@@ -18,6 +18,12 @@ public class User extends Entity{
 	protected String dateOfBirth;
 	protected Role role;
 	
+	public User()
+	{
+		super();
+	}
+	
+	
 	public User(String username, String password, String firstName, String lastName, Gender gender, String dateOfBirth,
 			Role role) {
 		super();
@@ -29,6 +35,7 @@ public class User extends Entity{
 		this.dateOfBirth = dateOfBirth;
 		this.role = role;
 	}
+
 	
 	@Override
 	public String toString() {
