@@ -3,28 +3,28 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Curier extends User{
+public class Courier extends User{
 	protected ArrayList<UUID> orders;
 
-	public Curier(ArrayList<UUID> orders) {
+	public Courier(ArrayList<UUID> orders) {
 		super();
 		this.orders = orders;
 	}
 
 	
-	public Curier() {
+	public Courier() {
 		super();
 		this.orders = new ArrayList<UUID>();
 		// TODO Auto-generated constructor stub
 	}
 
+	
 
-	public Curier(String username, String password, String firstName, String lastName, Gender gender,
-			String dateOfBirth, Role role) {
+	public Courier(String username, String password, String firstName, String lastName, Gender gender,
+			String dateOfBirth, Role role, ArrayList<UUID> orders) {
 		super(username, password, firstName, lastName, gender, dateOfBirth, role);
-		// TODO Auto-generated constructor stub
+		this.orders = orders;
 	}
-
 
 	public ArrayList<UUID> getOrders() {
 		return orders;
@@ -34,11 +34,13 @@ public class Curier extends User{
 		this.orders = orders;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Curier [orders=" + orders + ", username=" + username + ", password=" + password + ", firstName="
+		return "Courier [orders=" + orders + ", username=" + username + ", password=" + password + ", firstName="
 				+ firstName + ", lastName=" + lastName + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth
 				+ ", role=" + role + ", id=" + id + ", deleted=" + deleted + "]";
 	}
+
 	
 }
