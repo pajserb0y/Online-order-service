@@ -3,9 +3,6 @@ package model;
 enum Gender{
 	MALE,FEMALE
 }
-enum Role{
-	ADMIN,CUSTOMER,MANAGER,CURIER
-}
 
 
 public class User extends Entity{
