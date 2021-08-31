@@ -16,23 +16,30 @@ import services.ProductService;
 public class SparkAppMain {
 
 	private static Gson g = new Gson();
-	private static ProductService productService = new ProductService();
+	//private static ProductService productService = new ProductService();
 	
 	public static void main(String[] args) throws Exception {
 		port(8080);
 
 		staticFiles.externalLocation(new File("./static").getCanonicalPath());
 		
-		get("rest/products/", (req, res) -> {
-			res.type("application/json");
-			return g.toJson(productService.getProducts());
-		});
+//		get("rest/products/", (req, res) -> {
+//			res.type("application/json");
+//			return g.toJson(productService.getProducts());
+//		});
+//		
+//		post("rest/products/add", (req, res) -> {
+//			res.type("application/json");
+//			Product pd = g.fromJson(req.body(), Product.class);
+//			productService.addProduct(pd);
+//			return "SUCCESS";
+//		});
 		
-		post("rest/products/add", (req, res) -> {
-			res.type("application/json");
-			Product pd = g.fromJson(req.body(), Product.class);
-			productService.addProduct(pd);
-			return "SUCCESS";
-		});
+		post("/registerUser", (req, res) -> {
+				res.type("application/json");
+				res.status(200);
+				return "SUCCESS";
+			}
+		);
 	}
 }
