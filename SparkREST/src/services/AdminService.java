@@ -82,7 +82,7 @@ public class AdminService {
 		return admins;
 	}
 	
-	public static boolean checkUsernameAvailbility(String username)
+	public static boolean checkUsernameAvailability(String username)
 	{
 		for (Admin admin : adminList)
 		{

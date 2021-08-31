@@ -3,15 +3,13 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
-enum CustomerType{
-	GOLD,SILVER,BRONZE
-}
+
 public class Customer extends User {
 	
 	protected ArrayList<UUID> orders;
 	protected ShoppingCart shoppingCart;
 	protected double points;
-	protected CustomerType customerType;
+	protected CustomerTypeEnum customerType;
 	
 	public Customer() {
 		super();
@@ -20,7 +18,7 @@ public class Customer extends User {
 
 	public Customer(String username, String password, String firstName, String lastName, Gender gender,
 			String dateOfBirth, Role role, ArrayList<UUID> orders, ShoppingCart shoppingCart, double points,
-			CustomerType customerType) {
+			CustomerTypeEnum customerType) {
 		super(username, password, firstName, lastName, gender, dateOfBirth, role);
 		this.orders = orders;
 		this.shoppingCart = shoppingCart;
@@ -52,11 +50,11 @@ public class Customer extends User {
 		this.points = points;
 	}
 
-	public CustomerType getCustomerType() {
+	public CustomerTypeEnum getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(CustomerType customerType) {
+	public void setCustomerType(CustomerTypeEnum customerType) {
 		this.customerType = customerType;
 	}
 	

@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import com.google.gson.Gson;
 
-import model.Admin;
 import model.Courier;
 import model.Role;
 import model.User;
@@ -56,7 +55,7 @@ public class CourierService {
 		}
 	}
 	
-	public static void addCourier(Courier courier)
+	public static void add(Courier courier)
 	{
 		//not setting info for courier here but in the call of addCourier
 		courier.setRole(Role.COURIER);
