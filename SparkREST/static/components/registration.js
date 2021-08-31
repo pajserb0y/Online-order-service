@@ -15,8 +15,8 @@ Vue.component("registration", {
     template:`
     	<div>
         	<h1>Please fill registration form</h1>
-            <div class="registration ">
-                <form id="registrationForm" method ="POST" @submit.prevent = "registration">
+            <div class="registrationPageStyle">
+                <form id="registrationForm" method ="POST" @submit.prevent = "register">
                     <div>
                         <label for="firstName"><b>First Name</b></label>
                         <input type="text" v-model="user.firstName" placeholder = "First Name" required/>
