@@ -1,9 +1,16 @@
 package model;
 
+import model.Enums.RoleEnum;
+
 public class Admin extends User {
 	
+	public Admin() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public Admin(String username, String password, String firstName, String lastName, Gender gender, String dateOfBirth,
-			Role role) {
+			RoleEnum role) {
 		super(username, password, firstName, lastName, gender, dateOfBirth, role);
 		// TODO Auto-generated constructor stub
 	}

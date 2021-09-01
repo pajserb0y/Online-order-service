@@ -3,15 +3,16 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
-enum CustomerType{
-	GOLD,SILVER,BRONZE
-}
+import model.Enums.CustomerTypeEnum;
+import model.Enums.RoleEnum;
+
+
 public class Customer extends User {
 	
 	protected ArrayList<UUID> orders;
 	protected ShoppingCart shoppingCart;
 	protected double points;
-	protected CustomerType customerType;
+	protected CustomerTypeEnum customerType;
 	
 	public Customer() {
 		super();
@@ -19,8 +20,8 @@ public class Customer extends User {
 	}
 
 	public Customer(String username, String password, String firstName, String lastName, Gender gender,
-			String dateOfBirth, Role role, ArrayList<UUID> orders, ShoppingCart shoppingCart, double points,
-			CustomerType customerType) {
+			String dateOfBirth, RoleEnum role, ArrayList<UUID> orders, ShoppingCart shoppingCart, double points,
+			CustomerTypeEnum customerType) {
 		super(username, password, firstName, lastName, gender, dateOfBirth, role);
 		this.orders = orders;
 		this.shoppingCart = shoppingCart;
@@ -52,12 +53,20 @@ public class Customer extends User {
 		this.points = points;
 	}
 
-	public CustomerType getCustomerType() {
+	public CustomerTypeEnum getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(CustomerType customerType) {
+	public void setCustomerType(CustomerTypeEnum customerType) {
 		this.customerType = customerType;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [orders=" + orders + ", shoppingCart=" + shoppingCart + ", points=" + points
+				+ ", customerType=" + customerType + ", username=" + username + ", password=" + password
+				+ ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", dateOfBirth="
+				+ dateOfBirth + ", role=" + role + ", id=" + id + ", deleted=" + deleted + "]";
 	}
 	
 }

@@ -1,10 +1,9 @@
 package model;
 
+import model.Enums.RoleEnum;
+
 enum Gender{
 	MALE,FEMALE
-}
-enum Role{
-	ADMIN,CUSTOMER,MANAGER,CURIER
 }
 
 
@@ -16,7 +15,7 @@ public class User extends Entity{
 	protected String lastName;
 	protected Gender gender;
 	protected String dateOfBirth;
-	protected Role role;
+	protected RoleEnum role;
 	
 	public User()
 	{
@@ -25,7 +24,7 @@ public class User extends Entity{
 	
 	
 	public User(String username, String password, String firstName, String lastName, Gender gender, String dateOfBirth,
-			Role role) {
+			RoleEnum role) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -79,10 +78,10 @@ public class User extends Entity{
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	public Role getRole() {
+	public RoleEnum getRole() {
 		return role;
 	}
-	public void setRole(Role role) {
+	public void setRole(RoleEnum role) {
 		this.role = role;
 	}
 	
