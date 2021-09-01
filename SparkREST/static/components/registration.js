@@ -60,7 +60,7 @@ Vue.component("registration", {
 		register(){
         	console.log(this.user)
             axios
-            .post('/registrateCustomer',this.user)
+            .post('/registerCustomer',this.user)
             .then(response=>{
                 this.$router.push('/')
                 window.location.reload()

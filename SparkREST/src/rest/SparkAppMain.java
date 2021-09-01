@@ -4,7 +4,11 @@ import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.staticFiles;
+
+import java.io.Console;
 import java.io.File;
+import java.util.ArrayList;
+
 import model.Admin;
 import model.Courier;
 import model.Customer;
@@ -57,7 +61,6 @@ public class SparkAppMain {
 		post("/addAdmin", (req, res) -> {
 			res.type("application/json");
 			Admin admin = g.fromJson(req.body(), Admin.class);
-			//System.out.println(customer.toString());
 			if(!customerService.checkUsernameAvailability(admin.getUsername())) {
 				res.status(404);
 				return "ALREADY EXISTS";
@@ -82,7 +85,7 @@ public class SparkAppMain {
 			}
 		});
 		
-		post("/registrateCustomer", (req, res) -> {
+		post("/registerCustomer", (req, res) -> {
 			res.type("application/json");
 			Customer customer = g.fromJson(req.body(), Customer.class);
 			//System.out.println(customer.toString());
@@ -164,6 +167,17 @@ public class SparkAppMain {
 				return "NOT FOUND";
 			}
 
+		});
+		
+		get("/allUsers", (req,res) ->{
+			res.type("application/json");
+			ArrayList<User> users = new ArrayList<User>();
+			users.addAll(customerService.getAll());
+			users.addAll(courierService.getAll());
+			users.addAll(managerService.getAll());
+			users.addAll(adminService.getAll());
+			res.status(200);
+			return g.toJson(users);
 		});
 		
 		post("/editUser", (req, res) -> {

@@ -123,7 +123,7 @@ public class ManagerService {
 	public static void deleteRestaurant(UUID restaurantID) {
 		for (Manager manager : managerList) {
 			if (manager.getRestaurantId() == restaurantID) {
-				//manager.setRestaurantId(0);
+				addRestaurantToManager(manager.getUsername(),null);
 				break;
 			}
 		}

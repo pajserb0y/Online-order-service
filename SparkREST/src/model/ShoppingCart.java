@@ -39,4 +39,10 @@ public class ShoppingCart {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
+	@Override
+	public String toString() {
+		return "ShoppingCart [customerId=" + customerId + ", menuItems=" + menuItems + ", price=" + price + "]";
+	}
+	
 }

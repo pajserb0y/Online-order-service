@@ -135,8 +135,6 @@ public class AdminService {
 	}
 	
 	public static void add(Admin admin) {
-		
-		admin.setId(UUID. randomUUID());
 		admin.setRole(RoleEnum.ADMIN);
 		adminList.add(admin);
 		save();
