@@ -12,8 +12,8 @@ import java.util.UUID;
 import com.google.gson.Gson;
 
 import model.Manager;
-import model.Role;
 import model.User;
+import model.Enums.RoleEnum;
 
 public class ManagerService {
 
@@ -49,7 +49,7 @@ public class ManagerService {
 	
 	public static void add(Manager manager) {
 		
-		manager.setRole(Role.MANAGER);
+		manager.setRole(RoleEnum.MANAGER);
 		//manager.setRestaurantId(0);
 		save();
 	}
