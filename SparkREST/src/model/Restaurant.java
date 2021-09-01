@@ -2,21 +2,17 @@ package model;
 
 import java.util.ArrayList;
 
-enum RestaurantType{
-	CHINESE,MEXICAN,ITALIAN,GRILL
-}
-enum RestaurantStatus{
-	OPEN,CLOSED
-}
+import model.Enums.RestaurantStatusEnum;
+
 public class Restaurant extends Entity {
 	protected String name;
 	protected ArrayList<MenuItem> menu;
-	protected RestaurantStatus status;
+	protected RestaurantStatusEnum status;
 	protected Location location;
 	protected String logoPath;
 	protected double raiting;
 	
-	public Restaurant(String name, ArrayList<MenuItem> menu, RestaurantStatus status, Location location,
+	public Restaurant(String name, ArrayList<MenuItem> menu, RestaurantStatusEnum status, Location location,
 			String logoPath, double raiting) {
 		super();
 		this.name = name;
@@ -43,11 +39,11 @@ public class Restaurant extends Entity {
 		this.menu = menu;
 	}
 
-	public RestaurantStatus getStatus() {
+	public RestaurantStatusEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(RestaurantStatus status) {
+	public void setStatus(RestaurantStatusEnum status) {
 		this.status = status;
 	}
 

@@ -13,8 +13,8 @@ import java.util.UUID;
 import com.google.gson.Gson;
 
 import model.Courier;
-import model.Role;
 import model.User;
+import model.Enums.RoleEnum;
 
 public class CourierService {
 	public static ArrayList<Courier> courierList = new ArrayList<Courier>();
@@ -55,7 +55,7 @@ public class CourierService {
 	public static void add(Courier courier)
 	{
 		//not setting info for courier here but in the call of addCourier
-		courier.setRole(Role.COURIER);
+		courier.setRole(RoleEnum.COURIER);
 		courier.setOrders(new ArrayList<UUID>());
 		courier.setDeleted(false);
 		courierList.add(courier);

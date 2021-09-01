@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import model.Enums.RestaurantTypeEnum;
+
 enum OrderStatus{
 	PROCESSING,
 	INPREP,
@@ -20,11 +22,11 @@ public class Order extends Entity{
 	protected Date timeOfOrder;
 	protected double price;
 	protected OrderStatus orderStatus;
-	protected RestaurantType restaurantType;
+	protected RestaurantTypeEnum restaurantType;
 	protected ArrayList<String> requests;
 	
 	public Order(UUID restaturanId, UUID customerId, UUID currierId, ArrayList<MenuItem> menuItems, Date timeOfOrder,
-			double price, OrderStatus orderStatus, RestaurantType restaurantType, ArrayList<String> requests) {
+			double price, OrderStatus orderStatus, RestaurantTypeEnum restaurantType, ArrayList<String> requests) {
 		super();
 		this.restaturanId = restaturanId;
 		this.customerId = customerId;
@@ -93,11 +95,11 @@ public class Order extends Entity{
 		this.orderStatus = orderStatus;
 	}
 
-	public RestaurantType getRestaurantType() {
+	public RestaurantTypeEnum getRestaurantType() {
 		return restaurantType;
 	}
 
-	public void setRestaurantType(RestaurantType restaurantType) {
+	public void setRestaurantType(RestaurantTypeEnum restaurantType) {
 		this.restaurantType = restaurantType;
 	}
 

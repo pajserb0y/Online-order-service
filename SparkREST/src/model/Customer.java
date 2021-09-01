@@ -3,6 +3,9 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import model.Enums.CustomerTypeEnum;
+import model.Enums.RoleEnum;
+
 
 public class Customer extends User {
 	
@@ -17,7 +20,7 @@ public class Customer extends User {
 	}
 
 	public Customer(String username, String password, String firstName, String lastName, Gender gender,
-			String dateOfBirth, Role role, ArrayList<UUID> orders, ShoppingCart shoppingCart, double points,
+			String dateOfBirth, RoleEnum role, ArrayList<UUID> orders, ShoppingCart shoppingCart, double points,
 			CustomerTypeEnum customerType) {
 		super(username, password, firstName, lastName, gender, dateOfBirth, role);
 		this.orders = orders;

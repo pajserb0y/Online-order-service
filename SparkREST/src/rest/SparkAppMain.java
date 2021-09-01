@@ -12,6 +12,9 @@ import model.Manager;
 import model.Product;
 import model.Role;
 import model.User;
+import model.User;
+import model.Enums.RoleEnum;
+
 import com.google.gson.Gson;
 import services.AdminService;
 import services.CourierService;
@@ -102,7 +105,7 @@ public class SparkAppMain {
 				return "ALREADY EXISTS";
 			}
 			else {
-				customer.setRole(Role.CUSTOMER);
+				customer.setRole(RoleEnum.CUSTOMER);
 				customerService.add(customer);
 				res.status(200);
 				return "SUCCESS";
