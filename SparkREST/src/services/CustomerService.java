@@ -30,7 +30,7 @@ public class CustomerService {
 	public static void load() {
 		try {
 		    Gson gson = new Gson();
-		    Reader reader = Files.newBufferedReader(Paths.get("data"+File.separator+"customers.json"));
+		    Reader reader = Files.newBufferedReader(Paths.get("storage"+File.separator+"customers.json"));
 		    Customer[] customers = gson.fromJson(reader, Customer[].class);
 		    Collections.addAll(customerList, customers);
 		    reader.close();
@@ -43,7 +43,7 @@ public class CustomerService {
 	private static void save() {
 		try {
 		    Gson gson = new Gson();
-		    Writer writer = Files.newBufferedWriter(Paths.get("data"+File.separator+"customers.json"));
+		    Writer writer = Files.newBufferedWriter(Paths.get("storage"+File.separator+"customers.json"));
 		    gson.toJson(customerList, writer);
 		    writer.close();
 
@@ -92,7 +92,7 @@ public class CustomerService {
 		save();	
 	}
 	
-	public static boolean loginCustomer(String username, String password) {
+	public static boolean login(String username, String password) {
 		for (Customer customer : customerList) {
 			if (customer.getUsername().equals(username) && customer.getPassword().equals(password) && !customer.isDeleted()) {
 				return true;
@@ -118,5 +118,15 @@ public class CustomerService {
 			}
 		}			
 		return customers;
+	}
+
+	public boolean checkUsernameAvailability(String username) {
+		// TODO Auto-generated method stub
+		for (Customer customer : customerList) {
+			if (customer.getUsername().equals(username) && !customer.isDeleted()) {
+				return false;
+			}
+		}			
+		return true;
 	}
 }

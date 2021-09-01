@@ -24,7 +24,7 @@ public class ManagerService {
 		try {
 		    Gson gson = new Gson();
 
-		    Reader reader = Files.newBufferedReader(Paths.get("data"+File.separator+"managers.json"));
+		    Reader reader = Files.newBufferedReader(Paths.get("storage"+File.separator+"managers.json"));
 		    Manager[] managers = gson.fromJson(reader, Manager[].class);
 		    Collections.addAll(managerList, managers);		    
 		    reader.close();
@@ -38,7 +38,7 @@ public class ManagerService {
 		try {
 		    Gson gson = new Gson();
 
-		    Writer writer = Files.newBufferedWriter(Paths.get("data"+File.separator+"managers.json"));
+		    Writer writer = Files.newBufferedWriter(Paths.get("storage"+File.separator+"managers.json"));
 		    gson.toJson(managerList, writer);
 		    writer.close();
 
@@ -81,7 +81,7 @@ public class ManagerService {
 		save();
 	}
 	
-	public static boolean loginManager(String username, String password) {
+	public static boolean login(String username, String password) {
 		for (Manager manager : managerList) {
 			if (manager.getUsername().equals(username) && manager.getPassword().equals(password) && !manager.isDeleted()) {
 				return true;
@@ -127,5 +127,15 @@ public class ManagerService {
 			}
 		}
 		save();		
+	}
+
+	public boolean checkUsernameAvailability(String username) {
+		// TODO Auto-generated method stub
+		for (Manager menager : managerList) {
+			if (menager.getUsername().equals(username) && !menager.isDeleted()) {
+				return false;
+			}
+		}			
+		return true;
 	}
 }
