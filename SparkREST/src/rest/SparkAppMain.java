@@ -10,8 +10,6 @@ import model.Courier;
 import model.Customer;
 import model.Manager;
 import model.Product;
-import model.Role;
-import model.User;
 import model.User;
 import model.Enums.RoleEnum;
 
@@ -77,7 +75,7 @@ public class SparkAppMain {
 				return "ALREADY EXISTS";
 			}
 			else {
-				admin.setRole(Role.ADMIN);
+				admin.setRole(RoleEnum.ADMIN);
 				adminService.add(admin);
 				res.status(200);
 				return "SUCCESS";
@@ -145,19 +143,19 @@ public class SparkAppMain {
 		post("/getUser", (req, res) -> {
 			res.type("application/json");
 			User user = g.fromJson(req.body(), User.class);
-			if(user.getRole() == Role.ADMIN) {
+			if(user.getRole() == RoleEnum.ADMIN) {
 				res.status(200);
 				return g.toJson(adminService.getAdminByID(user.getId()));
 			}
-			else if (user.getRole() == Role.MANAGER) {
+			else if (user.getRole() == RoleEnum.MANAGER) {
 				res.status(200); 
 				return g.toJson(managerService.getManagerByID(user.getId()));
 			}
-			else if (user.getRole() == Role.COURIER) {
+			else if (user.getRole() == RoleEnum.COURIER) {
 				res.status(200);
 				return g.toJson(courierService.getCourierByID(user.getId()));
 			}
-			else if (user.getRole() == Role.CUSTOMER) {
+			else if (user.getRole() == RoleEnum.CUSTOMER) {
 				res.status(200);
 				return g.toJson(customerService.getCustomerByID(user.getId()));
 			}
@@ -188,19 +186,19 @@ public class SparkAppMain {
 				return "ALREADY EXISTS";
 			}
 			
-			if(user.getRole() == Role.ADMIN) {
+			if(user.getRole() == RoleEnum.ADMIN) {
 				res.status(200);				
 				return g.toJson(adminService.edit(user));
 			}
-			else if (user.getRole() == Role.MANAGER) {
+			else if (user.getRole() == RoleEnum.MANAGER) {
 				res.status(200);
 				return g.toJson(managerService.edit(user));
 			}
-			else if (user.getRole() == Role.COURIER) {
+			else if (user.getRole() == RoleEnum.COURIER) {
 				res.status(200);
 				return g.toJson(courierService.edit(user));
 			}
-			else if (user.getRole() == Role.CUSTOMER) {
+			else if (user.getRole() == RoleEnum.CUSTOMER) {
 				res.status(200);
 				return g.toJson(customerService.edit(user));
 			}

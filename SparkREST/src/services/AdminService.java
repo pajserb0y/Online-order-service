@@ -16,10 +16,9 @@ import com.google.gson.JsonElement;
 import javaxt.utils.string;
 import model.Admin;
 import model.Customer;
-import model.CustomerTypeEnum;
-import model.Role;
 import model.ShoppingCart;
 import model.User;
+import model.Enums.RoleEnum;
 
 public class AdminService {
 	
@@ -138,7 +137,7 @@ public class AdminService {
 	public static void add(Admin admin) {
 		
 		admin.setId(UUID. randomUUID());
-		admin.setRole(Role.ADMIN);
+		admin.setRole(RoleEnum.ADMIN);
 		adminList.add(admin);
 		save();
 	}
