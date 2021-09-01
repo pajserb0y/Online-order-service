@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import model.Manager;
 import model.Role;
@@ -56,7 +57,7 @@ public class ManagerService {
 	
 	public Manager edit(User user) {
 		for (Manager manager: managerList) {
-			if(manager.getId() == user.getId()) {
+			if(manager.getId().equals(user.getId())) {
 				manager.setFirstName(user.getFirstName());
 				manager.setLastName(user.getLastName());
 				manager.setGender(user.getGender());
@@ -137,5 +138,25 @@ public class ManagerService {
 			}
 		}			
 		return true;
+	}
+	
+	public boolean checkUsernameAvailability(String username, UUID id) {
+		// TODO Auto-generated method stub
+		for (Manager manager : managerList) {
+			if (manager.getUsername().equals(username) && !manager.isDeleted() && manager.getId().equals(id)) {
+				return false;
+			}
+		}			
+		return true;
+	}
+
+	public static Manager getManagerByID(UUID id) {
+		// TODO Auto-generated method stub
+		for (Manager manager: managerList) {
+			if (manager.getId().equals(id) && !manager.isDeleted()) {
+				return manager;
+			}
+		}			
+		return null;
 	}
 }

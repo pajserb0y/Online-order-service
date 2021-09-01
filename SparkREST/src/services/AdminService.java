@@ -11,9 +11,14 @@ import java.util.Collections;
 import java.util.UUID;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import javaxt.utils.string;
 import model.Admin;
+import model.Customer;
+import model.CustomerTypeEnum;
+import model.Role;
+import model.ShoppingCart;
 import model.User;
 
 public class AdminService {
@@ -41,14 +46,11 @@ public class AdminService {
 	public static void save()
 	{
 		Gson gson = new Gson();
-		
 		Writer writer;
 		
 		try {
 			writer = Files.newBufferedWriter(Paths.get("storage"+File.separator+"admins.json"));
-			
 			gson.toJson(adminList,writer);
-			
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -92,6 +94,16 @@ public class AdminService {
 		return true;
 	}
 	
+	public boolean checkUsernameAvailability(String username, UUID id)
+	{
+		for (Admin admin : adminList)
+		{
+			if(admin.getUsername().equals(username) && !admin.isDeleted() && !admin.getId().equals(id))
+				return false;
+		}
+		return true;
+	}
+	
 	public boolean login(String username,String password)
 	{
 		for(Admin admin : adminList)
@@ -102,7 +114,7 @@ public class AdminService {
 		return false;
 	}
 	
-	public static Admin edit(User user)
+	public Admin edit(User user)
 	{
 		for(Admin admin : adminList)
 		{
@@ -115,9 +127,28 @@ public class AdminService {
 				admin.setUsername(user.getUsername());
 				admin.setDateOfBirth(user.getDateOfBirth());
 				
+				System.out.println(admin.getUsername() + "  id: " + admin.getId() + " ---- " + user.getId());
 				save();
 				return admin;
 			}
+		}
+		return null;
+	}
+	
+	public static void add(Admin admin) {
+		
+		admin.setId(UUID. randomUUID());
+		admin.setRole(Role.ADMIN);
+		adminList.add(admin);
+		save();
+	}
+
+	public static Admin getAdminByID(UUID id) {
+		// TODO Auto-generated method stub
+		for(Admin admin : adminList)
+		{
+			if(admin.getId().equals(id) && !admin.isDeleted())
+				return admin;
 		}
 		return null;
 	}

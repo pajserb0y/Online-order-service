@@ -4,39 +4,15 @@ import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.staticFiles;
-
-
-
-
-
-
-
 import java.io.File;
-
-
-
-
-
-
-
 import model.Admin;
 import model.Courier;
 import model.Customer;
 import model.Manager;
 import model.Product;
-
-
 import model.Role;
 import model.User;
-
 import com.google.gson.Gson;
-
-
-
-
-
-
-
 import services.AdminService;
 import services.CourierService;
 import services.CustomerService;
@@ -77,8 +53,35 @@ public class SparkAppMain {
 		});
 		
 		
+		post("/addAdmin", (req, res) -> {
+			res.type("application/json");
+			Admin admin = g.fromJson(req.body(), Admin.class);
+			//System.out.println(customer.toString());
+			if(!customerService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!managerService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!courierService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!adminService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else {
+				admin.setRole(Role.ADMIN);
+				adminService.add(admin);
+				res.status(200);
+				return "SUCCESS";
+			}
+		});
 		
-		post("/registerUser", (req, res) -> {
+		post("/registrateCustomer", (req, res) -> {
 			res.type("application/json");
 			Customer customer = g.fromJson(req.body(), Customer.class);
 			//System.out.println(customer.toString());
@@ -134,6 +137,73 @@ public class SparkAppMain {
 				res.status(404);
 				return "FAILED LOGIN";
 			}
+		});
+		
+		post("/getUser", (req, res) -> {
+			res.type("application/json");
+			User user = g.fromJson(req.body(), User.class);
+			if(user.getRole() == Role.ADMIN) {
+				res.status(200);
+				return g.toJson(adminService.getAdminByID(user.getId()));
+			}
+			else if (user.getRole() == Role.MANAGER) {
+				res.status(200); 
+				return g.toJson(managerService.getManagerByID(user.getId()));
+			}
+			else if (user.getRole() == Role.COURIER) {
+				res.status(200);
+				return g.toJson(courierService.getCourierByID(user.getId()));
+			}
+			else if (user.getRole() == Role.CUSTOMER) {
+				res.status(200);
+				return g.toJson(customerService.getCustomerByID(user.getId()));
+			}
+			else {
+				res.status(404);
+				return "NOT FOUND";
+			}
+
+		});
+		
+		post("/editUser", (req, res) -> {
+			res.type("application/json");
+			User user = g.fromJson(req.body(), User.class);
+			if(!customerService.checkUsernameAvailability(user.getUsername(), user.getId())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!managerService.checkUsernameAvailability(user.getUsername(), user.getId())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!courierService.checkUsernameAvailability(user.getUsername(), user.getId())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!adminService.checkUsernameAvailability(user.getUsername(), user.getId())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			
+			if(user.getRole() == Role.ADMIN) {
+				res.status(200);				
+				return g.toJson(adminService.edit(user));
+			}
+			else if (user.getRole() == Role.MANAGER) {
+				res.status(200);
+				return g.toJson(managerService.edit(user));
+			}
+			else if (user.getRole() == Role.COURIER) {
+				res.status(200);
+				return g.toJson(courierService.edit(user));
+			}
+			else if (user.getRole() == Role.CUSTOMER) {
+				res.status(200);
+				return g.toJson(customerService.edit(user));
+			}
+			
+			res.status(404);
+			return "NOTHING";
 		});
 	}
 }

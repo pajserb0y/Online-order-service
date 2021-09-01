@@ -62,11 +62,51 @@ public class CourierService {
 		save();
 	}
 	
+	public Courier edit(User user) 
+	{
+		for (Courier courier: courierList) {
+			if(courier.getId().equals(user.getId())) 
+			{
+				courier.setFirstName(user.getFirstName());
+				courier.setLastName(user.getLastName());
+				courier.setGender(user.getGender());
+				courier.setPassword(user.getPassword());
+				courier.setUsername(user.getUsername());
+				courier.setDateOfBirth(user.getDateOfBirth());
+				
+				save();
+				return courier;
+			}
+		}
+		return null;
+	}
+	
+	public static void delete(UUID id) {
+		for (Courier courier: courierList) {
+			if (courier.getId().equals(id)) 
+			{
+				courier.setDeleted(true);
+				break;
+			}
+		}
+		save();
+	}
+	
 	public boolean checkUsernameAvailability(String username) 
 	{
 		for (Courier courier : courierList) 
 		{
 			if (courier.getUsername().equals(username) && !courier.isDeleted()) 
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean checkUsernameAvailability(String username, UUID id) 
+	{
+		for (Courier courier : courierList) 
+		{
+			if (courier.getUsername().equals(username) && !courier.isDeleted() && !courier.getId().equals(id)) 
 				return false;
 		}
 		return true;
@@ -110,35 +150,7 @@ public class CourierService {
 		return null;
 	}
 	
-	public Courier edit(User user) 
-	{
-		for (Courier courier: courierList) {
-			if(courier.getId().equals(user.getId())) 
-			{
-				courier.setFirstName(user.getFirstName());
-				courier.setLastName(user.getLastName());
-				courier.setGender(user.getGender());
-				courier.setPassword(user.getPassword());
-				courier.setUsername(user.getUsername());
-				courier.setDateOfBirth(user.getDateOfBirth());
-				
-				save();
-				return courier;
-			}
-		}
-		return null;
-	}
 	
-	public static void delete(UUID id) {
-		for (Courier courier: courierList) {
-			if (courier.getId().equals(id)) 
-			{
-				courier.setDeleted(true);
-				break;
-			}
-		}
-		save();
-	}
 	
 	public void addOrderToCourier(UUID orderId, UUID courierId) {
 		for (Courier courier: courierList) {

@@ -1,22 +1,46 @@
-Vue.component("registration", {
-	data: function () {
-		    return {
-                user: {
-                    username:"",
-                    password:"",
-                    firstName:"",
-                    lastName:"",                    
-                    gender:"",
-                    dateOfBirth:"",
-                    role:""
-                }
-		    }
-	},
+Vue.component("my-account", {
+
+    data: function(){
+        return{
+            user:{                
+                firstName:"",
+                lastName:"",
+                username:"",
+                password:"",
+                gender:"",
+                dateOfBirth:"",
+                role:"",
+                id:""
+            },
+            sendParams:{
+                id:"",
+                role:"",
+            }
+        }
+    },
+    mounted(){
+        this.sendParams.id = localStorage.getItem('id')
+        this.sendParams.role = localStorage.getItem('role')
+        axios
+            .post('/getUser',this.sendParams)
+            .then(response => {
+                this.user = response.data
+            })
+        /* this.user.role = localStorage.getItem('user.role')
+        this.user.id = localStorage.getItem('user.id')
+        this.user.username = localStorage.getItem('user.username')
+        this.user.firstName = localStorage.getItem('user.firstName')
+        this.user.lastName = localStorage.getItem('user.lastName')
+        this.user.password = localStorage.getItem('user.password')
+        this.user.dateOfBirth = localStorage.getItem('user.dateOfBirth')
+        this.user.gender = localStorage.getItem('user.gender') */
+
+    },
     template:`
     	<div>
-        	<h1>Please fill registration form</h1>
-            <div class="registrationPageStyle">
-                <form id="registrationForm" method ="POST" @submit.prevent = "register">
+        	<h1>{{user.username}} account</h1>
+            <div>
+                <form id="registrationForm" method ="POST" @submit.prevent = "edit">
                     <div>
                         <label for="firstName"><b>First Name</b></label>
                         <input type="text" v-model="user.firstName" placeholder = "First Name" required/>
@@ -46,48 +70,27 @@ Vue.component("registration", {
                     </div>
                     <p></p>
                     <div>
-                        <button type = "submit"> Register</button>
-                        <button type= "button" v-on:click="cancel">Cancel</button>
-                    </div>
-                    <div>
-                        <button type = "button" v-on:click="registerAdmin"> Register admin</button>
+                        <button type = "submit"> Change</button>
                     </div>
                 </form>
             </div>
         </div>
     `,
-	methods : {
-		register(){
-        	console.log(this.user)
+    methods:{
+        edit(){
             axios
-            .post('/registrateCustomer',this.user)
-            .then(response=>{
-                this.$router.push('/')
+            .post('/editUser',this.user)
+            .then(response => {
+                this.user = response.data
+                localStorage.setItem("username", response.data.username)
+                alert("Your data has been saved");
                 window.location.reload()
             })
             .catch((error) => {
                 console.log("Error");
-                alert("User with the same username already exists");
+                alert("A user exists with the same username");
               });
         },
+    }
 
-        cancel(){
-            this.$router.push("/")
-            window.location.reload()
-        },
-
-        registerAdmin(){
-        	console.log(this.user)
-            axios
-            .post('/addAdmin',this.user)
-            .then(response=>{
-                this.$router.push('/')
-                window.location.reload()
-            })
-            .catch((error) => {
-                console.log("Error");
-                alert("User with the same username already exists");
-              });
-        }
-	}
 });
