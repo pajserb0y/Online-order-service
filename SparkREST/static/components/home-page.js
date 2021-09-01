@@ -16,28 +16,6 @@ Vue.component("home-page", {
     },
     template:`
         <div>
-    	    <div v-if="(!role)" >
-                <button type= "button" v-on:click="restaurants">Restaurants</button>
-                <inline style="float: right">
-            	    <button type= "button" v-on:click="login">Login</button>
-                </inline>   
-                <div>
-                    <inline style="float: right">
-                        <a v-on:click="register">Register</a>
-                    </inline>
-                </div>
-            </div>
-            <div v-if="role === 'ADMINISTRATOR'">
-                <button type= "button" v-on:click="restaurants">Restaurants</button>
-                <button type= "button" v-on:click="registerEmployee">Register Employee</button>
-                <button type= "button" v-on:click="showUsers">Users</button>
-                <button type= "button" v-on:click="addRestaurant">Add Restaurant</button>
-                <inline style="float: right">
-                    <span>{{username}}</span>
-                    <button type= "button" v-on:click="myAccount">My Account</button>
-                    <button type= "button" v-on:click="logout">Logout</button>
-                </inline>
-            </div>
             <div v-if="role === 'CUSTOMER'">
                 <button type= "button" v-on:click="restaurants">Restaurants</button>
                 <button type= "button" v-on:click="orders">My Orders</button>
@@ -48,7 +26,18 @@ Vue.component("home-page", {
                     <button type= "button" v-on:click="logout">Logout</button>
                 </inline>
             </div>
-            <div v-if="role === 'MENAGER'">
+            <div v-if="role === 'ADMIN'">
+                <button type= "button" v-on:click="restaurants">Restaurants</button>
+                <button type= "button" v-on:click="registerEmployee">Register Employee</button>
+                <button type= "button" v-on:click="showUsers">Users</button>
+                <button type= "button" v-on:click="addRestaurant">Add Restaurant</button>
+                <inline style="float: right">
+                    <span>{{username}}</span>
+                    <button type= "button" v-on:click="myAccount">My Account</button>
+                    <button type= "button" v-on:click="logout">Logout</button>
+                </inline>
+            </div>
+            <div v-if="role === 'MANAGER'">
                 <button type= "button" v-on:click="restaurants">Restaurants</button>
                 <button type= "button" v-on:click="myRestaurant">My Restaurant</button>
                 <inline style="float: right">
@@ -66,6 +55,16 @@ Vue.component("home-page", {
                     <button type= "button" v-on:click="logout">Logout</button>
                 </inline>
             </div>
+            <div v-if="(!role)" >
+                <button type= "button" v-on:click="restaurants">Restaurants</button>
+                <inline style="float: right">
+            	    <button type= "button" v-on:click="login">Login</button>
+                    <div>
+                        <a v-on:click="register">Register</a>
+                    </div>
+                </inline>   
+               
+            </div>
             <div v-if="window === 'RESTAURANTS'">
                 <allRestaurants></allRestaurants>
             </div>
@@ -76,7 +75,7 @@ Vue.component("home-page", {
                 <registerEmployee></registerEmployee>
             </div>
             <div v-if="window === 'MYACCOUNT'">
-                <myAccount></myAccount>
+                <my-account></my-account>
             </div>
             <div v-if="window === 'ADDRESTAURANT'">
                 <addRestaurant></addRestaurant>

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import model.Customer;
 import model.ShoppingCart;
@@ -66,7 +67,7 @@ public class CustomerService {
 	
 	public Customer edit(User user) {
 		for (Customer customer: getAll()) {
-			if(customer.getId() == user.getId()) {
+			if(customer.getId().equals(user.getId())) {
 				customer.setFirstName(user.getFirstName());
 				customer.setLastName(user.getLastName());
 				customer.setGender(user.getGender());
@@ -75,6 +76,7 @@ public class CustomerService {
 				customer.setDateOfBirth(user.getDateOfBirth());
 				
 				save();
+				System.out.println(customer.getUsername() + "  id: " + customer.getId() + " ---- " + user.getId());
 				return customer;
 			}
 		}
@@ -128,5 +130,26 @@ public class CustomerService {
 			}
 		}			
 		return true;
+	}
+	
+	public boolean checkUsernameAvailability(String username, UUID id) {
+		// TODO Auto-generated method stub
+		for (Customer customer : customerList) {
+			if (customer.getUsername().equals(username) && !customer.isDeleted() && !customer.getId().equals(id)) {
+				return false;
+			}
+		}			
+		return true;
+	}
+
+	public static Customer getCustomerByID(UUID id) {
+		// TODO Auto-generated method stub
+		for (Customer customer : customerList) {
+			if (customer.getId().equals(id) && !customer.isDeleted()) {
+				//System.out.print(customer.toString());
+				return customer;
+			}
+		}			
+		return null;
 	}
 }
