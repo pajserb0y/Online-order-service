@@ -6,7 +6,6 @@ Vue.component("home-page", {
             role:"",
             username:"",
             window:"RESTAURANTS"
-
         }
     },
     mounted(){
@@ -69,7 +68,7 @@ Vue.component("home-page", {
                 <allRestaurants></allRestaurants>
             </div>
             <div v-if="window === 'USERS'">
-                <allUsers></allUsers>
+                <all-users></all-users>
             </div>
             <div v-if="window === 'EMPLOYEEREGISTRATION'">
                 <registrate-employee></registrate-employee>

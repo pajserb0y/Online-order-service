@@ -169,7 +169,7 @@ public class SparkAppMain {
 
 		});
 		
-		get("/allUsers", (req,res) ->{
+		get("/getAllUsers", (req,res) ->{
 			res.type("application/json");
 			ArrayList<User> users = new ArrayList<User>();
 			users.addAll(customerService.getAll());
