@@ -60,5 +60,13 @@ public class Customer extends User {
 	public void setCustomerType(CustomerTypeEnum customerType) {
 		this.customerType = customerType;
 	}
+
+	@Override
+	public String toString() {
+		return "Customer [orders=" + orders + ", shoppingCart=" + shoppingCart + ", points=" + points
+				+ ", customerType=" + customerType + ", username=" + username + ", password=" + password
+				+ ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", dateOfBirth="
+				+ dateOfBirth + ", role=" + role + ", id=" + id + ", deleted=" + deleted + "]";
+	}
 	
 }
