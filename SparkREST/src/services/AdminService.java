@@ -20,13 +20,13 @@ public class AdminService {
 	
 	public static ArrayList<Admin> adminList = new ArrayList<Admin>();
 	
-	private static void load() 
+	public static void load() 
 	{
 		Gson gson = new Gson();
 		
 		Reader reader;
 		try {			
-			reader = Files.newBufferedReader(Paths.get("files"+File.separator+"admins.json"));
+			reader = Files.newBufferedReader(Paths.get("storage"+File.separator+"admins.json"));
 			
 			Admin[] admins = gson.fromJson(reader, Admin[].class);
 			Collections.addAll(adminList,admins);
@@ -45,7 +45,7 @@ public class AdminService {
 		Writer writer;
 		
 		try {
-			writer = Files.newBufferedWriter(Paths.get("files"+File.separator+"admins.json"));
+			writer = Files.newBufferedWriter(Paths.get("storage"+File.separator+"admins.json"));
 			
 			gson.toJson(adminList,writer);
 			
@@ -82,7 +82,7 @@ public class AdminService {
 		return admins;
 	}
 	
-	public static boolean checkUsernameAvailability(String username)
+	public boolean checkUsernameAvailability(String username)
 	{
 		for (Admin admin : adminList)
 		{
@@ -92,7 +92,7 @@ public class AdminService {
 		return true;
 	}
 	
-	public static boolean login(String username,String password)
+	public boolean login(String username,String password)
 	{
 		for(Admin admin : adminList)
 		{

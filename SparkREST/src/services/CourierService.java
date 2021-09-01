@@ -17,18 +17,17 @@ import model.Role;
 import model.User;
 
 public class CourierService {
-	public static ArrayList<Courier> courierList;
+	public static ArrayList<Courier> courierList = new ArrayList<Courier>();
 	
-	private static void load() 
+	public static void load() 
 	{
 		Gson gson = new Gson();
 		
 		Reader reader;
 		try {			
-			reader = Files.newBufferedReader(Paths.get("files"+File.separator+"couriers.json"));
-			
+			reader = Files.newBufferedReader(Paths.get("storage" + File.separator + "couriers.json"));			
 			Courier[] couriers = gson.fromJson(reader, Courier[].class);
-			Collections.addAll(courierList,couriers);
+			Collections.addAll(courierList, couriers);
 			
 			reader.close();
 		} catch (IOException e) {
@@ -44,10 +43,8 @@ public class CourierService {
 		Writer writer;
 		
 		try {
-			writer = Files.newBufferedWriter(Paths.get("files"+File.separator+"couriers.json"));
-			
+			writer = Files.newBufferedWriter(Paths.get("storage"+File.separator+"couriers.json"));
 			gson.toJson(courierList,writer);
-			
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -65,7 +62,7 @@ public class CourierService {
 		save();
 	}
 	
-	public static boolean checkUsernameAvailability(String username) 
+	public boolean checkUsernameAvailability(String username) 
 	{
 		for (Courier courier : courierList) 
 		{
@@ -75,7 +72,7 @@ public class CourierService {
 		return true;
 	}
 	
-	public static boolean loginCourier(String username, String password) 
+	public static boolean login(String username, String password) 
 	{
 		for (Courier courier : courierList) {
 			if (courier.getUsername().equals(username) && courier.getPassword().equals(password) && !courier.isDeleted())

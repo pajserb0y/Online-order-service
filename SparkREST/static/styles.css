@@ -12,3 +12,18 @@ tr {
 #success {
 	color: green;	
 }
+
+a {
+	color: blue;
+	font-size: smaller;
+}
+
+a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+	
+}
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
