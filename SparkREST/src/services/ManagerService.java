@@ -51,7 +51,9 @@ public class ManagerService {
 	public static void add(Manager manager) {
 		
 		manager.setRole(RoleEnum.MANAGER);
-		//manager.setRestaurantId(0);
+		manager.setRestaurantId(null);
+		System.out.println(manager.toString());
+		managerList.add(manager);
 		save();
 	}
 	
@@ -143,7 +145,7 @@ public class ManagerService {
 	public boolean checkUsernameAvailability(String username, UUID id) {
 		// TODO Auto-generated method stub
 		for (Manager manager : managerList) {
-			if (manager.getUsername().equals(username) && !manager.isDeleted() && manager.getId().equals(id)) {
+			if (manager.getUsername().equals(username) && !manager.isDeleted() && !manager.getId().equals(id)) {
 				return false;
 			}
 		}			

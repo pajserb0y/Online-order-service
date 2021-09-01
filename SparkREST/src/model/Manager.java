@@ -26,6 +26,10 @@ public class Manager extends User{
 	public void setRestaurantId(UUID restaurantId) {
 		this.restaurantId = restaurantId;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Manager [restaurantId=" + restaurantId + "]";
+	}
 	
 }
