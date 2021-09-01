@@ -1,8 +1,8 @@
-Vue.component("my-account", {
-    
+Vue.component("registrate-employee",{
+
     data: function(){
         return{
-            user:{                
+            user:{
                 firstName:"",
                 lastName:"",
                 username:"",
@@ -10,28 +10,14 @@ Vue.component("my-account", {
                 gender:"",
                 dateOfBirth:"",
                 role:"",
-                id:""
-            },
-            sendParams:{
-                id:"",
-                role:"",
             }
         }
     },
-    mounted(){
-        this.sendParams.id = localStorage.getItem('id')
-        this.sendParams.role = localStorage.getItem('role')
-        axios
-            .post('/getUser',this.sendParams)
-            .then(response => {
-                this.user = response.data
-            })
-    },
     template:`
     	<div>
-        	<h1>{{user.username}}'s account</h1>
-            <div>
-                <form id="registrationForm" method ="POST" @submit.prevent = "edit">
+        	<h1>Employee registration form</h1>
+            <div class="container">
+                <form id="registrationForm" method ="POST" @submit.prevent = "registrate">
                     <div>
                         <label for="firstName"><b>First Name</b></label>
                         <input type="text" v-model="user.firstName" placeholder = "First Name" required/>
@@ -56,12 +42,19 @@ Vue.component("my-account", {
                         </select>
                     </div>
                     <div>
+                    <label for="role"><b>Role</b></label>
+                    <select name="role" v-model="user.role" id="role" required>
+                        <option value="MANAGER">Manager</option>
+                        <option value="COURIER">Courier</option>
+                    </select>
+                </div>
+                    <div>
                         <label for="date"><b>Date of birth</b></label>
                         <input type="date" v-model="user.dateOfBirth" required/>
                     </div>
                     <p></p>
                     <div>
-                        <button type = "submit"> Change</button>
+                        <button type = "submit"> Registrate</button>
                         <button type= "button" v-on:click="cancel">Cancel</button>
                     </div>
                 </form>
@@ -69,14 +62,14 @@ Vue.component("my-account", {
         </div>
     `,
     methods:{
-        edit(){
+        registrate(){
+        	console.log(this.user)
             axios
-            .post('/editUser',this.user)
-            .then(response => {
-                this.user = response.data
-                localStorage.setItem("username", response.data.username)
-                alert("Your data has been saved");
+            .post('/registrateEmployee',this.user)
+            .then(response=>{
+                alert("New employee has been successfuly registered!");
                 window.location.reload()
+                
             })
             .catch((error) => {
                 console.log("Error");
@@ -88,5 +81,4 @@ Vue.component("my-account", {
             window.location.reload()
         },
     }
-
 });

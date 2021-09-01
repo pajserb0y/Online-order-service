@@ -28,7 +28,7 @@ Vue.component("home-page", {
             </div>
             <div v-if="role === 'ADMIN'">
                 <button type= "button" v-on:click="restaurants">Restaurants</button>
-                <button type= "button" v-on:click="registerEmployee">Register Employee</button>
+                <button type= "button" v-on:click="registrateEmployee">Registrate employee</button>
                 <button type= "button" v-on:click="showUsers">Users</button>
                 <button type= "button" v-on:click="addRestaurant">Add Restaurant</button>
                 <inline style="float: right">
@@ -71,8 +71,8 @@ Vue.component("home-page", {
             <div v-if="window === 'USERS'">
                 <allUsers></allUsers>
             </div>
-            <div v-if="window === 'REGISTEREMPLOYEE'">
-                <registerEmployee></registerEmployee>
+            <div v-if="window === 'EMPLOYEEREGISTRATION'">
+                <registrate-employee></registrate-employee>
             </div>
             <div v-if="window === 'MYACCOUNT'">
                 <my-account></my-account>
@@ -102,8 +102,8 @@ Vue.component("home-page", {
             this.window = "RESTAURANTS"
             window.location.reload()
         },
-        registerEmployee(){
-            this.window = "REGISTEREMPLOYEE"
+        registrateEmployee(){
+            this.window = "EMPLOYEEREGISTRATION"
         },
         showUsers(){
             this.window = "USERS"

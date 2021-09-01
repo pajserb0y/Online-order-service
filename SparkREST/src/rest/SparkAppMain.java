@@ -119,9 +119,9 @@ public class SparkAppMain {
 				return g.toJson(customer);
 			}
 			else if(managerService.login(user.getUsername(),user.getPassword())) {
-				Manager menager= managerService.getManagerByUsername(user.getUsername());
+				Manager manager= managerService.getManagerByUsername(user.getUsername());
 				res.status(200);
-				return g.toJson(menager);
+				return g.toJson(manager);
 			}
 			else if(courierService.login(user.getUsername(),user.getPassword())) {
 				Courier courier = courierService.getCourierByUsername(user.getUsername());
@@ -205,6 +205,45 @@ public class SparkAppMain {
 			
 			res.status(404);
 			return "NOTHING";
+		});
+		
+		post("/registrateEmployee", (req, res) -> {
+			res.type("application/json");
+			User user = g.fromJson(req.body(), User.class);
+			if(!customerService.checkUsernameAvailability(user.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!managerService.checkUsernameAvailability(user.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!courierService.checkUsernameAvailability(user.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!adminService.checkUsernameAvailability(user.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else {
+				if(user.getRole() == RoleEnum.COURIER) {
+					Courier courier = g.fromJson(req.body(), Courier.class);
+					courierService.add(courier);
+					res.status(200);
+					return "SUCCESS";
+				}
+				else if(user.getRole() == RoleEnum.MANAGER) {
+					Manager manager = g.fromJson(req.body(), Manager.class);
+					managerService.add(manager);
+					res.status(200);
+					return "SUCCESS";
+				}
+				else {
+					res.status(404);
+					return "ALREADY EXISTS";
+				}
+			}
 		});
 	}
 }

@@ -57,6 +57,35 @@ public class AdminService {
 		}
 	}
 	
+	public static void add(Admin admin) {
+		
+		admin.setId(UUID. randomUUID());
+		admin.setRole(RoleEnum.ADMIN);
+		adminList.add(admin);
+		save();
+	}
+	
+	public Admin edit(User user)
+	{
+		for(Admin admin : adminList)
+		{
+			if(admin.getId().equals(user.getId()))
+			{
+				admin.setFirstName(user.getFirstName());
+				admin.setLastName(user.getLastName());
+				admin.setGender(user.getGender());
+				admin.setPassword(user.getPassword());
+				admin.setUsername(user.getUsername());
+				admin.setDateOfBirth(user.getDateOfBirth());
+				
+				System.out.println(admin.getUsername() + "  id: " + admin.getId() + " ---- " + user.getId());
+				save();
+				return admin;
+			}
+		}
+		return null;
+	}
+	
 	public static Admin getAdminById(UUID id)
 	{
 		for(Admin admin : adminList)
@@ -113,34 +142,6 @@ public class AdminService {
 		return false;
 	}
 	
-	public Admin edit(User user)
-	{
-		for(Admin admin : adminList)
-		{
-			if(admin.getId().equals(user.getId()))
-			{
-				admin.setFirstName(user.getFirstName());
-				admin.setLastName(user.getLastName());
-				admin.setGender(user.getGender());
-				admin.setPassword(user.getPassword());
-				admin.setUsername(user.getUsername());
-				admin.setDateOfBirth(user.getDateOfBirth());
-				
-				System.out.println(admin.getUsername() + "  id: " + admin.getId() + " ---- " + user.getId());
-				save();
-				return admin;
-			}
-		}
-		return null;
-	}
-	
-	public static void add(Admin admin) {
-		
-		admin.setId(UUID. randomUUID());
-		admin.setRole(RoleEnum.ADMIN);
-		adminList.add(admin);
-		save();
-	}
 
 	public static Admin getAdminByID(UUID id) {
 		// TODO Auto-generated method stub
