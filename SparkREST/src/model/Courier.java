@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import model.Enums.RoleEnum;
+
 public class Courier extends User{
 	protected ArrayList<UUID> orders;
 
@@ -21,7 +23,7 @@ public class Courier extends User{
 	
 
 	public Courier(String username, String password, String firstName, String lastName, Gender gender,
-			String dateOfBirth, Role role, ArrayList<UUID> orders) {
+			String dateOfBirth, RoleEnum role, ArrayList<UUID> orders) {
 		super(username, password, firstName, lastName, gender, dateOfBirth, role);
 		this.orders = orders;
 	}

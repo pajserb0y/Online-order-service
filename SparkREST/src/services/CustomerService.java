@@ -12,10 +12,10 @@ import java.util.UUID;
 import com.google.gson.Gson;
 
 import model.Customer;
-import model.CustomerTypeEnum;
-import model.Role;
 import model.ShoppingCart;
 import model.User;
+import model.Enums.CustomerTypeEnum;
+import model.Enums.RoleEnum;
 
 
 
@@ -54,7 +54,7 @@ public class CustomerService {
 	
 	public static void add(Customer customer) {
 		
-		customer.setRole(Role.CUSTOMER);
+		customer.setRole(RoleEnum.CUSTOMER);
 		//customer.setEntityID(generateID());
 		customer.setOrders(new ArrayList<UUID>());
 		customer.setShoppingCart(new ShoppingCart(customer.getId()));

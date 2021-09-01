@@ -2,6 +2,8 @@ package model;
 
 import java.util.UUID;
 
+import model.Enums.RoleEnum;
+
 public class Manager extends User{
 	protected UUID restaurantId;
 
@@ -11,7 +13,7 @@ public class Manager extends User{
 	}
 
 	public Manager(String username, String password, String firstName, String lastName, Gender gender,
-			String dateOfBirth, Role role, UUID restaurantId) {
+			String dateOfBirth, RoleEnum role, UUID restaurantId) {
 		super(username, password, firstName, lastName, gender, dateOfBirth, role);
 		this.restaurantId = restaurantId;
 		// TODO Auto-generated constructor stub

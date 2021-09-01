@@ -2,25 +2,22 @@ package model;
 
 import java.util.UUID;
 
-enum MenuItemType{
-	FOOD,DRINK
-}
-enum QuantityType{
-	GRAM,MILILITER
-}
+import model.Enums.MenuItemTypeEnum;
+import model.Enums.QuantityTypeEnum;
+
 public class MenuItem extends  Entity {
 	
 	protected String name;
 	protected double price;
-	protected MenuItemType type;
+	protected MenuItemTypeEnum type;
 	protected UUID restorantId;
 	protected Integer quantity;
-	protected QuantityType quantityType;
+	protected QuantityTypeEnum quantityType;
 	protected String description;
 	protected String picturePath;
 	protected Integer count; //number of ordered items from restaurant
 	
-	public MenuItem(String name, double price, MenuItemType type, UUID restorantId, Integer quantity,
+	public MenuItem(String name, double price, MenuItemTypeEnum type, UUID restorantId, Integer quantity,
 			String description, String picturePath, Integer count) {
 		super();
 		this.name = name;
@@ -49,11 +46,11 @@ public class MenuItem extends  Entity {
 		this.price = price;
 	}
 
-	public MenuItemType getType() {
+	public MenuItemTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(MenuItemType type) {
+	public void setType(MenuItemTypeEnum type) {
 		this.type = type;
 	}
 
