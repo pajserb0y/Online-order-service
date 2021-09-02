@@ -38,7 +38,7 @@ Vue.component("all-users",{
                     <option id="searchNoneRole" value="noneRole">--none--</option>
                 </select>
                 <label for="type"><b>Type</b></label>
-                <select v-on:change="searchTable(parameters.type)" name="type" v-model="parameters.type" id="type">
+                <select v-on:change="searchTable(parameters.type)" name="type" v-model="parameters.type" id="type" >
                     <option id="searchBronze" value="BRONZE">Bronze</option>
                     <option id="searchSilver" value="SILVER">Silver</option>
                     <option id="searchGold" value="GOLD">Gold</option>

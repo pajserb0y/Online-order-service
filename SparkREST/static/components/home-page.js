@@ -65,7 +65,7 @@ Vue.component("home-page", {
                
             </div>
             <div v-if="window === 'RESTAURANTS'">
-                <allRestaurants></allRestaurants>
+                <all-restaurants></all-restaurants>
             </div>
             <div v-if="window === 'USERS'">
                 <all-users></all-users>
@@ -77,7 +77,7 @@ Vue.component("home-page", {
                 <my-account></my-account>
             </div>
             <div v-if="window === 'ADDRESTAURANT'">
-                <addRestaurant></addRestaurant>
+                <add-restaurant></add-restaurant>
             </div>
             <div v-if="window === 'MYRESTAURANT'">
                 <myRestaurant></myRestaurant>
@@ -99,7 +99,6 @@ Vue.component("home-page", {
         },
         restaurants(){
             this.window = "RESTAURANTS"
-            window.location.reload()
         },
         registrateEmployee(){
             this.window = "EMPLOYEEREGISTRATION"
