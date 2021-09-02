@@ -85,7 +85,7 @@ public class CustomerService {
 	
 	public static void delete(UUID customerID) {
 		for (Customer customer : customerList) {
-			if (customer.getId() == customerID) {
+			if (customer.getId().equals(customerID)) {
 				customer.setDeleted(true);
 				break;
 			}

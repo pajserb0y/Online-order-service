@@ -2,6 +2,10 @@ tr.selected {
 	background: lightblue;
 }
 tr {
+	cursor: default;
+}
+
+th:hover {
 	cursor: pointer;
 }
 
@@ -27,3 +31,8 @@ a:hover {
 body {
 	font-family: "Times New Roman", Times, serif;
 }
+
+table {
+	border-spacing: 0;
+}
+
