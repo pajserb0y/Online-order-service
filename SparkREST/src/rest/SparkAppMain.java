@@ -7,13 +7,23 @@ import static spark.Spark.staticFiles;
 
 import java.io.Console;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.UUID;
+
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
 
 import model.Admin;
 import model.Courier;
 import model.Customer;
 import model.Manager;
 import model.Product;
+import model.Restaurant;
 import model.User;
 import model.Enums.RoleEnum;
 
@@ -23,6 +33,7 @@ import services.CourierService;
 import services.CustomerService;
 import services.ManagerService;
 import services.ProductService;
+import services.RestaurantService;
 
 public class SparkAppMain {
 
@@ -32,6 +43,7 @@ public class SparkAppMain {
 	private static ManagerService managerService = new ManagerService();
 	private static CourierService courierService = new CourierService();
 	private static AdminService adminService = new AdminService();
+	private static RestaurantService restaurantService = new RestaurantService();
 	
 	public static void main(String[] args) throws Exception {
 		port(8080);
@@ -259,5 +271,46 @@ public class SparkAppMain {
 				}
 			}
 		});
+		post("/addRestaurant", (req,res) ->{
+			res.type("applicaton/json");
+			Restaurant restaurant = g.fromJson(req.body(),Restaurant.class);
+			restaurantService.addRestaurant(restaurant);
+			managerService.addRestaurantToManager(restaurant.getManager(), restaurant.getId());
+			
+			res.status(200);
+			return g.toJson("");
+		});
+		
+		get("/availableManagers", (req,res) ->{
+			res.type("application/json");
+			ArrayList<Manager> managers = managerService.getAvailableManagers();
+			res.status(200);
+			return g.toJson(managers);	
+		});
+		
+		post("/uploadRestaurantPicture", "multipart/form-data", (req, res) -> {
+			
+			String location = "static"+File.separator+"restaurantLogo";          // the directory location where files will be stored
+			long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
+			long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
+			int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
+			MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
+				     location, maxFileSize, maxRequestSize, fileSizeThreshold);
+			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
+				
+            Part uploadedFile = req.raw().getPart("file");
+            Path out = Paths.get("static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID().toString() +".png");
+            try (final InputStream in = uploadedFile.getInputStream()) {
+               Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
+               uploadedFile.delete();
+            }
+            
+            multipartConfigElement = null;
+            uploadedFile = null;
+            
+            
+            return "OK";
+        });
+		
 	}
 }
