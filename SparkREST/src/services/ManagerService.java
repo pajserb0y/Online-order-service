@@ -76,7 +76,7 @@ public class ManagerService {
 
 	public static void delete(UUID id) {
 		for (Manager manager : getAll()) {
-			if (manager.getId() == id) {
+			if (manager.getId().equals(id)) {
 				manager.setDeleted(true);
 				break;
 			}

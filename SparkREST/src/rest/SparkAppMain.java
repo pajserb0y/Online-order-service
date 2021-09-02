@@ -5,9 +5,11 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.staticFiles;
 
+
 import java.io.Console;
 import java.io.File;
 import java.util.ArrayList;
+
 
 import model.Admin;
 import model.Courier;
@@ -17,7 +19,9 @@ import model.Product;
 import model.User;
 import model.Enums.RoleEnum;
 
+
 import com.google.gson.Gson;
+
 import services.AdminService;
 import services.CourierService;
 import services.CustomerService;
@@ -259,5 +263,25 @@ public class SparkAppMain {
 				}
 			}
 		});
+		
+		post("/deleteUser", (req, res) -> {
+			res.type("application/json");
+			
+			User user = g.fromJson(req.body(), User.class);
+			if(user.getRole() == RoleEnum.MANAGER) {
+				managerService.delete(user.getId());
+				//restaurantService.deleteMenager(user.getUsername());
+			}
+			else if(user.getRole() == RoleEnum.CUSTOMER) {
+				customerService.delete(user.getId());
+			}
+			else if(user.getRole() == RoleEnum.COURIER) {
+				courierService.delete(user.getId());
+			}
+			
+			res.status(200);
+			return g.toJson(user);
+		});
+		
 	}
 }
