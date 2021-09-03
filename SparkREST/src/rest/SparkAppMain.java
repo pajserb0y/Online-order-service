@@ -33,13 +33,11 @@ import services.AdminService;
 import services.CourierService;
 import services.CustomerService;
 import services.ManagerService;
-import services.ProductService;
 import services.RestaurantService;
 
 public class SparkAppMain {
 
 	private static Gson g = new Gson();
-	private static ProductService productService = new ProductService();
 	private static CustomerService customerService = new CustomerService();
 	private static ManagerService managerService = new ManagerService();
 	private static CourierService courierService = new CourierService();
@@ -56,20 +54,7 @@ public class SparkAppMain {
 
 		staticFiles.externalLocation(new File("./static").getCanonicalPath());
 		
-		
-		
-		get("rest/products/", (req, res) -> {
-			res.type("application/json");
-			return g.toJson(productService.getProducts());
-		});
-		
-		post("rest/products/add", (req, res) -> {
-			res.type("application/json");
-			Product pd = g.fromJson(req.body(), Product.class);
-			productService.addProduct(pd);
-			return "SUCCESS";
-		});
-		
+			
 		
 		post("/addAdmin", (req, res) -> {
 			res.type("application/json");
@@ -311,7 +296,7 @@ public class SparkAppMain {
 
 		post("/uploadRestaurantPicture", "multipart/form-data", (req, res) -> {
 
-			String location = "static"+File.separator+"restaurantLogo";          // the directory location where files will be stored
+			String location = "static"+File.separator+"images";          // the directory location where files will be stored
 			long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
 			long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
 			int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
@@ -320,7 +305,7 @@ public class SparkAppMain {
 			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
 
             Part uploadedFile = req.raw().getPart("file");
-            Path out = Paths.get("static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID().toString() +".png");
+            Path out = Paths.get("static"+File.separator+"images"+File.separator+"RES"+ UUID.randomUUID().toString() +".png");
             try (final InputStream in = uploadedFile.getInputStream()) {
                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
                uploadedFile.delete();

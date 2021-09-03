@@ -2,11 +2,18 @@ tr.selected {
 	background: lightblue;
 }
 tr {
-	cursor: default;
+	cursor: pointer;
 }
+
 
 th:hover {
 	cursor: pointer;
+	
+	background-color: rgba(255, 255, 255, 0.856);
+}
+
+th {
+	background-color: rgba(0, 119, 255, 0.911);
 }
 
 #error {
@@ -19,7 +26,7 @@ th:hover {
 
 a {
 	color: blue;
-	font-size: smaller;
+	font-size: 17px;
 }
 
 a:hover {
@@ -29,11 +36,150 @@ a:hover {
 }
 
 body {
-	font-family: "Times New Roman", Times, serif;
+	font-family: "Candara", Times, serif;
+	height: 100%;
+	background-image: url("images/logo2.jpg");
+	background-repeat: no-repeat;    
+   	background-position: top center;
+  	background-size: cover;
+	
+}
+
+button {
+	background-color: rgba(0, 119, 255, 0.911); /* Green */
+	border: none;
+	color: black;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	border-radius: 22px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: rgba(255, 255, 255, 0.856);
+}
+
+input {
+	background-color: transparent;
+	width: 200px;
+	height: 20px;
+  	padding: 10px 10px;
+  	margin: 3px 0;
+  	box-sizing: border-box;
+	border-style: solid;
+	border-color: black;
+	
+}
+
+select {
+	background-color: transparent;
+  	margin: 3px 0;
+	border-radius: 5px;
+	height: 25px;
+	border-style: solid;
+	border-color: black;
+	cursor: pointer;
+}
+
+select option {
+	background: #5ab6f8;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+	color: rgb(17, 17, 17);
+	font-size: small;
+  }
+
+html {
+	height: 100%;
 }
 
 table {
 	border-spacing: 0;
+	border-color: black;
+	margin-top: 1%;
+	background-color: transparent;
 }
 
+h1 {
+	font-family: 'Brush Script MT', Times, serif;
+	font-size: 50px;
+	margin-bottom: 5px;
+}
+
+.menu {
+	width: 300px;
+	margin-top: 30px;
+}
+
+.buttonDelete {
+	background-color: rgba(255, 255, 255, 0.856);
+	box-shadow: none;
+	border: solid;
+	border-color: black;
+	width: 20;
+	color: black;
+	text-align: center;
+	text-decoration: none;
+	font-size: 18px;
+	cursor: pointer;	
+	border-radius: 30px;
+}
+
+.bottomLeft {
+	position: absolute;
+	left: 8px;
+	bottom: 20px;
+}
+
+.topRight {
+	position: absolute;
+	right: 40px;
+	top: 30px;
+}
+
+.signUp {
+	position: absolute;
+	right: 64px;
+	top: 80px;
+}
+
+.grid-container {
+	display: grid;
+	grid-template-columns: auto auto auto;
+  	padding: 10px;
+  }
+
+.center {
+	display: flex;
+	justify-content: center;
+}
+
+.setPositionOfForms {
+	margin-left: 10%;
+}
+
+.menuPosition {
+	margin-top: 10%;
+}
+
+button[class="menuButtons"] {
+	background-color: rgba(0, 119, 255, 0.911);
+	border: none;
+	color: black;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 20px;
+	cursor: pointer;
+	width: 250px;
+	border-radius: 22px;
+	margin-top: 5%;
+}
+
+button[class="menuButtons"]:hover {
+	background-color: rgba(255, 255, 255, 0.856);
+}
 

@@ -33,8 +33,8 @@ Vue.component("allRestaurants",{
     template:`
         <div>
             <div>
-                <h1>Restaurants</h1> 
-                <div>
+                <h1 class="leftMargin">Restaurants</h1> 
+                <div class="leftMargin">
                     <input type="text" v-on:keyup="searchTable(123)" v-model="parameters.name" placeholder="Name" id="searchName"/>
                     <input type="text" v-on:keyup="searchTable(124)" v-model="parameters.location" placeholder="Location" id="searchLocation"/>
                     <label for="type"><b>Type</b></label>
@@ -61,7 +61,7 @@ Vue.component("allRestaurants",{
                     </select>
                 </div>
 
-                <table style="width:99.999%" border="1" id="myTable">
+                <table border="1" id="myTable">
                     <thead>
                         <tr>
                             <th style="width:5%">Logo</th>
