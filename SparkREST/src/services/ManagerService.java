@@ -166,10 +166,8 @@ public class ManagerService {
 		// TODO Auto-generated method stub
 		ArrayList<Manager> managers = new ArrayList<Manager>();
 		for (Manager manager: managerList) {
-			System.out.println("Id restorana kod menagera je " + manager.getRestaurantId());
 			if (manager.getRestaurantId() == (null)) {
 				 managers.add(manager);
-				 System.out.println("usao je u if");
 			}
 		}			
 		return managers;

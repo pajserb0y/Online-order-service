@@ -12,9 +12,10 @@ Vue.component("login",{
 
     },
     template:`
-    	<div>
-        	<h1>Login form</h1>
-            <div class="container">
+    	<div class="center">
+        	
+            <div>
+            <h1>Login form</h1>
                 <form id="loginForm" method ="POST" @submit.prevent = "login">
                     <div>
                         <label for="username"><b>Username</b></label>

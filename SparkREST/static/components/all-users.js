@@ -24,8 +24,8 @@ Vue.component("all-users",{
     },
     template:`
     	<div>
-        	<h1>Users</h1>
-            <div>
+        	<h1 class="leftMargin">Users</h1>
+            <div class="leftMargin">
                 <input type="text" v-on:keyup="searchTable(0)" v-model="parameters.firstName" placeholder="First Name" id="searchFirstName"/>
                 <input type="text" v-on:keyup="searchTable(1)" v-model="parameters.lastName" placeholder="Last Name" id="searchLastName"/>
                 <input type="text" v-on:keyup="searchTable(2)" v-model="parameters.username" placeholder="Username" id="searchUsername"/>
@@ -46,16 +46,16 @@ Vue.component("all-users",{
                 </select>
             </div>
 
-            <table style="width:99.999%" border="1" id="myTable">
+            <table  border="1" id="myTable">
                 <thead>
-                    <tr>
-                        <th v-on:click="sortTable(0)" style="width:30%">First Name</th>
-                        <th v-on:click="sortTable(1)" style="width:30%">Last Name</th>
-                        <th v-on:click="sortTable(2)" style="width:30%">Username</th>
-                        <th v-on:click="sortTable(3)" style="width:30%">Role</th>
-                        <th v-on:click="sortTable(4)" style="width:30%">Points</th>
-                        <th v-on:click="sortTable(5)" style="width:30%">Type</th>
-                        <th v-on:click="sortTable(6)" style="width:5%"></th>
+                    <tr background-color="transparent">
+                        <th background-color: transparent v-on:click="sortTable(0)" style="width:30%">First Name</th>
+                        <th background-color: transparent v-on:click="sortTable(1)" style="width:30%">Last Name</th>
+                        <th background-color: transparent v-on:click="sortTable(2)" style="width:30%">Username</th>
+                        <th background-color: transparent v-on:click="sortTable(3)" style="width:30%">Role</th>
+                        <th background-color: transparent v-on:click="sortTable(4)" style="width:30%">Points</th>
+                        <th background-color: transparent v-on:click="sortTable(5)" style="width:30%">Type</th>
+                        <th background-color: transparent v-on:click="sortTable(6)" style="width:5%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,7 +68,7 @@ Vue.component("all-users",{
                     <td style="width:30%" v-if="u.role != 'CUSTOMER'"></td>
                     <td style="width:30%" v-if="u.role == 'CUSTOMER'">{{u.customerType}}</td>
                     <td style="width:30%" v-if="u.role != 'CUSTOMER'"></td>
-                    <td style="width:5%"><button v-if="u.role !== 'ADMIN'" type= "button" v-on:click="deleteUser(u)">X</button> </td>
+                    <td style="width:5%"><button border="1" class="buttonDelete" v-if="u.role !== 'ADMIN'" type= "button" v-on:click="deleteUser(u)">X</button> </td>
                 </tr>
                </tbody>
             </table>
