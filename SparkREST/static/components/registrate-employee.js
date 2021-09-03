@@ -78,7 +78,13 @@ Vue.component("registrate-employee",{
         },
 
         cancel(){
-            window.location.reload()
+            this.user.firstName="";
+            this.user.lastName="";
+            this.user.username="";
+            this.user.password="";
+            this.user.dateOfBirth="";
+            this.user.role="";
+            this.user.gender="";
         },
     }
 });

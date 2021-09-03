@@ -46,7 +46,7 @@ Vue.component("my-account", {
                     </div>
                     <div>
                         <label for="password"><b>Password</b></label>
-                        <input type="password" v-model="user.password" placeholder = "Password" required/>
+                        <input type="text" v-model="user.password" placeholder = "Password" required/>
                     </div>
                     <div>
                         <label for="gender"><b>Gender</b></label>
@@ -62,7 +62,6 @@ Vue.component("my-account", {
                     <p></p>
                     <div>
                         <button type = "submit"> Change</button>
-                        <button type= "button" v-on:click="cancel">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -82,11 +81,7 @@ Vue.component("my-account", {
                 console.log("Error");
                 alert("A user exists with the same username");
               });
-        },
-
-        cancel(){
-            window.location.reload()
-        },
+        }
     }
 
 });
