@@ -15,22 +15,21 @@ Vue.component("login",{
     	<div class="center">
         	
             <div>
-            <h1>Login form</h1>
-                <form id="loginForm" method ="POST" @submit.prevent = "login">
-                    <div>
-                        <label for="username"><b>Username</b></label>
-                        <input type="text" v-model="user.username" placeholder = "Username" required/>
+            <h1 style="padding-left: 40%;">Login form</h1>
+                <form id="loginForm" method ="POST"  @submit.prevent = "login">
+                    <div class="pp">
+                        <label class="lbl" for="username"><b>Username</b></label>
+                        <input type="text" v-model="user.username" placeholder = "Username" required autofocus/>
                     </div>
-                    <div>
-                        <label for="password"><b>Password</b></label>
+                    <p class="pp">
+                        <label class="lbl" for="password"><b>Password</b></label>
                         <input type="password" v-model="user.password" placeholder = "Password" required/>
-                    </div>
-                    <p></p>
-                    <div>
-                        <button type = "submit">Login</button>
+                    </p>                
+                    <p class="btn2">
+                        <button class="emptyLabel" type = "submit" >Login</button>
                         <button type= "button" v-on:click="cancel">Cancel</button>
-                    </div>
-                </form>
+                    </p>  
+                    </form>              
             </div>
         </div>
     `,

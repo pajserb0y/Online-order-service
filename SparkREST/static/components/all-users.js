@@ -15,6 +15,7 @@ Vue.component("all-users",{
         }
     },
     mounted(){
+        /* document.body.style.backgroundImage = "url('images/background.jpg')" */
         axios
         .get('/getAllUsers')
         .then(response=>{
