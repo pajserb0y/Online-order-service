@@ -85,7 +85,7 @@ Vue.component("add-restaurant", {
                     </div>
                     <div>
                     <label for="menager"><b>Menager</b></label>
-                    <input type="text" v-model="restaurant.manager" placeholder = "Menager" disabled/>
+                    <input type="text" v-model="selectedManager.username" placeholder = "Menager" disabled/>
                     </div>
                     <p></p>
                     <div>
@@ -152,15 +152,16 @@ Vue.component("add-restaurant", {
 	`,
 	methods:{
         registerRestaurant(){
-            if(this.restaurant.manager){
-                this.restaurant.location.geoLatitude = this.location[0];
-                this.restaurant.location.geoLongitute = this.location[1];
+            if(this.restaurant.manager != ""){
+                //this.restaurant.location.geoLatitude = this.location[0];
+               // this.restaurant.location.geoLongitute = this.location[1];
+            	console.log("caocaocaocao");
                 axios
                 .post('/addRestaurant',this.restaurant)
                 .then(response=>{
                     this.restaurant.name = ""
+                    this.restaurant.manager = "",
                     this.restaurant.type = "",
-                    this.restaurant.status = "",
                     this.restaurant.location.geoLongitute = 0
                     this.restaurant.location.geoLatitude = 0
                     this.restaurant.location.adress.street = ""
@@ -168,7 +169,7 @@ Vue.component("add-restaurant", {
                     this.restaurant.location.adress.postalCode = ""
                     this.restaurant.location.adress.country = ""
                     this.restaurant.logoPath = ""
-                    this.restaurant.username = ""
+					this.selectedManager.username = ""
                     axios
                     .get('/availableManagers')
                     .then(response=>{
@@ -184,6 +185,14 @@ Vue.component("add-restaurant", {
             axios
             .post('/registrateEmployee',this.selectedManager)
             .then(response=>{
+            	
+               	this.selectedManager.firstName = ""	
+                this.selectedManager.lastName = ""
+                this.selectedManager.username = ""
+                this.selectedManager.password = ""	
+                this.selectedManager.gender = ""	
+                this.selectedManager.dateOfBirth = ""
+            	
                 alert("Successfully registered a new menager");
                 axios
                 .get('/availableManagers')
@@ -197,8 +206,9 @@ Vue.component("add-restaurant", {
                 alert("A user exists with the same username");
               });
         },
-        addManager(selectedManager){
-            this.restaurant.manager = selectedManager.username;
+        addManager(manager){
+        	this.selectedManager = manager;
+            this.restaurant.manager = manager.id;
         },
 
         fileUploadChange(){
