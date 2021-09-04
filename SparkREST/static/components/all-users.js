@@ -7,11 +7,10 @@ Vue.component("all-users",{
                 firstName:"",
                 lastName:"",
                 username:"",
-                points:"",
                 role:"",
                 type:""
             },
-            table:""
+            table:"",
         }
     },
     mounted(){
@@ -93,70 +92,44 @@ Vue.component("all-users",{
         },
 
         searchTable(n) {
-            var input, filter, table, tr, td, i, txtValue;
-
-            if (n == 0)
-                input = document.getElementById("searchFirstName");
-            else if (n == 1)
-                input = document.getElementById("searchLastName");
-            else if (n == 2)
-                input = document.getElementById("searchUsername");
-            else if (n == "CUSTOMER"){
-                input = document.getElementById("searchCustomer");
-                n=4;
-            }
-            else if (n == "MANAGER"){
-                input = document.getElementById("searchManager");
-                n=4;
-            }
-            else if (n == "COURIER"){
-                input = document.getElementById("searchCourier");
-                n=4;
-            }
-            else if (n == "ADMIN"){
-                input = document.getElementById("searchAdmin");
-                n=4;
-            }
-
-            else if (n == "BRONZE"){
-                input = document.getElementById("searchBronze");
-                n=6;
-            }
-            else if (n == "SILVER"){
-                input = document.getElementById("searchSilver");
-                n=6;
-            }
-            else if (n == "GOLD"){
-                input = document.getElementById("searchGold");
-                n=6;
-            }
-
-            try{
-                filter = input.value.toUpperCase();
-            }catch(err){
-                if (n == "noneType"){
-                    filter = "";
-                    n=6;
-                }
-                else if (n == "noneRole"){
-                    filter = "";
-                    n=4;
-                }
-            }          
+            var input, filter, table, tr, td, i, txtValue;     
             
             table = document.getElementById("myTable");
             tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-              td = tr[i].getElementsByTagName("td")[n];
-              if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                  tr[i].style.display = "";
-                } else {
-                  tr[i].style.display = "none";
+
+            if (n == "noneType")
+                this.parameters.type = "";
+            else if (n == "noneRole")
+                this.parameters.role = "";
+                
+            let map = new Map();
+            map.set(0, this.parameters.firstName);
+            map.set(1, this.parameters.lastName);
+            map.set(2, this.parameters.username);
+            map.set(4, this.parameters.role);
+            map.set(6, this.parameters.type);            
+
+
+            var hideList = [];
+
+            for ([col, parameter] of map) {
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[col];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (!(txtValue.toUpperCase().indexOf(parameter.toUpperCase()) > -1)) 
+                            hideList.push(i);
+                }       
                 }
-              }       
             }
+            for (i = 0; i < tr.length; i++)
+            {
+                if (hideList.includes(i))
+                    tr[i].style.display = "none";
+                else 
+                    tr[i].style.display = "";
+            }
+            hideList.length = 0;  //clear the map
           },
 
         sortTable(n) {

@@ -60,7 +60,7 @@ Vue.component("allRestaurants",{
                     <select v-on:change="searchTable(parameters.open)" name="open" v-model="parameters.open" id="open">
                         <option id="searchOpen" value="OPEN">Yes</option>
                         <option id="searchClosed" value="CLOSED">No</option>
-                        <option id="searchAll" value="ALL">All</option>
+                        <option id="searchAll" value="all">All</option>
                     </select>
                 </div>
 
@@ -105,97 +105,44 @@ Vue.component("allRestaurants",{
         searchTable(n) {
             var input, filter, table, tr, td, i, txtValue;
 
-            if (n == 123){
-                input = document.getElementById("searchName");
-                n=1;
-            }
-            else if (n == 124){
-                input = document.getElementById("searchLocation");
-                n=3;
-            }
-
-            else if (n == "ITALIAN"){
-                input = document.getElementById("searchItalian");
-                n=2;
-            }
-            else if (n == "CHINESE"){
-                input = document.getElementById("searchChinese");
-                n=2;
-            }
-            else if (n == "GRILL"){
-                input = document.getElementById("searchGrill");
-                n=2;
-            }
-            else if (n == "GREEK"){
-                input = document.getElementById("searchGreek");
-                n=2;
-            }
-            else if (n == "MEXICAN"){
-                input = document.getElementById("searchMexican");
-                n=2;
-            }
-            
-            else if (n == "1"){
-                input = document.getElementById("search1");
-                n=4;
-            }
-            else if (n == "2"){
-                input = document.getElementById("search2");
-                n=4;
-            }
-            else if (n == "3"){
-                input = document.getElementById("search3");
-                n=4;
-            }
-            else if (n == "4"){
-                input = document.getElementById("search4");
-                n=4;
-            }
-            else if (n == "5"){
-                input = document.getElementById("search5");
-                n=4;
-            }
-
-            else if (n == "OPEN"){
-                input = document.getElementById("searchOpen");
-                n=5;
-            }
-            else if (n == "CLOSED"){
-                input = document.getElementById("searchClosed");
-                n=5;
-            }
-
-
-            try{
-                filter = input.value.toUpperCase();
-            }catch(err){
-                if (n == "noneType"){
-                    filter = "";
-                    n=2;
-                }
-                else if (n == "noneRating"){
-                    filter = "";
-                    n=4;
-                }
-                else if (n == "ALL"){
-                    filter = "";
-                    n=5;
-                }
-            }          
-            
             table = document.getElementById("myTable");
             tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-              td = tr[i].getElementsByTagName("td")[n];
-              if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                  tr[i].style.display = "";
-                } else {
-                  tr[i].style.display = "none";
+
+            if (n == "noneType")
+                this.parameters.type = "";
+            else if (n == "noneRating")
+                this.parameters.rating = "";
+            else if (n == "all")
+                this.parameters.open = "";
+                
+            let map = new Map();
+            map.set(1, this.parameters.name);
+            map.set(3, this.parameters.location);
+            map.set(2, this.parameters.type);
+            map.set(4, this.parameters.rating);
+            map.set(5, this.parameters.open);            
+
+
+            var hideList = [];
+
+            for ([col, parameter] of map) {
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[col];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (!(txtValue.toUpperCase().indexOf(parameter.toUpperCase()) > -1)) 
+                            hideList.push(i);
+                    }       
                 }
-              }       
             }
+            for (i = 0; i < tr.length; i++)
+            {
+                if (hideList.includes(i))
+                    tr[i].style.display = "none";
+                else 
+                    tr[i].style.display = "";
+            }
+            hideList.length = 0;  //clear the map
           },
 
         sortTable(n) {
