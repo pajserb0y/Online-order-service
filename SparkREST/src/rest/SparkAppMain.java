@@ -277,12 +277,44 @@ public class SparkAppMain {
 			return g.toJson(user);
 		});
 		
+		//Restaurant currRes = new Restaurant();
+		class LogoPath {
+			public String value;			
+		}
+		LogoPath logoPath = new LogoPath();
+		post("/uploadRestaurantPicture", "multipart/form-data", (req, res) -> {
+
+			String location = "static"+File.separator+"restaurantLogo";          // the directory location where files will be stored
+			long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
+			long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
+			int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
+			MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
+				     location, maxFileSize, maxRequestSize, fileSizeThreshold);
+			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
+
+            Part uploadedFile = req.raw().getPart("file");
+           // currRes.setLogoPath("static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png");
+            logoPath.value = "static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png";
+            Path out = Paths.get("static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png");
+            try (final InputStream in = uploadedFile.getInputStream()) {
+               Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
+               uploadedFile.delete();
+            }
+
+            multipartConfigElement = null;
+            uploadedFile = null;
+            return "OK";
+        });
+		
 		post("/addRestaurant", (req,res) ->{
 			res.type("applicaton/json");
 			Restaurant restaurant = g.fromJson(req.body(),Restaurant.class);
+			//restaurant.setLogoPath(currRes.getLogoPath());
+			restaurant.setLogoPath(logoPath.value);
+			
 			restaurantService.addRestaurant(restaurant);
 			managerService.addRestaurantToManager(restaurant.getManager(), restaurant.getId());
-
+			
 			res.status(200);
 			return g.toJson("");
 		});
@@ -293,30 +325,6 @@ public class SparkAppMain {
 			res.status(200);
 			return g.toJson(managers);	
 		});
-
-		post("/uploadRestaurantPicture", "multipart/form-data", (req, res) -> {
-
-			String location = "static"+File.separator+"images";          // the directory location where files will be stored
-			long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
-			long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
-			int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
-			MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
-				     location, maxFileSize, maxRequestSize, fileSizeThreshold);
-			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
-
-            Part uploadedFile = req.raw().getPart("file");
-            Path out = Paths.get("static"+File.separator+"images"+File.separator+"RES"+ UUID.randomUUID().toString() +".png");
-            try (final InputStream in = uploadedFile.getInputStream()) {
-               Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
-               uploadedFile.delete();
-            }
-
-            multipartConfigElement = null;
-            uploadedFile = null;
-
-
-            return "OK";
-        });
 		
 		get("/allRestaurants", (req, res) -> {
 			res.type("application/json");

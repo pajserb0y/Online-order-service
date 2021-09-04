@@ -166,10 +166,13 @@ public class ManagerService {
 		// TODO Auto-generated method stub
 		ArrayList<Manager> managers = new ArrayList<Manager>();
 		for (Manager manager: managerList) {
-			if (manager.getRestaurantId() == null) {
+			if (manager.getRestaurantId() == (null)) {
 				 managers.add(manager);
 			}
-		}			
-		return managers;
+		}	
+		if(managers.isEmpty())
+			return null;
+		else
+			return managers;
 	}
 }
