@@ -169,7 +169,10 @@ public class ManagerService {
 			if (manager.getRestaurantId() == (null)) {
 				 managers.add(manager);
 			}
-		}			
-		return managers;
+		}	
+		if(managers.isEmpty())
+			return null;
+		else
+			return managers;
 	}
 }

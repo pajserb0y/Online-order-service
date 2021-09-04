@@ -25,7 +25,7 @@ public class RestaurantService {
 		try {
 		    Gson gson = new Gson();
 
-		    Writer writer = Files.newBufferedWriter(Paths.get("data"+File.separator+"restaurants.json"));
+		    Writer writer = Files.newBufferedWriter(Paths.get("storage"+File.separator+"restaurants.json"));
 
 		    gson.toJson(restaurantList, writer);
 
@@ -40,7 +40,7 @@ public class RestaurantService {
 		try {
 		    Gson gson = new Gson();
 
-		    Reader reader = Files.newBufferedReader(Paths.get("data"+File.separator+"restaurants.json"));
+		    Reader reader = Files.newBufferedReader(Paths.get("storage"+File.separator+"restaurants.json"));
 
 		    Restaurant[] restaurants = gson.fromJson(reader, Restaurant[].class);
 		    Collections.addAll(restaurantList, restaurants);
@@ -76,7 +76,7 @@ public class RestaurantService {
 	public static void addRestaurant(Restaurant restaurant) {
 		restaurant.setDeleted(false);
 		restaurant.setMenu(new ArrayList<MenuItem>());
-		restaurant.setLogoPath("restaurantPictures"+File.separator+ "RES" + restaurant.getId().toString() + ".png");
+		//restaurant.setLogoPath("restaurantPictures"+File.separator+ "RES" + restaurant.getId().toString() + ".png");
 		restaurant.setStatus(RestaurantStatusEnum.OPEN);
 		restaurant.setRaiting(0);
 
