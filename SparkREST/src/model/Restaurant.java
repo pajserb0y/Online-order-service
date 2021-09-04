@@ -11,7 +11,7 @@ public class Restaurant extends Entity {
 	protected UUID manager;
 	protected ArrayList<MenuItem> menu;
 	protected RestaurantStatusEnum status;
-	protected RestaurantTypeEnum restaturantType;
+	protected RestaurantTypeEnum type;
 	protected Location location;
 	protected String logoPath;
 	protected double raiting;
@@ -28,7 +28,7 @@ public class Restaurant extends Entity {
 		this.manager = manager;
 		this.menu = menu;
 		this.status = status;
-		this.restaturantType = restaturantType;
+		this.type = restaturantType;
 		this.location = location;
 		this.logoPath = logoPath;
 		this.raiting = raiting;
@@ -68,11 +68,11 @@ public class Restaurant extends Entity {
 	}
 
 	public RestaurantTypeEnum getRestaturantType() {
-		return restaturantType;
+		return type;
 	}
 
 	public void setRestaturantType(RestaurantTypeEnum restaturantType) {
-		this.restaturantType = restaturantType;
+		this.type = restaturantType;
 	}
 
 	public Location getLocation() {
@@ -102,7 +102,7 @@ public class Restaurant extends Entity {
 	@Override
 	public String toString() {
 		return "Restaurant [name=" + name + ", manager=" + manager + ", menu=" + menu + ", status=" + status
-				+ ", restaturantType=" + restaturantType + ", location=" + location + ", logoPath=" + logoPath
+				+ ", restaturantType=" + type + ", location=" + location + ", logoPath=" + logoPath
 				+ ", raiting=" + raiting + ", id=" + id + ", deleted=" + deleted + "]";
 	}
 }

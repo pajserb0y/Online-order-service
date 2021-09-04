@@ -51,6 +51,7 @@ public class SparkAppMain {
 		managerService.load();
 		courierService.load();
 		adminService.load();
+		restaurantService.load();  //radi i bez ovoga
 
 		staticFiles.externalLocation(new File("./static").getCanonicalPath());
 		
@@ -317,6 +318,17 @@ public class SparkAppMain {
 			
 			res.status(200);
 			return g.toJson("");
+		});
+		
+		post("/deleteRestaurant", (req, res) -> {
+			res.type("application/json");			
+			Restaurant restaurant = g.fromJson(req.body(), Restaurant.class);
+			restaurantService.delete(restaurant.getId());
+			//menuItemService.deleteForRestaurant(restaurant.getId());
+			managerService.deleteRestaurant(restaurant.getId());
+			
+			res.status(200);
+			return g.toJson(restaurantService.getAll());
 		});
 
 		get("/availableManagers", (req,res) ->{

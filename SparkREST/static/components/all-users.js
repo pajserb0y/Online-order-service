@@ -53,10 +53,11 @@ Vue.component("all-users",{
                         <th background-color: transparent v-on:click="sortTable(0)" style="width:30%">First Name</th>
                         <th background-color: transparent v-on:click="sortTable(1)" style="width:30%">Last Name</th>
                         <th background-color: transparent v-on:click="sortTable(2)" style="width:30%">Username</th>
-                        <th background-color: transparent v-on:click="sortTable(3)" style="width:30%">Role</th>
-                        <th background-color: transparent v-on:click="sortTable(4)" style="width:30%">Points</th>
-                        <th background-color: transparent v-on:click="sortTable(5)" style="width:30%">Type</th>
-                        <th background-color: transparent v-on:click="sortTable(6)" style="width:5%"></th>
+                        <th background-color: transparent v-on:click="sortTable(3)" style="width:30%">Password</th>
+                        <th background-color: transparent v-on:click="sortTable(4)" style="width:30%">Role</th>
+                        <th background-color: transparent v-on:click="sortTable(5)" style="width:30%">Points</th>
+                        <th background-color: transparent v-on:click="sortTable(6)" style="width:30%">Type</th>
+                        <th background-color: transparent v-on:click="sortTable(7)" style="width:5%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,6 +65,7 @@ Vue.component("all-users",{
                     <td style="width:30%">{{u.firstName}}</td>
                     <td style="width:30%">{{u.lastName}}</td>
                     <td style="width:30%">{{u.username}}</td>
+                    <td style="width:30%">{{u.password}}</td>
                     <td style="width:30%">{{u.role}}</td>
                     <td style="width:30%" v-if="u.role == 'CUSTOMER'">{{u.points}}</td>
                     <td style="width:30%" v-if="u.role != 'CUSTOMER'"></td>
@@ -101,32 +103,32 @@ Vue.component("all-users",{
                 input = document.getElementById("searchUsername");
             else if (n == "CUSTOMER"){
                 input = document.getElementById("searchCustomer");
-                n=3;
+                n=4;
             }
             else if (n == "MANAGER"){
                 input = document.getElementById("searchManager");
-                n=3;
+                n=4;
             }
             else if (n == "COURIER"){
                 input = document.getElementById("searchCourier");
-                n=3;
+                n=4;
             }
             else if (n == "ADMIN"){
                 input = document.getElementById("searchAdmin");
-                n=3;
+                n=4;
             }
 
             else if (n == "BRONZE"){
                 input = document.getElementById("searchBronze");
-                n=5;
+                n=6;
             }
             else if (n == "SILVER"){
                 input = document.getElementById("searchSilver");
-                n=5;
+                n=6;
             }
             else if (n == "GOLD"){
                 input = document.getElementById("searchGold");
-                n=5;
+                n=6;
             }
 
             try{
@@ -134,11 +136,11 @@ Vue.component("all-users",{
             }catch(err){
                 if (n == "noneType"){
                     filter = "";
-                    n=5;
+                    n=6;
                 }
                 else if (n == "noneRole"){
                     filter = "";
-                    n=3;
+                    n=4;
                 }
             }          
             
