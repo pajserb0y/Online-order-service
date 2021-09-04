@@ -15,7 +15,7 @@ Vue.component("home-page", {
     },
     template:`
         <div class="grid-container">
-        <div class="grid-item" class="menuPosition">
+        <div class="grid-item menuPosition">
             <div v-if="role === 'CUSTOMER'" >
                 <div>
                     <button class="menuButtons" type= "button" v-on:click="restaurants">Restaurants</button>

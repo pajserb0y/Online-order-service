@@ -41,71 +41,72 @@ Vue.component("add-restaurant", {
 			})
 	},
 	template:`
-		<div> 
+		<div > 
         	<h1>New restaurant registration form</h1>
             <div class="container">
-                <form id="registrationFormRest" enctype="multipart/form-data"  method ="POST" @submit.prevent = "upload">
-                    <div>
-                        <label for="file"><b>Restaurant picture</b></label>
-                        <input accept="image/png" type="file" name="file" id="file" ref="file" v-on:change="fileUploadChange()" required/>
+                <form style="width: 630px;" id="registrationFormRest" enctype="multipart/form-data"  method ="POST" @submit.prevent = "upload">
+                    <div class="pp" >
+                    <div class="lbl3">
+                        <label for="file"><b>Restaurant picture:</b></label>
+                        <input style="cursor: pointer" class="inputImageUpload" accept="image/png" type="file" name="file" id="file" ref="file" v-on:change="fileUploadChange()" required/>
+                    </div>
                         <button type = "submit"> Upload </button>
                     </div>
                 </form>
             </div>
             <div class="container">
                 <form id="registrationFormRest"  method ="POST" @submit.prevent = "registerRestaurant">
-                    <div>
-                        <label for="name"><b>Name</b></label>
+                    <div  class="pp">
+                        <label class="lbl" for="name"><b>Name</b></label>
                         <input type="text" v-model="restaurant.name" placeholder = "Name" required/>
                     </div>
-                    <div>
-                        <label for="type"><b>Type</b></label>
+                    <div class="pp">
+                        <label class="lbl" for="type"><b>Type</b></label>
                         <select name="type" v-model="restaurant.type" id="type" required>
                             <option value="ITALIAN">Italian</option>
                             <option value="CHINESE">Chinese</option>
                             <option value="GRILL">Grill</option>
+                            <option value="GREEK">Greek</option>
                             <option value="MEXICAN">Mexican</option>
                         </select>
                     </div>
-                    <div>
-                    <label for="country"><b>Country</b></label>
+                    <div class="pp">
+                    <label class="lbl" for="country"><b>Country</b></label>
                     <input type="text" v-model="restaurant.location.adress.country" placeholder = "Country" required/>
                     </div>
-                    <div>
-                    <label for="town"><b>Town</b></label>
+                    <div class="pp">
+                    <label class="lbl" for="town"><b>Town</b></label>
                     <input type="text" v-model="restaurant.location.adress.town" placeholder = "Town" required/>
                     </div>
-                    <div>
-                    <label for="street"><b>Street</b></label>
+                    <div class="pp">
+                    <label class="lbl" for="street"><b>Street</b></label>
                     <input type="text" v-model="restaurant.location.adress.street" placeholder = "Street" required/>
                     </div>
-                    <div>
-                    <label for="postalCode"><b>Postal Code</b></label>
+                    <div class="pp">
+                    <label class="lbl" for="postalCode"><b>Postal Code</b></label>
                     <input type="text" v-model="restaurant.location.adress.postalCode" placeholder = "Postal Code" required/>
                     </div>
-                    <div>
-                    <label for="menager"><b>Menager</b></label>
-                    <input type="text" v-model="selectedManager.username" placeholder = "Menager" disabled/>
+                    <div class="pp">
+                    <label class="lbl" for="manager"><b>Manager</b></label>
+                    <input type="text" v-model="selectedManager.username" placeholder = "Manager" disabled/>
                     </div>
                     <p></p>
-                    <div>
+                    <div class="btn2">
                         <button type = "submit"> Register </button>
                     </div>
                 </form>
             </div>
             <div v-if="availableManagers">
-        	<h1>Pick a menager for the restaurant</h1>
-            <table style="width:99.999%">
+        	<h1>Pick a manager for the restaurant</h1>
+            <table border="1"  style="width:650px">
                 <thead>
                     <th style="width:30%">Name</th>
                     <th style="width:30%">Username</th>
-                    <th style="width:30%">Role</th>
                 </thead>
                 <tbody>
                 <tr v-for="m in availableManagers" @click="addManager(m)" style="height:40px">
                    <td style="width:30%">{{m.firstName}} {{m.lastName}}</td>
                    <td style="width:30%">{{m.username}}</td>
-                   <td style="width:30%">{{m.role}}</td>
                 </tr>
                </tbody>
             </table>
@@ -114,35 +115,35 @@ Vue.component("add-restaurant", {
         	<h1>Register a manager for the restaurant</h1>
             <div class="container">
                 <form id="registrationForm" method ="POST" @submit.prevent = "registerManager">
-                    <div>
-                        <label for="firstName"><b>First Name</b></label>
+                    <div class="pp">
+                        <label class="lbl" for="firstName"><b>First Name</b></label>
                         <input type="text" v-model="selectedManager.firstName" placeholder = "First Name" required/>
                     </div>
-                    <div>
-                        <label for="lastName"><b>Last Name</b></label>
+                    <div class="pp">
+                        <label class="lbl" for="lastName"><b>Last Name</b></label>
                         <input type="text" v-model="selectedManager.lastName" placeholder = "Last Name" required/>
                     </div>
-                    <div>
-                        <label for="username"><b>Username</b></label>
+                    <div class="pp">
+                        <label class="lbl" for="username"><b>Username</b></label>
                         <input type="text" v-model="selectedManager.username" placeholder = "Username" required/>
                     </div>
-                    <div>
-                        <label for="password"><b>Password</b></label>
+                    <div class="pp">
+                        <label class="lbl" for="password"><b>Password</b></label>
                         <input type="password" v-model="selectedManager.password" placeholder = "Password" required/>
                     </div>
-                    <div>
-                        <label for="gender"><b>Gender</b></label>
+                    <div class="pp">
+                        <label class="lbl" for="gender"><b>Gender</b></label>
                         <select name="gender" v-model="selectedManager.gender" id="gender" required>
                             <option value="MALE">Male</option>
                             <option value="FEMALE">Female</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="date"><b>Date of birth</b></label>
+                    <div class="pp">
+                        <label class="lbl" for="date"><b>Date of birth</b></label>
                         <input type="date" v-model="selectedManager.dateOfBirth" required/>
                     </div>
                     <p></p>
-                    <div>
+                    <div class="btn2">
                         <button type = "submit"> Register</button>
                     </div>
                 </form>
@@ -174,6 +175,7 @@ Vue.component("add-restaurant", {
                     .get('/availableManagers')
                     .then(response=>{
                         this.availableManagers = response.data
+                        window.location.reload()
                     })
                 })
             }
@@ -223,8 +225,7 @@ Vue.component("add-restaurant", {
                   "Content-Type": "multipart/form-data",
                 },
               })
-              .then(response=>{
-              })
+              .then(response => toast("Image uploaded") )
               .catch((error) => {
               });
         }

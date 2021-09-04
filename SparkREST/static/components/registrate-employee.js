@@ -22,7 +22,7 @@ Vue.component("registrate-employee",{
             <div>
                 <form id="registrationForm" method ="POST" @submit.prevent = "registrate">
                     <div class="pp">
-                        <label class="text-right" class="lbl" for="firstName"><b>First Name</b></label>
+                        <label class="text-right lbl" for="firstName"><b>First Name</b></label>
                         <input type="text" v-model="user.firstName" placeholder = "First Name" required autofocus/>
                     </div>
                     <p class="pp">

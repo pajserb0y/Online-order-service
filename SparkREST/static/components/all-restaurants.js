@@ -57,8 +57,10 @@ Vue.component("allRestaurants",{
                         <option id="searchNoneRating" value="noneRating">--none--</option>
                     </select>                    
                     <label for="open"><b>Open</b></label>
-                    <select name="open" v-model="parameters.open" id="open">
-                        <option value="OPEN">Yes</option>
+                    <select v-on:change="searchTable(parameters.open)" name="open" v-model="parameters.open" id="open">
+                        <option id="searchOpen" value="OPEN">Yes</option>
+                        <option id="searchClosed" value="CLOSED">No</option>
+                        <option id="searchAll" value="ALL">All</option>
                     </select>
                 </div>
 
@@ -77,12 +79,13 @@ Vue.component("allRestaurants",{
                     <tbody>
                     <tr v-for="r in restaurants" @click="view(r)">
                         <td style="width:15%" ><img :src="r.logoPath" width="100" height="100" ></td>
-                       <td style="width:15%" >{{r.name}}</td>
-                       <td style="width:10%">{{r.type}}</td>
-                       <td style="width:15%">{{r.location.adress.street}}, {{r.location.adress.town}}, {{r.location.adress.country}}</td>
-                       <td v-if="!r.rating" style="width:10%">No rating yet</td>
-                       <td v-if="r.rating" style="width:10%">{{r.rating}}</td>
-                       <td v-if="role === 'ADMIN'" style="width:5%"><button type= "button" v-on:click="deleteRestaurant(r)">Delete</button> </td>
+                        <td style="width:15%" >{{r.name}}</td>
+                        <td style="width:10%">{{r.type}}</td>
+                        <td style="width:15%">{{r.location.adress.street}}, {{r.location.adress.town}}, {{r.location.adress.country}}</td>
+                        <td v-if="!r.rating" style="width:10%">No rating yet</td>
+                        <td v-if="r.rating" style="width:10%">{{r.rating}}</td>
+                        <td style="width:10%">{{r.status}}</td>
+                        <td v-if="role === 'ADMIN'" style="width:5%"><button border="1" class="buttonDelete" type= "button" v-on:click="deleteRestaurant(r)">X</button> </td>
                     </tr>
                    </tbody>
                 </table>
@@ -94,17 +97,9 @@ Vue.component("allRestaurants",{
             axios
             .post('/deleteRestaurant', restaurant)
             .then(response=>{
-            })
-            .catch((error) => {
-              });
-              axios
-              .post('/searchRestaurants', this.parameters)
-              .then(response=>{
-                  this.restaurants = response.data
-              })
-              .catch((error) => {
-                });
-
+                alert("Restaurant has been successfuly deleted")
+                window.location.reload()
+            });
         },
         
         searchTable(n) {
@@ -161,6 +156,15 @@ Vue.component("allRestaurants",{
                 n=4;
             }
 
+            else if (n == "OPEN"){
+                input = document.getElementById("searchOpen");
+                n=5;
+            }
+            else if (n == "CLOSED"){
+                input = document.getElementById("searchClosed");
+                n=5;
+            }
+
 
             try{
                 filter = input.value.toUpperCase();
@@ -172,6 +176,10 @@ Vue.component("allRestaurants",{
                 else if (n == "noneRating"){
                     filter = "";
                     n=4;
+                }
+                else if (n == "ALL"){
+                    filter = "";
+                    n=5;
                 }
             }          
             
