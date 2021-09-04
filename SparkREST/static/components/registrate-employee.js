@@ -13,50 +13,53 @@ Vue.component("registrate-employee",{
             }
         }
     },
+    mounted(){
+        /* document.body.style.backgroundImage = "url('images/background.jpg')" */
+    },
     template:`
     	<div>
         	<h1>Employee registration form</h1>
-            <div class="container">
+            <div>
                 <form id="registrationForm" method ="POST" @submit.prevent = "registrate">
-                    <div>
-                        <label for="firstName"><b>First Name</b></label>
-                        <input type="text" v-model="user.firstName" placeholder = "First Name" required/>
+                    <div class="pp">
+                        <label class="text-right" class="lbl" for="firstName"><b>First Name</b></label>
+                        <input type="text" v-model="user.firstName" placeholder = "First Name" required autofocus/>
                     </div>
-                    <div>
-                        <label for="lastName"><b>Last Name</b></label>
+                    <p class="pp">
+                        <label class="lbl" for="lastName"><b>Last Name</b></label>
                         <input type="text" v-model="user.lastName" placeholder = "Last Name" required/>
-                    </div>
-                    <div>
-                        <label for="username"><b>Username</b></label>
+                    </p>
+                    <p class="pp">
+                        <label class="lbl" for="username"><b>Username</b></label>
                         <input type="text" v-model="user.username" placeholder = "Username" required/>
-                    </div>
-                    <div>
-                        <label for="password"><b>Password</b></label>
+                        </p>
+                    <p class="pp">
+                        <label class="lbl" for="password"><b>Password</b></label>
                         <input type="password" v-model="user.password" placeholder = "Password" required/>
-                    </div>
-                    <div>
-                        <label for="gender"><b>Gender</b></label>
+                        </p>
+                    <p class="pp">
+                        <label class="lbl" for="gender"><b>Gender</b></label>
                         <select name="gender" v-model="user.gender" id="gender" required>
                             <option value="MALE">Male</option>
                             <option value="FEMALE">Female</option>
                         </select>
-                    </div>
-                    <div>
-                    <label for="role"><b>Role</b></label>
+                        </p>
+                        <p class="pp">
+                    <label class="lbl" for="role"><b>Role</b></label>
                     <select name="role" v-model="user.role" id="role" required>
                         <option value="MANAGER">Manager</option>
                         <option value="COURIER">Courier</option>
                     </select>
-                </div>
-                    <div>
-                        <label for="date"><b>Date of birth</b></label>
+                    </p>
+                <p class="pp">
+                        <label class="lbl" for="date"><b>Date of birth</b></label>
                         <input type="date" v-model="user.dateOfBirth" required/>
-                    </div>
-                    <p></p>
-                    <div>
-                        <button type = "submit"> Registrate</button>
-                        <button type= "button" v-on:click="cancel">Cancel</button>
-                    </div>
+                        </p>
+                        
+                    <div class="pp">
+                        <label class="lbl2"> <button  type = "submit"> Registrate</button> </label>
+                        <label class="lbl2"><button  type= "button" v-on:click="cancel">Clear</button></label>
+                        </div>
                 </form>
             </div>
         </div>

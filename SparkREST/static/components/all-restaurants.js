@@ -20,6 +20,7 @@ Vue.component("allRestaurants",{
         }
     },
     mounted(){
+        /* document.body.style.backgroundImage = "url('images/background.jpg')" */
         this.user.id = localStorage.getItem("id")
         this.user.role = localStorage.getItem("role");
         this.role = localStorage.getItem("role");
@@ -89,7 +90,7 @@ Vue.component("allRestaurants",{
         </div>
     `,
     methods:{
-        deleteRestaurant(restaurant){
+        deleteRestaurant(restaurant){            
             axios
             .post('/deleteRestaurant', restaurant)
             .then(response=>{
