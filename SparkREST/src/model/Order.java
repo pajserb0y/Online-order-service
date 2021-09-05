@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Menu;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -24,6 +25,13 @@ public class Order extends Entity{
 	protected OrderStatus orderStatus;
 	protected RestaurantTypeEnum restaurantType;
 	protected ArrayList<String> requests;
+	
+	public Order()
+	{
+		super();
+		menuItems = new ArrayList<MenuItem>();
+		requests = new ArrayList<String>();
+	}
 	
 	public Order(UUID restaturanId, UUID customerId, UUID currierId, ArrayList<MenuItem> menuItems, Date timeOfOrder,
 			double price, OrderStatus orderStatus, RestaurantTypeEnum restaurantType, ArrayList<String> requests) {
