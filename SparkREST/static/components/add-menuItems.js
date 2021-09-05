@@ -1,9 +1,10 @@
-Vue.component("add-menuItem",{
+Vue.component("add-menuItems",{
 
     data: function(){
         return{
             sendParams:{
                 username: "",
+                id:""
             },
             menuitem:{
                 name:"",
@@ -20,10 +21,11 @@ Vue.component("add-menuItem",{
     },
     mounted(){
         this.sendParams.username = localStorage.getItem('username')
+        this.sendParams.id = localStorage.getItem('id')
         axios
-        .post("/getCurrentRestaurant",localStorage.getItem('id'))
-        .then(response=>{
-        	this.menuitem.restorantId = response.data
+            .post("/getCurrentRestaurant", this.sendParams)
+            .then(response=>{
+                this.menuitem.restorantId = response.data
         })  
     },
     template:`
@@ -111,7 +113,7 @@ Vue.component("add-menuItem",{
                   "Content-Type": "multipart/form-data",
                 },
               })
-              .then(response=>{
+              .then(response=>{ toast("Image uploaded")
               })
               .catch((error) => {
               });

@@ -86,6 +86,8 @@ public class MenuItemService {
 		item.setPicturePath("menuItemPictures"+File.separator+ "MENU" + item.getId().toString() + ".png");
 		item.setCount(0);
 		menuItemList.add(item);
+		RestaurantService.setMenuItemForRestaurant(item);
+		
 		save();
 		
 	}
@@ -109,6 +111,6 @@ public class MenuItemService {
 			}
 		}
 		save();
-		
 	}
+	
 }
