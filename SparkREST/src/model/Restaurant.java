@@ -9,7 +9,7 @@ import model.Enums.RestaurantTypeEnum;
 public class Restaurant extends Entity {
 	protected String name;
 	protected UUID manager;
-	protected ArrayList<MenuItem> menu;
+	protected ArrayList<UUID> menu;
 	protected RestaurantStatusEnum status;
 	protected RestaurantTypeEnum type;
 	protected Location location;
@@ -21,7 +21,7 @@ public class Restaurant extends Entity {
 		super();
 	}
 
-	public Restaurant(String name, UUID manager, ArrayList<MenuItem> menu, RestaurantStatusEnum status,
+	public Restaurant(String name, UUID manager, ArrayList<UUID> menu, RestaurantStatusEnum status,
 			RestaurantTypeEnum restaturantType, Location location, String logoPath, double raiting) {
 		super();
 		this.name = name;
@@ -51,11 +51,11 @@ public class Restaurant extends Entity {
 		this.manager = manager;
 	}
 
-	public ArrayList<MenuItem> getMenu() {
+	public ArrayList<UUID> getMenu() {
 		return menu;
 	}
 
-	public void setMenu(ArrayList<MenuItem> menu) {
+	public void setMenu(ArrayList<UUID> menu) {
 		this.menu = menu;
 	}
 

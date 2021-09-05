@@ -108,7 +108,7 @@ Vue.component("home-page", {
                 <add-restaurant></add-restaurant>
             </div>
             <div v-if="window === 'MYRESTAURANT'">
-                <myRestaurant></myRestaurant>
+                <my-restaurant></my-restaurant>
             </div>
             <div v-if="window === 'ORDERS'">
                 <orders></orders>

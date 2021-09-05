@@ -60,6 +60,7 @@ public class RestaurantService {
 		for (Restaurant restaurant: restaurantList) {
 			if (!restaurant.isDeleted()) {
 				restaurants.add(restaurant);
+				
 			}
 		}
 		restaurants = (ArrayList<Restaurant>) restaurants.stream()
@@ -78,7 +79,7 @@ public class RestaurantService {
 
 	public static void addRestaurant(Restaurant restaurant) {
 		restaurant.setDeleted(false);
-		restaurant.setMenu(new ArrayList<MenuItem>());
+		restaurant.setMenu(new ArrayList<UUID>());
 		restaurant.setLogoPath("restaurantLogo"+File.separator+ "RES" + restaurant.getId().toString() + ".png");
 		restaurant.setStatus(RestaurantStatusEnum.OPEN);
 		restaurant.setRating(0);
@@ -96,7 +97,18 @@ public class RestaurantService {
 			}
 		}
 		save();
-
+	}
+	
+	public static void setMenuItemForRestaurant(MenuItem menuItem) {
+		for (Restaurant restaurant : restaurantList) {
+			if (restaurant.getId().equals(menuItem.getRestorantId())) {
+				ArrayList<UUID> menu = restaurant.getMenu();
+				menu.add(menuItem.getId());
+				restaurant.setMenu(menu);
+				break;
+			}
+		}
+		save();
 	}
 
 	public void setSelectedRestaurant(Restaurant restaurant) {
