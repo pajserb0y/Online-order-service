@@ -17,6 +17,11 @@ public class MenuItem extends  Entity {
 	protected String picturePath;
 	protected Integer count; //number of ordered items from restaurant
 	
+	public MenuItem()
+	{
+		super();
+	}
+	
 	public MenuItem(String name, double price, MenuItemTypeEnum type, UUID restorantId, Integer quantity,
 			String description, String picturePath, Integer count) {
 		super();
