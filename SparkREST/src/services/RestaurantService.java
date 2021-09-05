@@ -20,6 +20,9 @@ import model.Enums.RestaurantStatusEnum;
 public class RestaurantService {
 
 	public static ArrayList<Restaurant> restaurantList = new ArrayList<Restaurant>();
+	public static Restaurant selectedRestaurant;
+
+	
 
 	private static void save() {
 		try {
@@ -67,7 +70,7 @@ public class RestaurantService {
 		return restaurants;
 	}
 
-	public static Restaurant getById(UUID id){ 
+	public Restaurant getById(UUID id){ 
 		for (Restaurant restaurant: restaurantList) 
 			if (!restaurant.isDeleted() && restaurant.getId().equals(id)) 
 				return restaurant;
@@ -79,7 +82,7 @@ public class RestaurantService {
 		restaurant.setMenu(new ArrayList<UUID>());
 		restaurant.setLogoPath("restaurantLogo"+File.separator+ "RES" + restaurant.getId().toString() + ".png");
 		restaurant.setStatus(RestaurantStatusEnum.OPEN);
-		restaurant.setRaiting(0);
+		restaurant.setRating(0);
 
 		restaurantList.add(restaurant);
 		save();
@@ -106,6 +109,15 @@ public class RestaurantService {
 			}
 		}
 		save();
+	}
+
+	public void setSelectedRestaurant(Restaurant restaurant) {
+		// TODO Auto-generated method stub
+		this.selectedRestaurant = restaurant;
+	}
+	
+	public static Restaurant getSelectedRestaurant() {
+		return selectedRestaurant;
 	}
 
 }

@@ -195,7 +195,7 @@ Vue.component("add-restaurant", {
                 this.selectedManager.gender = ""	
                 this.selectedManager.dateOfBirth = ""
             	
-                alert("Successfully registered a new menager");
+                alert("Successfully registered a new manager");
                 axios
                 .get('/availableManagers')
                 .then(response=>{

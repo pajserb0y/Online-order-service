@@ -339,12 +339,30 @@ public class SparkAppMain {
 			return g.toJson(managers);	
 		});
 		
+		
+		
 		get("/allRestaurants", (req, res) -> {
 			res.type("application/json");
 			res.status(200);
 			return g.toJson(restaurantService.getAll());
 		});
 		
+
+		post("/rememberRestaurant", (req, res) -> {
+			res.type("application/json");
+			Restaurant restaurant = g.fromJson(req.body(), Restaurant.class);
+			restaurantService.setSelectedRestaurant(restaurant);
+			res.status(200);
+			return g.toJson(restaurant);
+		});
+		
+		get("/getRestaurant", (req, res) -> {
+			res.type("application/json");
+			res.status(200);
+			return g.toJson(restaurantService.getSelectedRestaurant());
+		});
+		
+
 		class PicturePath {
 			public String value;			
 		}

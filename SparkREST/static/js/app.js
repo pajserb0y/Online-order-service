@@ -8,6 +8,7 @@ const EmployeeRegistration = { template: '<registrate-employee></registrate-empl
 const AllUsers = { template: '<all-users></all-users>' }
 const AddRestaurant = { template: '<add-restaurant></add-restaurant>' }
 const AllRestaurants = { template: '<all-restaurants></all-restaurants>' }
+const ViewRestaurants = { template: '<view-restaurant></view-restaurant>' }
 const MyRestaurant = { template: '<all-restaurants></all-restaurants>' }
 const AddMenuItems = { template: '<add-menuItems></add-menuItems>' }
 
@@ -24,8 +25,10 @@ const router = new VueRouter({
 		{ path: '/all-users', component: AllUsers},
 		{ path: '/add-restaurant', component: AddRestaurant},
 		{ path: '/all-restaurants', component: AllRestaurants},
+		{ path: '/view-restaurant', component: ViewRestaurants},
 		{ path: '/my-restaurant', component: MyRestaurant},
 		{ path: '/add-menuItems', component: AddMenuItems},
+
 	  ]
 });
 

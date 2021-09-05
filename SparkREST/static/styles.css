@@ -82,6 +82,20 @@ input {
 	font-size: 18px;
 }
 
+textarea {
+	background-color: transparent;
+	width: 240px;
+  	padding: 10px 10px;
+  	margin: 3px 0;
+  	box-sizing: border-box;
+	border-style: solid;
+	border-color: black;
+	font-size: 18px;
+	font-family: Arial, sans-serif;
+	border-width: 2px;
+	resize: none;
+}
+
 select {
 	background-color: transparent;
   	margin: 3px 0;
