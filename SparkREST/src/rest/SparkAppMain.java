@@ -338,10 +338,56 @@ public class SparkAppMain {
 			return g.toJson(managers);	
 		});
 		
+		
+		
+//		post("/viewRestaurant", (req, res) -> {
+//			res.type("application/json");
+//			RestaurantDTO returnDTO = new RestaurantDTO();
+//			Restaurant restaurant = new Restaurant();
+//			User user = g.fromJson(req.body(), User.class);
+//			restaurant = restaurantService.getById(user.getId());
+//			returnDTO.setName(restaurant.getName());
+//			returnDTO.setLocation(restaurant.getLocation());
+//			returnDTO.setLogoPath(restaurant.getLogoPath());
+//			returnDTO.setRating(restaurant.getRating());
+//			returnDTO.setStatus(restaurant.getStatus());
+//			returnDTO.setType(restaurant.getRestaturantType());
+//			returnDTO.setEntityID(restaurant.getId());
+//			if(user.getRole() == RoleEnum.ADMIN) {
+//				returnDTO.setComments(commentService.getAllForRestaurant(user.getEntityID()));
+//			}
+//			else {
+//				returnDTO.setComments(commentService.getApprovedForRestaurant(user.getEntityID()));
+//			}
+//			returnDTO.setMenuItems(menuItemService.getAllForRestaurant(user.getEntityID()));
+//			
+//			
+//			res.status(200);
+//			return g.toJson(returnDTO);
+//		});
+		
 		get("/allRestaurants", (req, res) -> {
 			res.type("application/json");
 			res.status(200);
 			return g.toJson(restaurantService.getAll());
 		});
+		
+		post("/rememberRestaurant", (req, res) -> {
+			res.type("application/json");
+			Restaurant restaurant = g.fromJson(req.body(), Restaurant.class);
+			System.out.println(restaurant.toString());
+			restaurantService.setSelectedRestaurant(restaurant);
+			System.out.println("primljeno u servis    " + restaurantService.getSelectedRestaurant().toString());
+			res.status(200);
+			return g.toJson(restaurant);
+		});
+		
+		get("/getRestaurant", (req, res) -> {
+			res.type("application/json");
+			res.status(200);
+			System.out.println("get:     " + g.toJson(restaurantService.getSelectedRestaurant()).toString());
+			return g.toJson(restaurantService.getSelectedRestaurant());
+		});
+		
 	}
 }

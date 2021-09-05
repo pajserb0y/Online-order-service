@@ -128,6 +128,7 @@ Vue.component("home-page", {
         },
         restaurants(){
             this.window = "RESTAURANTS"
+            window.location.reload()
         },
         registrateEmployee(){
             this.window = "EMPLOYEEREGISTRATION"
@@ -141,6 +142,9 @@ Vue.component("home-page", {
         addRestaurant(){
             this.window = "ADDRESTAURANT"
         },
+       /*  viewRestaurant(){
+            this.window = "VIEWRESTAURANT";
+        } */
         myRestaurant(){
             this.window = "MYRESTAURANT"
         },

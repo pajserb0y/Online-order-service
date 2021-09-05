@@ -1,4 +1,4 @@
-Vue.component("allRestaurants",{
+Vue.component("all-restaurants",{
 
     data: function(){
         return{
@@ -15,8 +15,9 @@ Vue.component("allRestaurants",{
             user:{
                 role:"",
                 id:"",
-            }
-
+            },
+            window:"",
+            showOne:false
         }
     },
     mounted(){
@@ -25,15 +26,15 @@ Vue.component("allRestaurants",{
         this.user.role = localStorage.getItem("role");
         this.role = localStorage.getItem("role");
         axios
-        .get('/allRestaurants')
-        .then(response=>{
+            .get('/allRestaurants')
+            .then(response=>{
             this.restaurants = response.data
         })
 
     },
     template:`
         <div>
-            <div>
+            <div v-if="!showOne">
                 <h1 class="leftMargin">Restaurants</h1> 
                 <div class="leftMargin">
                     <input type="text" v-on:keyup="searchTable(123)" v-model="parameters.name" placeholder="Name" id="searchName"/>
@@ -90,9 +91,25 @@ Vue.component("allRestaurants",{
                    </tbody>
                 </table>
             </div>
+
+            <div v-if="showOne">
+                <div v-if="window === 'VIEWRESTAURANT'">
+                    <view-restaurant></view-restaurant>
+                </div>   
+            </div>            
         </div>
     `,
     methods:{
+
+        view(restaurant){
+            this.window = "VIEWRESTAURANT";
+            this.showOne = true;
+            axios
+                .post('/rememberRestaurant', restaurant)
+                .then(response=>{
+            });
+        },
+
         deleteRestaurant(restaurant){            
             axios
             .post('/deleteRestaurant', restaurant)
