@@ -58,6 +58,7 @@ Vue.component("view-restaurant",{
                     </div>
                     <p></p>
                 </div>
+
                 <h1>Menu</h1>
                 <div>
                     <table style="width:99.999%">
@@ -82,6 +83,7 @@ Vue.component("view-restaurant",{
                         </tbody>
                     </table>            
                 </div>
+                
                 <h1 v-if="commentable">Leave a comment</h1>
                 <div v-if="commentable">
                     <input style="width:85%" type="text" v-model="comment.text" placeholder = "Comment"/>
@@ -113,23 +115,93 @@ Vue.component("view-restaurant",{
         </div>
     `,
     methods:{
-        login(){
+        makeComment(){
             axios
-            .post('/login',this.user)
-            .then(response => {
-                console.log(response.data)
-                this.$router.push('/')
-                window.location.reload()
+            .post('/makeComment', this.comment)
+            .then(response=>{
+                axios
+                .post('/viewRestaurant', this.reqparams)
+                .then(response=>{
+                    this.restaurantDTO = response.data
+                    if(this.role === 'MANAGER'){
+                        axios
+                        .post('/getMyRestaurant',this.user)
+                        .then(response=>{
+                            this.myResId = response.data
+                            this.myRes = this.myResId == this.restaurantDTO.entityID
+                        })
+                    }
+                    if(this.role === 'CUSTOMER'){
+                        this.commentReq.username = localStorage.getItem("username")
+                        this.commentReq.entityID = this.restaurantDTO.entityID
+                        axios
+                        .post('/canIComment',this.commentReq)
+                        .then(response=>{
+                            this.commentable = response.data
+                            this.comment.customer = localStorage.getItem("id")
+                            this.comment.username = localStorage.getItem("username")
+                            this.comment.restaurant = this.restaurantDTO.entityID
+                        })
+                    }
+                })
+                .catch((error) => {
+                  });
             })
             .catch((error) => {
                 console.log("Error");
-                alert("Invalid username or password");
+                alert("Rating from 1 to 5");
+              });
+        },
+        deleteComment(comment){
+
+            axios
+            .post('/deleteComment', comment)
+            .then(response=>{
+                axios
+                .post('/viewRestaurant', this.reqparams)
+                .then(response=>{
+                    this.restaurantDTO = response.data
+                })
+                .catch((error) => {
+                  });
+            })
+            .catch((error) => {
+                console.log(error)
+              });
+        },
+        deleteMenuItem(menuItem){
+            axios
+            .post('/deleteMenuItem', menuItem)
+            .then(response=>{
+                axios
+                .post('/viewRestaurant', this.reqparams)
+                .then(response=>{
+                    this.restaurantDTO = response.data
+                })
+                .catch((error) => {
+                  });
+            })
+            .catch((error) => {
+                console.log(error)
               });
         },
 
-        cancel(){
-            this.$router.push("/")
-            window.location.reload()
+        addToCart(menuItem){
+            if(menuItem.count >0){
+                this.cartItem.entityID = localStorage.getItem("id")
+                this.cartItem.menuItem = menuItem
+                console.log(this.cartItem)
+                axios
+                .post('/addToCart', this.cartItem)
+                .then(response=>{
+                    menuItem.count = 0;
+                    alert("Added to cart");
+                })
+                .catch((error) => {
+                    menuItem.count = 0;
+                  });
+            }
+
         }
     }
 });

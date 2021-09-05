@@ -375,9 +375,7 @@ public class SparkAppMain {
 		post("/rememberRestaurant", (req, res) -> {
 			res.type("application/json");
 			Restaurant restaurant = g.fromJson(req.body(), Restaurant.class);
-			System.out.println(restaurant.toString());
 			restaurantService.setSelectedRestaurant(restaurant);
-			System.out.println("primljeno u servis    " + restaurantService.getSelectedRestaurant().toString());
 			res.status(200);
 			return g.toJson(restaurant);
 		});
@@ -385,7 +383,6 @@ public class SparkAppMain {
 		get("/getRestaurant", (req, res) -> {
 			res.type("application/json");
 			res.status(200);
-			System.out.println("get:     " + g.toJson(restaurantService.getSelectedRestaurant()).toString());
 			return g.toJson(restaurantService.getSelectedRestaurant());
 		});
 		
