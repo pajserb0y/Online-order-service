@@ -25,7 +25,7 @@ Vue.component("add-menuItems",{
         axios
             .post("/getCurrentRestaurant", this.sendParams)
             .then(response=>{
-                this.menuitem.restorantId = response.data
+                this.menuitem.restorantId = response.data.id
         })  
     },
     template:`
