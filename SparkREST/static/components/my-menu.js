@@ -75,7 +75,8 @@ Vue.component("my-menu",{
    	            	axios
                     .post('/getMenuItems', this.restaurant)
                     .then(response => {  
-                        this.menuItems = response.data;
+                        this.menuItems = response.data
+                    })
    	                .catch((error) => {
    	                  });
    	            })
