@@ -21,10 +21,10 @@ Vue.component("my-restaurant",{
             </div>
             <div>
                 <div v-if="window === 'INFO'">
-                    <myRestaurantInfo></myRestaurantInfo>
+                    <my-restaurant-information></my-restaurant-information>
                 </div>
                 <div v-if="window === 'MENU'">
-                    <myMenu></myMenu>
+                    <my-menu></my-menu>
                 </div>
                 <div v-if="window === 'ADDMENUITEMS'">
                     <add-menuItems></add-menuItems>

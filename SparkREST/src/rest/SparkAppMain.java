@@ -420,10 +420,11 @@ public class SparkAppMain {
 		
 		post("/getCurrentRestaurant",(req, res) -> {
 			res.type("application/json");
-			Manager manager = g.fromJson(req.body(), Manager.class);
+			Manager manager = g.fromJson(req.body(), Manager.class); //dobija kao parametar id od trenutnog usera odnosno menagera
 			manager = managerService.getManagerByID(manager.getId());
+			Restaurant restaurant = restaurantService.getById(manager.getRestaurantId());
 			res.status(200);
-			return g.toJson(manager.getRestaurantId());
+			return g.toJson(restaurant);
 		});
 		
 		
@@ -434,6 +435,16 @@ public class SparkAppMain {
 			return g.toJson(menuItemService.getMenuForRestaurant(restaurant.getId()));
 		});
 		
-		
+		post("/deleteMenuItem",(req, res) -> {
+			res.type("application/json");
+			MenuItem menuItem = g.fromJson(req.body(), MenuItem.class);
+			menuItemService.delete(menuItem.getId());
+			Restaurant restaurant = restaurantService.getById(menuItem.getRestorantId());
+			ArrayList<UUID> Menu = restaurant.getMenu();
+			Menu.remove(menuItem);
+			restaurant.setMenu(Menu);
+			res.status(200);
+			return "OK";
+		});
 	}
 }
