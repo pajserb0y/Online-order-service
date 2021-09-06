@@ -5,13 +5,16 @@ Vue.component("home-page", {
             id:"",
             role:"",
             username:"",
-            window:"RESTAURANTS"
+            window:"RESTAURANTS",
+            myRestaurantClicked:false
         }
     },
     mounted(){
         this.role = localStorage.getItem('role')
         this.id = localStorage.getItem('id')
         this.username = localStorage.getItem('username')
+        if (this.myRestaurantClicked)
+            this.window = "INFO"
     },
     template:`
         <div class="grid-container">
@@ -65,7 +68,24 @@ Vue.component("home-page", {
                     </div>
                 <div class="bottomLeft">
                     <button type= "button" v-on:click="logout">Logout</button>
-                    </div>                
+                    </div>      
+                <div id="subMenu" v-if="myRestaurantClicked">   
+                    <div>
+                    <button class="headerButtons" type= "button" v-on:click="info">Information</button>
+                    </div> <div>
+                    <button class="headerButtons"  type= "button" v-on:click="menu">Menu</button>
+                    </div> <div>
+                    <button class="headerButtons"  type= "button" v-on:click="menuitem">Add Menu Item</button>
+                    </div> <div>
+                    <button class="headerButtons"  type= "button" v-on:click="comments">Comments</button>
+                    </div> <div>
+                    <button class="headerButtons" type= "button" v-on:click="orders">Orders</button>
+                    </div> <div>
+                    <button class="headerButtons"  type= "button" v-on:click="customers">Customers</button>
+                    </div> <div>
+                    <button class="headerButtons" type= "button" v-on:click="requests">Transport Requests</button>
+                    </div> 
+                </div>                       
             </div>
             <div v-if="role === 'COURIER'">
             <div>
@@ -117,6 +137,30 @@ Vue.component("home-page", {
             <div v-if="window === 'CART'">
                 <cart></cart>
             </div>
+
+
+
+            <div v-if="window === 'INFO'">
+                    <myRestaurantInfo></myRestaurantInfo>
+                </div>
+                <div v-if="window === 'MENU'">
+                    <myMenu></myMenu>
+                </div>
+                <div v-if="window === 'ADDMENUITEMS'">
+                    <add-menuItems></add-menuItems>
+                </div>
+                <div v-if="window === 'COMMENTS'">
+                    <myComments></myComments>
+                </div>
+                <div v-if="window === 'ORDERS'">
+                    <orders></orders>
+                </div>
+                <div v-if="window === 'CUSTOMERS'">
+                    <myCustomers></myCustomers>
+                </div>
+                <div v-if="window === 'REQUESTS'">
+                    <myRequests></myRequests>
+                </div> 
         </div>
         </div>
     `,
@@ -129,6 +173,7 @@ Vue.component("home-page", {
         },
         restaurants(){
             this.window = "RESTAURANTS"
+            this.myRestaurantClicked = false
             window.location.reload()
         },
         registrateEmployee(){
@@ -139,6 +184,7 @@ Vue.component("home-page", {
         },
         myAccount(){
             this.window = "MYACCOUNT"
+            this.myRestaurantClicked = false
         },
         addRestaurant(){
             this.window = "ADDRESTAURANT"
@@ -148,6 +194,7 @@ Vue.component("home-page", {
         } */
         myRestaurant(){
             this.window = "MYRESTAURANT"
+            this.myRestaurantClicked = true
         },
 
         orders(){
@@ -164,10 +211,33 @@ Vue.component("home-page", {
             this.id = ""
             this.role = ""
             this.username = ""
+            this.myRestaurantClicked = false
             window.location.reload()
             //this.$router.push("/allUsers")
-        }
+        },
 
 
+
+        info(){
+            this.window = "INFO"
+        },
+        menu(){
+            this.window = "MENU"    
+        },
+        menuitem(){
+            this.window = "ADDMENUITEMS"
+        },
+        comments(){
+            this.window = "COMMENTS"
+        },
+        orders(){
+            this.window = "ORDERS"
+        },
+        customers(){
+            this.window = "CUSTOMERS"
+        },
+        requests(){
+            this.window = "REQUESTS"
+        },
     }
 });
