@@ -16,7 +16,7 @@ enum OrderStatus{
 	CANCELED
 }
 public class Order extends Entity{
-	protected UUID restaturanId;
+	protected UUID restaurantId;
 	protected UUID customerId;
 	protected UUID currierId;
 	protected ArrayList<MenuItem> menuItems;
@@ -36,7 +36,7 @@ public class Order extends Entity{
 	public Order(UUID restaturanId, UUID customerId, UUID currierId, ArrayList<MenuItem> menuItems, Date timeOfOrder,
 			double price, OrderStatus orderStatus, RestaurantTypeEnum restaurantType, ArrayList<String> requests) {
 		super();
-		this.restaturanId = restaturanId;
+		this.restaurantId = restaturanId;
 		this.customerId = customerId;
 		this.currierId = currierId;
 		this.menuItems = menuItems;
@@ -48,11 +48,11 @@ public class Order extends Entity{
 	}
 
 	public UUID getRestaturanId() {
-		return restaturanId;
+		return restaurantId;
 	}
 
 	public void setRestaturanId(UUID restaturanId) {
-		this.restaturanId = restaturanId;
+		this.restaurantId = restaturanId;
 	}
 
 	public UUID getCustomerId() {
