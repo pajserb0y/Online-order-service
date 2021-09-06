@@ -80,7 +80,7 @@ public class RestaurantService {
 	public static void addRestaurant(Restaurant restaurant) {
 		restaurant.setDeleted(false);
 		restaurant.setMenu(new ArrayList<UUID>());
-		restaurant.setLogoPath("restaurantLogo"+File.separator+ "RES" + restaurant.getId().toString() + ".png");
+		restaurant.setLogoPath( "static" + File.separator+ "restaurantLogo" +File.separator+ "RES" + restaurant.getId().toString() + ".png");
 		restaurant.setStatus(RestaurantStatusEnum.OPEN);
 		restaurant.setRating(0);
 
