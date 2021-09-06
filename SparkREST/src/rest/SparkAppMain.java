@@ -302,9 +302,8 @@ public class SparkAppMain {
 			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
 
             Part uploadedFile = req.raw().getPart("file");
-           // currRes.setLogoPath("static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png");
-            logoPath.value = "static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png";
-            Path out = Paths.get(logoPath.value);
+            logoPath.value = "restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png";
+            Path out = Paths.get("static"+File.separator+logoPath.value);
             try (final InputStream in = uploadedFile.getInputStream()) {
                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
                uploadedFile.delete();
@@ -318,9 +317,8 @@ public class SparkAppMain {
 		post("/addRestaurant", (req,res) ->{
 			res.type("applicaton/json");
 			Restaurant restaurant = g.fromJson(req.body(),Restaurant.class);
-			//restaurant.setLogoPath(currRes.getLogoPath());
-			restaurant.setLogoPath(logoPath.value);
 			
+			restaurant.setLogoPath(logoPath.value);
 			restaurantService.addRestaurant(restaurant);
 			managerService.addRestaurantToManager(restaurant.getManager(), restaurant.getId());
 			
@@ -377,7 +375,7 @@ public class SparkAppMain {
 		
 		post("/uploadMenuPicture", "multipart/form-data", (req, res) -> {
 			
-			String location = "static"+File.separator+"menuPictures";          // the directory location where files will be stored
+			String location = "static"+File.separator+"menuItemPictures";          // the directory location where files will be stored
 			long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
 			long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
 			int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
@@ -386,8 +384,8 @@ public class SparkAppMain {
 			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
 				
             Part uploadedFile = req.raw().getPart("file");
-            picturePath.value = "static"+File.separator+"menuPictures"+File.separator+"MENU"+ UUID.randomUUID() +".png";
-            Path out = Paths.get(picturePath.value);
+            picturePath.value = "menuItemPictures"+File.separator+"MENU"+ UUID.randomUUID() +".png";
+            Path out = Paths.get("static"+File.separator+picturePath.value);
             try (final InputStream in = uploadedFile.getInputStream()) {
                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
                uploadedFile.delete();
@@ -403,11 +401,11 @@ public class SparkAppMain {
 		post("/addItem", (req, res) -> {
 			res.type("application/json");
 			MenuItem item = g.fromJson(req.body(), MenuItem.class);
-			item.setPicturePath(picturePath.value);
-			item.setCount(0);
 //			int restaurantID = menagerService.getRestaurantID(item.getRestaurant());			
 //			item.setRestaurant(restaurantID);	
 			if (menuItemService.checkNameAvailability(item)) { 		//zasto nismo pozvali gore i napravili novu instancu MenuitemService-a kao i za ostale servise
+				item.setPicturePath(picturePath.value);
+				item.setCount(0);
 				menuItemService.add(item);
 				res.status(200);
 				return "DONE";
@@ -439,10 +437,22 @@ public class SparkAppMain {
 			res.type("application/json");
 			MenuItem menuItem = g.fromJson(req.body(), MenuItem.class);
 			menuItemService.delete(menuItem.getId());
-			Restaurant restaurant = restaurantService.getById(menuItem.getRestorantId());
+			
+			
+			Restaurant restaurant = restaurantService.getById(menuItem.getRestorantId()); //ovaj naredni pasus cak i ne mora
 			ArrayList<UUID> Menu = restaurant.getMenu();
-			Menu.remove(menuItem);
+			Menu.remove(menuItem.getId());
 			restaurant.setMenu(Menu);
+			
+			
+			res.status(200);
+			return "OK";
+		});
+		
+		post("/changeMenuItem",(req, res) -> {
+			res.type("application/json");
+			MenuItem menuItem = g.fromJson(req.body(), MenuItem.class);
+			menuItemService.change(menuItem);
 			res.status(200);
 			return "OK";
 		});

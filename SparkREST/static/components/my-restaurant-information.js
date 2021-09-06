@@ -48,7 +48,11 @@ Vue.component("my-restaurant-information",{
     template:`
     	<div>
             <h1 style="padding-left: 15%;">{{restaurant.name}} restaurant</h1>
-                <div>
+                <div> 
+                    <div  class="pp">
+                        <label class="lbl" for="logo"><b>Logo</b></label>
+                        <img :src="restaurant.logoPath" width="100" height="100"/>
+                    </div>				
                     <div  class="pp">
                         <label class="lbl" for="name"><b>Name</b></label>
                         <input type="text" v-model="restaurant.name" />
@@ -74,6 +78,50 @@ Vue.component("my-restaurant-information",{
                 </div>
            </div> 
     	`,
+    /*
+    template:`
+    	<div>
+        <h1>Information</h1>
+        </br>
+        </br>
+        </br>
+        <div>
+            <table style="width:99.999%">
+                <thead>
+                    <th style="width:50%"></th>
+                    <th style="width:50%"></th>
+                </thead>
+                <tbody>
+                <tr class="inforow">
+                    <td style="width:50%; text-align:center"><b>Logo</b></td>
+                    <td style="width:50%"><img :src="restaurant.logoPath" width="100" height="100" ></td>
+                </tr>                        
+                <tr class="inforow">
+                    <td style="width:50%; text-align:center"><b> Name</b></td>
+                    <td style="width:50%">{{restaurant.name}} </td>
+                </tr>
+                <tr class="inforow">
+                    <td style="width:50%; text-align:center"><b>Type</b></td>
+                    <td style="width:50%">{{restaurant.type}}  </td>
+                </tr>
+                <tr class="inforow">
+                    <td style="width:50%; text-align:center"><b>Status</b></td>
+                    <td style="width:50%">{{restaurant.status}}  </td>
+                </tr>
+                <tr class="inforow">
+                    <td style="width:50%; text-align:center"><b>Rating</b></td>
+                    <td style="width:50%" v-if="!restaurant.rating" >No rating yet</td>
+                    <td style="width:50%" v-if="restaurantDTO.rating" >{{restaurantDTO.rating}}</td>
+                </tr> 
+                <tr class="inforow">
+                    <td style="width:50%; text-align:center"><b>Location</b></td>
+                    <td style="width:50%">{{restaurantDTO.location.adress.street}}, {{restaurantDTO.location.adress.town}}, {{restaurantDTO.location.adress.country}}</td>
+                </tr>                                            
+                </tbody>
+            </table>
+        </div>
+        </div>
+    	`,*/
     	   methods:{
 
     }

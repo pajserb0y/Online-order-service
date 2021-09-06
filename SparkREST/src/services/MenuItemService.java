@@ -83,7 +83,6 @@ public class MenuItemService {
 	
 	public static void add(MenuItem item) {
 		item.setDeleted(false);
-		item.setPicturePath("menuItemPictures"+File.separator+ "MENU" + item.getId().toString() + ".png");
 		item.setCount(0);
 		menuItemList.add(item);
 		RestaurantService.setMenuItemForRestaurant(item);
