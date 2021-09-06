@@ -5,6 +5,7 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.staticFiles;
 
+
 import java.io.Console;
 import java.io.File;
 import java.io.InputStream;
@@ -15,8 +16,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.UUID;
 
+
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+
 
 import model.Admin;
 import model.Courier;
@@ -27,7 +30,9 @@ import model.Restaurant;
 import model.User;
 import model.Enums.RoleEnum;
 
+
 import com.google.gson.Gson;
+
 
 import services.AdminService;
 import services.CourierService;
@@ -44,6 +49,7 @@ public class SparkAppMain {
 	private static CourierService courierService = new CourierService();
 	private static AdminService adminService = new AdminService();
 	private static RestaurantService restaurantService = new RestaurantService();
+	private static MenuItemService menuItemService = new MenuItemService();
 	
 	public static void main(String[] args) throws Exception {
 		port(8080);
@@ -53,6 +59,7 @@ public class SparkAppMain {
 		courierService.load();
 		adminService.load();
 		restaurantService.load();  //radi i bez ovoga
+		menuItemService.load();
 
 		staticFiles.externalLocation(new File("./static").getCanonicalPath());
 		
@@ -400,8 +407,8 @@ public class SparkAppMain {
 			item.setCount(0);
 //			int restaurantID = menagerService.getRestaurantID(item.getRestaurant());			
 //			item.setRestaurant(restaurantID);	
-			if (MenuItemService.checkNameAvailability(item)) {
-				MenuItemService.add(item);
+			if (menuItemService.checkNameAvailability(item)) { 		//zasto nismo pozvali gore i napravili novu instancu MenuitemService-a kao i za ostale servise
+				menuItemService.add(item);
 				res.status(200);
 				return "DONE";
 			}
@@ -417,6 +424,14 @@ public class SparkAppMain {
 			manager = managerService.getManagerByID(manager.getId());
 			res.status(200);
 			return g.toJson(manager.getRestaurantId());
+		});
+		
+		
+		post("/getMenuItems",(req, res) -> {
+			res.type("application/json");
+			Restaurant restaurant = g.fromJson(req.body(), Restaurant.class);
+			res.status(200);
+			return g.toJson(menuItemService.getMenuForRestaurant(restaurant.getId()));
 		});
 		
 		

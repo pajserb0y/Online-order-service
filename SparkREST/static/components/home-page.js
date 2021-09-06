@@ -82,6 +82,7 @@ Vue.component("home-page", {
                     </div>
             </div>
             <div v-if="(!role)" >
+                <button class="menuButtons" type= "button" v-on:click="restaurants">Restaurants</button>
                 <div class="topRight">
             	<button type= "button" v-on:click="login">Login</button>
                 </div>

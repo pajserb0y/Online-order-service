@@ -18,18 +18,28 @@ Vue.component("view-restaurant",{
                 },
 				logoPath:"",
                 status:"",
-                rating:""
+                rating:"",
+                menu:""
             },
-            locationDTO:""
+            role:"",
+            locationDTO:"",
+            menuItems:""
         }
     },
     mounted(){
+        this.role = localStorage.getItem("role");
         axios
             .get('/getRestaurant')
             .then(response => {  
                 this.restaurant = response.data;
                 this.locationDTO = response.data.location.adress.street + ", " + response.data.location.adress.postalCode + " " + response.data.location.adress.town + ", " + response.data.location.adress.country
-                })        
+                axios
+                    .post('/getMenuItems', this.restaurant)
+                    .then(response => {  
+                        this.menuItems = response.data;
+            })
+        }) 
+                
     },
     template:`
     	<div>
@@ -61,7 +71,7 @@ Vue.component("view-restaurant",{
 
                 <h1>Menu</h1>
                 <div>
-                    <table style="width:99.999%">
+                    <table border="1">
                         <thead>
                             <th style="width:20%">Picture</th>
                             <th style="width:15%">Name</th>
@@ -71,7 +81,7 @@ Vue.component("view-restaurant",{
                             <th v-if="role === 'CUSTOMER'" style="width:5%"></th>
                         </thead>
                         <tbody>
-                            <tr class="nopointerrow" v-for="i in restaurant.menuItems">
+                            <tr class="nopointerrow" v-for="i in menuItems">
                                 <td style="width:20%"> <img :src="i.picturePath" width="75" height="75" ></td>
                                 <td style="width:15%">{{i.name}}</td>
                                 <td style="width:40%">{{i.description}}</td>
