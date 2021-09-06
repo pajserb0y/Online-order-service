@@ -211,18 +211,20 @@ button[class="menuButtons"] {
 }
 
 button[class="headerButtons"] {
-	background-color: rgba(0, 119, 255, 0.911);
+	background-color: rgba(253, 255, 139, 0.911);
 	border: none;
 	color: black;
 	text-decoration: none;
+	display: inline-block;
 	cursor: pointer;
 	width: 120px;
 	border-radius: 22px;
-	margin-top: 5%;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 0px;
 	padding-left: 0px;
+	margin-top: 2%;
+	margin-left: 60px;
 	text-align: center;
 }
 

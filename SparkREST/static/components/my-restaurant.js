@@ -11,13 +11,7 @@ Vue.component("my-restaurant",{
     template:`
         <div >
             <div >
-                    <button class="headerButtons" type= "button" v-on:click="info">Information</button>
-                    <button class="headerButtons"  type= "button" v-on:click="menu">Menu</button>
-                    <button class="headerButtons"  type= "button" v-on:click="menuitem">Add Menu Item</button>
-                    <button class="headerButtons"  type= "button" v-on:click="comments">Comments</button>
-                    <button class="headerButtons" type= "button" v-on:click="orders">Orders</button>
-                    <button class="headerButtons"  type= "button" v-on:click="customers">Customers</button>
-                    <button class="headerButtons" type= "button" v-on:click="requests">Transport Requests</button>
+                    
             </div>
             <div>
                 <div v-if="window === 'INFO'">

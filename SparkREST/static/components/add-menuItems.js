@@ -30,50 +30,52 @@ Vue.component("add-menuItems",{
     },
     template:`
     <div>
-    <h1>Add menu item</h1>
+    <h1 style="padding-left: 15%;">Add menu item</h1>
     <div class="container">
-        <form id="registrationFormRest" enctype="multipart/form-data"  method ="POST" @submit.prevent = "upload">
-            <div>
-                <label for="file"><b>Restaurant picture</b></label>
-                <input accept="image/png" type="file" name="file" id="file" ref="file" v-on:change="fileUploadChange()" required/>
+        <form  style="width: 630px;" id="registrationFormRest" enctype="multipart/form-data"  method ="POST" @submit.prevent = "upload">
+            <div class="pp">
+            <div class="lbl3">
+                <label for="file"><b>Restaurant picture:</b></label>
+                <input style="cursor: pointer" class="inputImageUpload" accept="image/png" type="file" name="file" id="file" ref="file" v-on:change="fileUploadChange()" required/>
+            </div>
                 <button type = "submit"> Upload </button>
             </div>
         </form>
     </div>
     <div class="container">
         <form id="registrationForm" method ="POST" @submit.prevent = "addItem">
-            <div>
-                <label for="name"><b>Name*</b></label>
+            <div class="pp">
+                <label class="lbl" for="name"><b>Name*</b></label>
                 <input type="text" v-model="menuitem.name" placeholder = "Name" required/>
             </div>
-            <div>
-                <label for="description"><b>Description</b></label>
+            <div class="pp">
+                <label class="lbl" for="description"><b>Description</b></label>
                 <input type="text" v-model="menuitem.description" placeholder = "Description"/>
             </div>
-            <div>
-                <label for="type"><b>Type*</b></label>
+            <div class="pp">
+                <label class="lbl" for="type"><b>Type*</b></label>
                 <select name="type" v-model="menuitem.type" id="type" required>
                     <option value="FOOD">Food</option>
                     <option value="DRINK">Drink</option>
                 </select>
             </div>
-            <div>
-                <label for="quantity"><b>Quantity</b></label>
+            <div class="pp">
+                <label class="lbl" for="quantity"><b>Quantity</b></label>
                 <input type="number" v-model="menuitem.quantity" placeholder = "Quantity"/>
             </div>
-            <div>
-                <label for="type"><b>Quantity Type</b></label>
+            <div class="pp">
+                <label class="lbl" for="type"><b>Quantity Type</b></label>
                 <select name="quantityType" v-model="menuitem.quantityType" id="quantityType">
                     <option value="GRAMS">Grams</option>
                     <option value="MILLILITERS">Milliliters</option>
                 </select>
             </div>
-            <div>
-                <label for="price"><b>Price*</b></label>
+            <div class="pp"> 
+                <label class="lbl" for="price"><b>Price*</b></label>
                 <input type="number" v-model="menuitem.price" placeholder = "Price" required/>
             </div>
             <p></p>
-            <div>
+            <div class="btn2">
                 <button type = "submit"> Add</button>
             </div>
         </form>
