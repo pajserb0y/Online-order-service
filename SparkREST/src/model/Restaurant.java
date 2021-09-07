@@ -67,11 +67,11 @@ public class Restaurant extends Entity {
 		this.status = status;
 	}
 
-	public RestaurantTypeEnum getRestaturantType() {
+	public RestaurantTypeEnum getRestaurantType() {
 		return type;
 	}
 
-	public void setRestaturantType(RestaurantTypeEnum restaturantType) {
+	public void setRestaurantType(RestaurantTypeEnum restaturantType) {
 		this.type = restaturantType;
 	}
 

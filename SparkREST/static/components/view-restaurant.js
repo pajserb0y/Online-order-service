@@ -81,6 +81,7 @@ Vue.component("view-restaurant",{
                             <th style="width:15%">Name</th>
                             <th style="width:40%">Description</th>
                             <th style="width:5%">Price</th>
+                            <th v-if="role === 'CUSTOMER'" style="width:5%">Count</th>
                             <th v-if="role === 'CUSTOMER'" style="width:5%"></th>
                         </thead>
                         <tbody>
@@ -88,9 +89,10 @@ Vue.component("view-restaurant",{
                                 <td style="width:0%"> <img :src="i.picturePath" width="75" height="75" ></td>
                                 <td style="width:15%">{{i.name}}</td>
                                 <td style="width:40%">{{i.description}}</td>
-                                <td style="width:5%">{{i.price}}</td>
-                                <td v-if="role === 'CUSTOMER' && restaurant.status === 'OPEN' " style="width:5%"><input min="0" style="width:99%" type="number" v-model="i.count" /><button type= "button" v-on:click="addToCart(i)">Add To Cart</button> </td>
+                                <td style="text-align:center">{{i.price}}</td>
+                                <td v-if="role === 'CUSTOMER' && restaurant.status === 'OPEN' " style="width:5%"><input min="0" style="width:99%" type="number" v-model="i.count" /> </td>
                                 <td v-if="role === 'CUSTOMER' && restaurant.status === 'CLOSED' " style="width:5%"></td>
+                                <td v-if="role === 'CUSTOMER' && restaurant.status === 'OPEN' " style="width:5%"> <button type= "button" v-on:click="addToCart(i)">Add To Cart</button> </td>
                             </tr>                                                                  
                         </tbody>
                     </table>            

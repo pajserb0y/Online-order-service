@@ -5,26 +5,28 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import model.Enums.OrderStatusEnum;
 import model.Enums.RestaurantTypeEnum;
 
-enum OrderStatus{
-	PROCESSING,
-	INPREP,
-	WAITING,
-	TRANSPORT,
-	DELIVERED,
-	CANCELED
-}
 public class Order extends Entity{
 	protected UUID restaurantId;
 	protected UUID customerId;
 	protected UUID currierId;
 	protected ArrayList<MenuItem> menuItems;
-	protected Date timeOfOrder;
+	protected String timeOfOrder;
 	protected double price;
-	protected OrderStatus orderStatus;
-	protected RestaurantTypeEnum restaurantType;
-	protected ArrayList<String> requests;
+	protected OrderStatusEnum orderStatus;
+//	protected RestaurantTypeEnum restaurantType;
+//	protected String restaurantName;
+//	public String getRestaurantName() {
+//		return restaurantName;
+//	}
+//
+//	public void setRestaurantName(String restaurantName) {
+//		this.restaurantName = restaurantName;
+//	}
+
+	protected ArrayList<String> requests;	//zahtevi kurira da preuzme paket koji cekaju da menadzer odabere kurira
 	
 	public Order()
 	{
@@ -33,8 +35,8 @@ public class Order extends Entity{
 		requests = new ArrayList<String>();
 	}
 	
-	public Order(UUID restaturanId, UUID customerId, UUID currierId, ArrayList<MenuItem> menuItems, Date timeOfOrder,
-			double price, OrderStatus orderStatus, RestaurantTypeEnum restaurantType, ArrayList<String> requests) {
+	public Order(UUID restaturanId, UUID customerId, UUID currierId, ArrayList<MenuItem> menuItems, String timeOfOrder,
+			double price, OrderStatusEnum orderStatus,  ArrayList<String> requests) {
 		super();
 		this.restaurantId = restaturanId;
 		this.customerId = customerId;
@@ -43,15 +45,15 @@ public class Order extends Entity{
 		this.timeOfOrder = timeOfOrder;
 		this.price = price;
 		this.orderStatus = orderStatus;
-		this.restaurantType = restaurantType;
+//		this.restaurantType = restaurantType;
 		this.requests = requests;
 	}
 
-	public UUID getRestaturanId() {
+	public UUID getRestaurantId() {
 		return restaurantId;
 	}
 
-	public void setRestaturanId(UUID restaturanId) {
+	public void setRestaurantId(UUID restaturanId) {
 		this.restaurantId = restaturanId;
 	}
 
@@ -79,11 +81,11 @@ public class Order extends Entity{
 		this.menuItems = menuItems;
 	}
 
-	public Date getTimeOfOrder() {
+	public String getTimeOfOrder() {
 		return timeOfOrder;
 	}
 
-	public void setTimeOfOrder(Date timeOfOrder) {
+	public void setTimeOfOrder(String timeOfOrder) {
 		this.timeOfOrder = timeOfOrder;
 	}
 
@@ -95,21 +97,21 @@ public class Order extends Entity{
 		this.price = price;
 	}
 
-	public OrderStatus getOrderStatus() {
+	public OrderStatusEnum getOrderStatus() {
 		return orderStatus;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
+	public void setOrderStatus(OrderStatusEnum orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 
-	public RestaurantTypeEnum getRestaurantType() {
-		return restaurantType;
-	}
-
-	public void setRestaurantType(RestaurantTypeEnum restaurantType) {
-		this.restaurantType = restaurantType;
-	}
+//	public RestaurantTypeEnum getRestaurantType() {
+//		return restaurantType;
+//	}
+//
+//	public void setRestaurantType(RestaurantTypeEnum restaurantType) {
+//		this.restaurantType = restaurantType;
+//	}
 
 	public ArrayList<String> getRequests() {
 		return requests;

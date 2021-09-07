@@ -152,9 +152,6 @@ Vue.component("home-page", {
                 <div v-if="window === 'COMMENTS'">
                     <myComments></myComments>
                 </div>
-                <div v-if="window === 'ORDERS'">
-                    <orders></orders>
-                </div>
                 <div v-if="window === 'CUSTOMERS'">
                     <myCustomers></myCustomers>
                 </div>
@@ -196,7 +193,7 @@ Vue.component("home-page", {
             this.window = "MYRESTAURANT"
             this.myRestaurantClicked = true
         },
-
+        
         orders(){
             this.window = "ORDERS"
         },
@@ -229,9 +226,6 @@ Vue.component("home-page", {
         },
         comments(){
             this.window = "COMMENTS"
-        },
-        orders(){
-            this.window = "ORDERS"
         },
         customers(){
             this.window = "CUSTOMERS"

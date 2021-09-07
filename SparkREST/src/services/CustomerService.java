@@ -10,10 +10,9 @@ import java.util.Collections;
 import java.util.UUID;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-
 import model.Customer;
 import model.MenuItem;
+import model.Order;
 import model.ShoppingCart;
 import model.User;
 import model.Enums.CustomerTypeEnum;
@@ -24,10 +23,10 @@ import model.Enums.RoleEnum;
 public class CustomerService {
 	
 	public static ArrayList<Customer> customerList = new ArrayList<Customer>();
-//	private static CustomerType normal = new CustomerType("NORMAL",0,0);
-//	private static CustomerType bronze = new CustomerType("BRONZE",1,1000);
-//	private static CustomerType silver = new CustomerType("SILVER",2,3000);
-//	private static CustomerType gold = new CustomerType("GOLD",5,20000);
+	public final static int silverRequired = 3000;
+	public final static int goldRequired = 4000;
+	public final static double silverDiscount = 3;
+	public final static double goldDiscount = 5;
 	
 	public static void load() {
 		try {
@@ -185,14 +184,16 @@ public class CustomerService {
 		shoppingCartDTO.setPrice(price);
 		currCustomer.setShoppingCart(shoppingCartDTO);
 		
+		updatePointsAndType(shoppingCartDTO);		//azurira cenu u korpi
+		
 		save();
 	}
 	
-	public ShoppingCart getCart(UUID customerId) {
+	public static ShoppingCart getCart(UUID customerId) {
 			return getCustomerByID(customerId).getShoppingCart();
 	}
 	
-	public void changeCart(ShoppingCart cart) {
+	public static void changeCart(ShoppingCart cart) {
 		Customer customer = getCustomerByID(cart.getCustomerId());
 		customer.setShoppingCart(cart);
 		double price = 0;
@@ -201,6 +202,44 @@ public class CustomerService {
 		//price = price - (price * customer.getCustomerType().getDiscount()/100);
 				
 		customer.getShoppingCart().setPrice(price);
+		save();
+	}
+	
+	public static void emptyCart(ShoppingCart cart) {
+		Customer customer = getCustomerByID(cart.getCustomerId());
+		customer.getShoppingCart().getMenuItems().clear();
+		customer.getShoppingCart().setPrice(0);
+		save();
+	}
+	
+	public static void addOrders(ArrayList<Order> orders) {
+		Customer customer = getCustomerByID(orders.get(0).getCustomerId());
+		for (Order order : orders)
+			customer.getOrders().add(order.getId());
+		
+		save();		
+	}
+	
+	public static void updatePointsAndType(ShoppingCart cart) {
+		double newPoints = cart.getPrice()/1000*133;
+		double price = cart.getPrice();
+		
+		Customer customer = getCustomerByID(cart.getCustomerId());	
+		
+		customer.setPoints(customer.getPoints() + newPoints);
+		
+		if(customer.getPoints() >= silverRequired) 
+			customer.setCustomerType(CustomerTypeEnum.SILVER);
+		if(customer.getPoints() >= goldRequired) 
+			customer.setCustomerType(CustomerTypeEnum.GOLD);
+		
+		
+		if(customer.getCustomerType() == CustomerTypeEnum.SILVER)
+			price = price * (100 - silverDiscount) / 100;
+		else if(customer.getCustomerType() == CustomerTypeEnum.GOLD)
+			price = price * (100 - goldDiscount) / 100;
+		
+		cart.setPrice(price);
 		save();
 	}
 }

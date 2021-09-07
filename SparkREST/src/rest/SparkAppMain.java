@@ -8,6 +8,8 @@ import static spark.Spark.staticFiles;
 
 
 
+
+
 import java.io.Console;
 import java.io.File;
 import java.io.InputStream;
@@ -21,8 +23,12 @@ import java.util.UUID;
 
 
 
+
+
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+
+
 
 
 
@@ -36,6 +42,9 @@ import model.Restaurant;
 import model.ShoppingCart;
 import model.User;
 import model.Enums.RoleEnum;
+import model.Order;
+
+
 
 
 
@@ -45,11 +54,14 @@ import com.google.gson.Gson;
 
 
 
+
+
 import services.AdminService;
 import services.CourierService;
 import services.CustomerService;
 import services.ManagerService;
 import services.MenuItemService;
+import services.OrderService;
 import services.RestaurantService;
 
 public class SparkAppMain {
@@ -61,6 +73,7 @@ public class SparkAppMain {
 	private static AdminService adminService = new AdminService();
 	private static RestaurantService restaurantService = new RestaurantService();
 	private static MenuItemService menuItemService = new MenuItemService();
+	private static OrderService orderService = new OrderService();
 	
 	public static void main(String[] args) throws Exception {
 		port(8080);
@@ -71,6 +84,7 @@ public class SparkAppMain {
 		adminService.load();
 		restaurantService.load();  //radi i bez ovoga
 		menuItemService.load();
+		orderService.load();
 
 		staticFiles.externalLocation(new File("./static").getCanonicalPath());
 		
@@ -464,7 +478,6 @@ public class SparkAppMain {
 			
 			customerService.addItemsToShoppingCart(shoppingCartDTO);
 			
-			
 			res.status(200);
 			return "OK";
 					
@@ -487,5 +500,40 @@ public class SparkAppMain {
 			return "OK";					
 		});
 		
+		post("/checkout", (req, res) -> {
+			res.type("application/json");
+			ShoppingCart cart = g.fromJson(req.body(), ShoppingCart.class);
+			if(!cart.getMenuItems().isEmpty()) {
+				customerService.emptyCart(cart);
+				
+				ArrayList<Order> newOrders = orderService.createOrders(cart);		
+				customerService.addOrders(newOrders);
+			}
+			res.status(200);
+			return g.toJson("");
+		});
+		
+		post("/getOrders", (req, res) -> {
+			res.type("application/json");
+			User user = g.fromJson(req.body(), User.class);
+			ArrayList<Order> orders  = new ArrayList<Order>();
+
+			if(user.getRole() == RoleEnum.CUSTOMER)
+				orders = orderService.getForCustomer(user.getId());
+			else if(user.getRole() == RoleEnum.COURIER) 
+				orders = orderService.getForCourier(user.getId(),user.getUsername());
+			else if(user.getRole() == RoleEnum.MANAGER) 		//ustvari trazim za restoran jer je to isto
+				orders = orderService.getForManager(managerService.getManagerByID(user.getId()).getRestaurantId());
+			
+			res.status(200);
+			return g.toJson(orders);
+		});
+		
+		post("/findRestaurant",(req, res) -> {
+			res.type("application/json");
+			Order order = g.fromJson(req.body(), Order.class);
+			res.status(200);
+			return g.toJson(restaurantService.getById(order.getRestaurantId()));
+		});
 	}
 }

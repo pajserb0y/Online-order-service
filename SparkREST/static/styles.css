@@ -82,6 +82,10 @@ input {
 	font-size: 18px;
 }
 
+.searchInputSmaller {
+	width: 120px;
+}
+
 textarea {
 	background-color: transparent;
 	width: 240px;
