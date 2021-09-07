@@ -314,8 +314,8 @@ public class SparkAppMain {
 
             Part uploadedFile = req.raw().getPart("file");
            // currRes.setLogoPath("static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png");
-            logoPath.value = "static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png";
-            Path out = Paths.get(logoPath.value);
+            logoPath.value = "restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png";
+            Path out = Paths.get("static"+File.separator+logoPath.value);
             try (final InputStream in = uploadedFile.getInputStream()) {
                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
                uploadedFile.delete();
@@ -388,7 +388,7 @@ public class SparkAppMain {
 		
 		post("/uploadMenuPicture", "multipart/form-data", (req, res) -> {
 			
-			String location = "static"+File.separator+"menuPictures";          // the directory location where files will be stored
+			String location = "static"+File.separator+"menuItemPictures";          // the directory location where files will be stored
 			long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
 			long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
 			int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
@@ -397,8 +397,8 @@ public class SparkAppMain {
 			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
 				
             Part uploadedFile = req.raw().getPart("file");
-            picturePath.value = "static"+File.separator+"menuPictures"+File.separator+"MENU"+ UUID.randomUUID() +".png";
-            Path out = Paths.get(picturePath.value);
+            picturePath.value = "menuItemPictures"+File.separator+"MENU"+ UUID.randomUUID() +".png";
+            Path out = Paths.get("static"+File.separator+picturePath.value);
             try (final InputStream in = uploadedFile.getInputStream()) {
                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
                uploadedFile.delete();
