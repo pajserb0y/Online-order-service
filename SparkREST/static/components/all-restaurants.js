@@ -68,7 +68,7 @@ Vue.component("all-restaurants",{
                 <table border="1" id="myTable">
                     <thead>
                         <tr>
-                            <th style="width:5%">Logo</th>
+                            <th style="width:0%">Logo</th>
                             <th v-on:click="sortTable(0)" style="width:15%">Name</th>
                             <th v-on:click="sortTable(1)" style="width:5%">Type</th>
                             <th v-on:click="sortTable(2)" style="width:15%">Location</th>
@@ -79,7 +79,7 @@ Vue.component("all-restaurants",{
                     </thead>
                     <tbody>
                     <tr v-for="r in restaurants" @click="view(r)">
-                        <td style="width:15%" ><img :src="r.logoPath" width="100" height="100" ></td>
+                        <td style="width:0%" ><img :src="r.logoPath" width="100" height="100" ></td>
                         <td style="width:15%" >{{r.name}}</td>
                         <td style="width:10%">{{r.type}}</td>
                         <td style="width:15%">{{r.location.adress.street}}, {{r.location.adress.town}}, {{r.location.adress.country}}</td>

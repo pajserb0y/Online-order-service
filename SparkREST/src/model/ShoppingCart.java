@@ -9,8 +9,13 @@ public class ShoppingCart {
 	protected ArrayList<MenuItem> menuItems;
 	protected double price;
 	
+	public ShoppingCart()
+	{
+		menuItems = new ArrayList<MenuItem>();
+		price = 0;
+	}
+	
 	public ShoppingCart(UUID customerId) {
-		super();
 		this.customerId = customerId;
 		menuItems = new ArrayList<MenuItem>();
 		price = 0;	

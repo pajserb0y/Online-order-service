@@ -23,7 +23,11 @@ Vue.component("view-restaurant",{
             },
             role:"",
             locationDTO:"",
-            menuItems:""
+            menuItems:"",
+            cartItem:{
+                customerId:"",
+                menuItems:""
+            }
         }
     },
     mounted(){
@@ -73,21 +77,19 @@ Vue.component("view-restaurant",{
                 <div>
                     <table border="1">
                         <thead>
-                            <th style="width:20%">Picture</th>
+                            <th style="width:0%">Picture</th>
                             <th style="width:15%">Name</th>
                             <th style="width:40%">Description</th>
                             <th style="width:5%">Price</th>
-                            <th v-if="role === 'ADMIN'" style="width:5%"></th>
                             <th v-if="role === 'CUSTOMER'" style="width:5%"></th>
                         </thead>
                         <tbody>
                             <tr class="nopointerrow" v-for="i in menuItems">
-                                <td style="width:20%"> <img :src="i.picturePath" width="75" height="75" ></td>
+                                <td style="width:0%"> <img :src="i.picturePath" width="75" height="75" ></td>
                                 <td style="width:15%">{{i.name}}</td>
                                 <td style="width:40%">{{i.description}}</td>
                                 <td style="width:5%">{{i.price}}</td>
-                                <td v-if="role === 'ADMIN'" style="width:5%"><button type= "button" v-on:click="deleteMenuItem(i)">Delete</button> </td>
-                                <td v-if="role === 'CUSTOMER' && restaurant.status === 'OPEN' " style="width:5%"><input min="0" style="width:99%" type="number" v-model="i.count" placeholder = "Count"/><button type= "button" v-on:click="addToCart(i)">Add To Cart</button> </td>
+                                <td v-if="role === 'CUSTOMER' && restaurant.status === 'OPEN' " style="width:5%"><input min="0" style="width:99%" type="number" v-model="i.count" /><button type= "button" v-on:click="addToCart(i)">Add To Cart</button> </td>
                                 <td v-if="role === 'CUSTOMER' && restaurant.status === 'CLOSED' " style="width:5%"></td>
                             </tr>                                                                  
                         </tbody>
@@ -179,33 +181,17 @@ Vue.component("view-restaurant",{
                 console.log(error)
               });
         },
-        deleteMenuItem(menuItem){
-            axios
-            .post('/deleteMenuItem', menuItem)
-            .then(response=>{
-                axios
-                .post('/viewRestaurant', this.reqparams)
-                .then(response=>{
-                    this.restaurantDTO = response.data
-                })
-                .catch((error) => {
-                  });
-            })
-            .catch((error) => {
-                console.log(error)
-              });
-        },
 
         addToCart(menuItem){
             if(menuItem.count >0){
-                this.cartItem.entityID = localStorage.getItem("id")
-                this.cartItem.menuItem = menuItem
+                this.cartItem.customerId = localStorage.getItem("id")
+                this.cartItem.menuItems = [menuItem]    //napravim array od jednog menuItem-a
                 console.log(this.cartItem)
                 axios
                 .post('/addToCart', this.cartItem)
                 .then(response=>{
                     menuItem.count = 0;
-                    alert("Added to cart");
+                    toast("Added to cart");
                 })
                 .catch((error) => {
                     menuItem.count = 0;

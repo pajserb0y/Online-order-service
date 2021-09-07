@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import model.Customer;
+import model.MenuItem;
 import model.ShoppingCart;
 import model.User;
 import model.Enums.CustomerTypeEnum;
@@ -151,5 +152,55 @@ public class CustomerService {
 			}
 		}			
 		return null;
+	}
+	
+	public static void addItemsToShoppingCart(ShoppingCart shoppingCartDTO) 	//objekat shopingCart sluzi kao DTO za dodavanje pojedinacnog istog meniItema, koji moze biti u vecem broju,
+																				//u shoppingCart trenutnog korisnika 
+	{
+		Customer currCustomer = getCustomerByID(shoppingCartDTO.getCustomerId());
+		
+		ArrayList<MenuItem> oldMenuItems = currCustomer.getShoppingCart().getMenuItems();
+		MenuItem newItem = shoppingCartDTO.getMenuItems().get(0);
+		
+		double price = currCustomer.getShoppingCart().getPrice();
+		boolean found = false;
+		for (MenuItem oneOldItem : oldMenuItems)
+		{
+			if (oneOldItem.getId().equals(newItem.getId()))
+			{
+				oneOldItem.setCount(oneOldItem.getCount() + newItem.getCount());
+				price += newItem.getPrice() * newItem.getCount();
+				found = true;
+				break;
+			}			
+		}
+		if (!found)
+		{
+			oldMenuItems.add(newItem);
+			price += newItem.getPrice() * newItem.getCount();
+		}
+
+		
+		shoppingCartDTO.setMenuItems(oldMenuItems);
+		shoppingCartDTO.setPrice(price);
+		currCustomer.setShoppingCart(shoppingCartDTO);
+		
+		save();
+	}
+	
+	public ShoppingCart getCart(UUID customerId) {
+			return getCustomerByID(customerId).getShoppingCart();
+	}
+	
+	public void changeCart(ShoppingCart cart) {
+		Customer customer = getCustomerByID(cart.getCustomerId());
+		customer.setShoppingCart(cart);
+		double price = 0;
+		for (MenuItem menuItem : customer.getShoppingCart().getMenuItems()) 
+			price += menuItem.getPrice()*menuItem.getCount();
+		//price = price - (price * customer.getCustomerType().getDiscount()/100);
+				
+		customer.getShoppingCart().setPrice(price);
+		save();
 	}
 }

@@ -6,6 +6,8 @@ import static spark.Spark.post;
 import static spark.Spark.staticFiles;
 
 
+
+
 import java.io.Console;
 import java.io.File;
 import java.io.InputStream;
@@ -17,8 +19,12 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 
+
+
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+
+
 
 
 import model.Admin;
@@ -27,11 +33,16 @@ import model.Customer;
 import model.Manager;
 import model.MenuItem;
 import model.Restaurant;
+import model.ShoppingCart;
 import model.User;
 import model.Enums.RoleEnum;
 
 
+
+
 import com.google.gson.Gson;
+
+
 
 
 import services.AdminService;
@@ -302,8 +313,9 @@ public class SparkAppMain {
 			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
 
             Part uploadedFile = req.raw().getPart("file");
-            logoPath.value = "restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png";
-            Path out = Paths.get("static"+File.separator+logoPath.value);
+           // currRes.setLogoPath("static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png");
+            logoPath.value = "static"+File.separator+"restaurantLogo"+File.separator+"RES"+ UUID.randomUUID() +".png";
+            Path out = Paths.get(logoPath.value);
             try (final InputStream in = uploadedFile.getInputStream()) {
                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
                uploadedFile.delete();
@@ -317,8 +329,9 @@ public class SparkAppMain {
 		post("/addRestaurant", (req,res) ->{
 			res.type("applicaton/json");
 			Restaurant restaurant = g.fromJson(req.body(),Restaurant.class);
-			
+			//restaurant.setLogoPath(currRes.getLogoPath());
 			restaurant.setLogoPath(logoPath.value);
+			
 			restaurantService.addRestaurant(restaurant);
 			managerService.addRestaurantToManager(restaurant.getManager(), restaurant.getId());
 			
@@ -375,7 +388,7 @@ public class SparkAppMain {
 		
 		post("/uploadMenuPicture", "multipart/form-data", (req, res) -> {
 			
-			String location = "static"+File.separator+"menuItemPictures";          // the directory location where files will be stored
+			String location = "static"+File.separator+"menuPictures";          // the directory location where files will be stored
 			long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
 			long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
 			int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
@@ -384,8 +397,8 @@ public class SparkAppMain {
 			req.raw().setAttribute("org.eclipse.jetty.multipartConfig",multipartConfigElement);
 				
             Part uploadedFile = req.raw().getPart("file");
-            picturePath.value = "menuItemPictures"+File.separator+"MENU"+ UUID.randomUUID() +".png";
-            Path out = Paths.get("static"+File.separator+picturePath.value);
+            picturePath.value = "static"+File.separator+"menuPictures"+File.separator+"MENU"+ UUID.randomUUID() +".png";
+            Path out = Paths.get(picturePath.value);
             try (final InputStream in = uploadedFile.getInputStream()) {
                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
                uploadedFile.delete();
@@ -401,11 +414,11 @@ public class SparkAppMain {
 		post("/addItem", (req, res) -> {
 			res.type("application/json");
 			MenuItem item = g.fromJson(req.body(), MenuItem.class);
+			item.setPicturePath(picturePath.value);
+			item.setCount(0);
 //			int restaurantID = menagerService.getRestaurantID(item.getRestaurant());			
 //			item.setRestaurant(restaurantID);	
 			if (menuItemService.checkNameAvailability(item)) { 		//zasto nismo pozvali gore i napravili novu instancu MenuitemService-a kao i za ostale servise
-				item.setPicturePath(picturePath.value);
-				item.setCount(0);
 				menuItemService.add(item);
 				res.status(200);
 				return "DONE";
@@ -437,24 +450,42 @@ public class SparkAppMain {
 			res.type("application/json");
 			MenuItem menuItem = g.fromJson(req.body(), MenuItem.class);
 			menuItemService.delete(menuItem.getId());
-			
-			
-			Restaurant restaurant = restaurantService.getById(menuItem.getRestorantId()); //ovaj naredni pasus cak i ne mora
+			Restaurant restaurant = restaurantService.getById(menuItem.getRestorantId());
 			ArrayList<UUID> Menu = restaurant.getMenu();
-			Menu.remove(menuItem.getId());
+			Menu.remove(menuItem);
 			restaurant.setMenu(Menu);
-			
-			
 			res.status(200);
 			return "OK";
 		});
 		
-		post("/changeMenuItem",(req, res) -> {
+		post("/addToCart", (req, res) -> {
 			res.type("application/json");
-			MenuItem menuItem = g.fromJson(req.body(), MenuItem.class);
-			menuItemService.change(menuItem);
+			ShoppingCart shoppingCartDTO = g.fromJson(req.body(), ShoppingCart.class);	//DTO je zato sto se prosledjuje isti item(tacno jedan), koji moze biti vise puta tj count > 1
+			
+			customerService.addItemsToShoppingCart(shoppingCartDTO);
+			
+			
 			res.status(200);
 			return "OK";
+					
 		});
+		
+		post("/getCart", (req, res) -> {
+			res.type("application/json");
+			User user = g.fromJson(req.body(), User.class);
+			res.status(200);
+			return g.toJson(customerService.getCart(user.getId()));
+					
+		});
+		
+		post("/changeCart", (req, res) -> {
+			res.type("application/json");
+			ShoppingCart cart = g.fromJson(req.body(), ShoppingCart.class);
+			customerService.changeCart(cart);
+			
+			res.status(200);
+			return "OK";					
+		});
+		
 	}
 }

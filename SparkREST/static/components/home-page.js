@@ -135,7 +135,7 @@ Vue.component("home-page", {
                 <orders></orders>
             </div>
             <div v-if="window === 'CART'">
-                <cart></cart>
+                <my-cart></my-cart>
             </div>
 
 
