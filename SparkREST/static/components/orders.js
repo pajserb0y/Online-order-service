@@ -23,7 +23,8 @@ Vue.component("orders",{
                 orderStatus:"",
                 sort:"",
                 username:""
-            }
+            },
+            name:""
         }
     },
     mounted(){
@@ -40,81 +41,82 @@ Vue.component("orders",{
         });
     },
     template:`
-        <div>
-        <h1 class="leftMargin">Orders</h1>
-            <div class="leftMargin">                
-                <input id="searchRestaurantName" v-on:keyup="searchTable(0)" v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" type="text" v-model="parameters.restaurantName" placeholder="Restaurant Name"/>
-                <input id="searchPriceFrom" class="searchInputSmaller" v-on:keyup="searchTable(0)" type="number" v-model="parameters.priceFrom" placeholder="Price From"/>
-                <input id="searchPriceTo" class="searchInputSmaller" v-on:keyup="searchTable(0)" type="number" v-model="parameters.priceTo" placeholder="Price To"/>
-                <label for="dateFrom"><b>Date from</b></label>
-                <input id="searchDateFrom" class="searchInputSmaller"  v-on:keyup="searchTable(0)" type="date" name="dateFrom" v-model="parameters.dateFrom"/>
-                <label for="dateTo"><b>Date to</b></label>
-                <input id="searchDateTo" class="searchInputSmaller"  v-on:keyup="searchTable(0)" type="date" name="dateTo" v-model="parameters.dateTo"/>
+    <div>
+    <h1 class="leftMargin">Orders</h1>
+        <div class="leftMargin">                
+            <input id="searchRestaurantName" v-on:keyup="searchTable(0)" v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" type="text" v-model="parameters.restaurantName" placeholder="Restaurant Name"/>
+            <input id="searchPriceFrom" class="searchInputSmaller" v-on:keyup="searchTable(0)" type="number" v-model="parameters.priceFrom" placeholder="Price From"/>
+            <input id="searchPriceTo" class="searchInputSmaller" v-on:keyup="searchTable(0)" type="number" v-model="parameters.priceTo" placeholder="Price To"/>
+            <label for="dateFrom"><b>Date from</b></label>
+            <input id="searchDateFrom" class="searchInputSmaller"  v-on:keyup="searchTable(0)" type="date" name="dateFrom" v-model="parameters.dateFrom"/>
+            <label for="dateTo"><b>Date to</b></label>
+            <input id="searchDateTo" class="searchInputSmaller"  v-on:keyup="searchTable(0)" type="date" name="dateTo" v-model="parameters.dateTo"/>
 
-                </br>
-                <label for="status"><b>Order status</b></label>
-                <select v-on:change="searchTable(parameters.orderStatus)" name="status" v-model="parameters.orderStatus" id="status">
-                    <option id="searchProcessing" value="PROCESSING">Processing</option>
-                    <option id="searchInPreparation" value="INPREPARATION">In preparation</option>
-                    <option id="searchWaiting" value="WAITING">Waiting for transport</option>
-                    <option id="searchTransport" value="TRANSPORT">In transport</option>
-                    <option id="searchDelivered" value="DELIVERED">Delivered</option>
-                    <option id="searchCanceled" value="CANCELED">Canceled</option>
-                    <option id="searchNoneStatus" value="noneStatus">--none--</option>
-                </select>
-                <label for="type"><b>Restaurant type</b></label>
-                <select v-on:change="searchTable(parameters.restaurantType)" v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" name="type" v-model="parameters.restaurantType" id="type">
-                    <option id="searchItalian" value="ITALIAN">Italian</option>
-                    <option id="searchChinese" value="CHINESE">Chinese</option>
-                    <option id="searchGrill" value="GRILL">Grill</option>
-                    <option id="searchGreek" value="GREEK">Greek</option>
-                    <option id="searchMexican" value="MEXICAN">Mexican</option>
-                    <option id="searchNoneType" value="noneType">--none--</option>
-                </select>
-            </div>
-
-        <table id="myTable" border="1">
-        <div class="leftMargin"
-            <thead>
-            <tr background-color="transparent">
-                <th style="width:20%">Date</th>
-                <th v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:20%">Restaurant</th>     
-                <th v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:10%">Type</th> 
-                <th style="width:10%">Price</th>
-                <th style="width:20%">Status</th>
-                <th style="width:1%" ></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="nopointerrow" v-for="o in orders" style="height:40px">
-                    <td style="width:20%">{{o.timeOfOrder}}</td>
-                    <td v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:20%" >{{restaurant.name}}</td>  
-                    <td v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:10%" >{{restaurant.type}}</td>                    
-                    <td style="text-align:center">{{o.price}}</td>
-                    <td v-if="o.orderStatus === 'INPREPARATION'" style="width:20%">IN PREPARATION</td>
-                    <td v-if="o.orderStatus === 'WAITING'" style="width:20%">WAITING FOR TRANSPORT</td>
-                    <td v-if="o.orderStatus === 'TRANSPORT'" style="width:20%">IN TRANSPORT</td>
-                    <td v-if="o.orderStatus !== 'TRANSPORT' && o.orderStatus !== 'WAITING' && o.orderStatus !== 'INPREPARATION'" style="width:20%">{{o.orderStatus}}</td>
-                    <td v-if="o.orderStatus === 'PROCESSING' && user.role === 'CUSTOMER'" style="width:10%"><button type= "button" v-on:click="cancel(o)">Cancel</button> </td>
-                    <td v-if="o.orderStatus === 'INPREPARATION' && user.role === 'MANAGER'" style="width:10%"><button type= "button" v-on:click="finish(o)">Finish Preperation</button> </td>
-                    <td v-if="o.orderStatus === 'TRANSPORT' && user.role === 'COURIER'" style="width:10%"><button type= "button" v-on:click="deliver(o)">Order Delivered</button> </td>
-                    <td v-if="o.orderStatus === 'WAITING' && user.role === 'COURIER'" style="width:10%"><button type= "button" v-on:click="request(o)">Request Order</button> </td>
-                </tr>
-            </tbody>
-            </div>
-        </table>
+            </br>
+            <label for="status"><b>Order status</b></label>
+            <select v-on:change="searchTable(parameters.orderStatus)" name="status" v-model="parameters.orderStatus" id="status">
+                <option id="searchProcessing" value="PROCESSING">Processing</option>
+                <option id="searchInPreparation" value="INPREPARATION">In preparation</option>
+                <option id="searchWaiting" value="WAITING">Waiting for transport</option>
+                <option id="searchTransport" value="TRANSPORT">In transport</option>
+                <option id="searchDelivered" value="DELIVERED">Delivered</option>
+                <option id="searchCanceled" value="CANCELED">Canceled</option>
+                <option id="searchNoneStatus" value="noneStatus">--none--</option>
+            </select>
+            <label for="type"><b>Restaurant type</b></label>
+            <select v-on:change="searchTable(parameters.restaurantType)" v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" name="type" v-model="parameters.restaurantType" id="type">
+                <option id="searchItalian" value="ITALIAN">Italian</option>
+                <option id="searchChinese" value="CHINESE">Chinese</option>
+                <option id="searchGrill" value="GRILL">Grill</option>
+                <option id="searchGreek" value="GREEK">Greek</option>
+                <option id="searchMexican" value="MEXICAN">Mexican</option>
+                <option id="searchNoneType" value="noneType">--none--</option>
+            </select>
         </div>
 
-    `,
+    <table id="myTable" border="1">
+    <div class="leftMargin"
+        <thead>
+        <tr background-color="transparent">
+            <th style="width:20%">Date</th>
+            <th v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:20%">Restaurant</th>     
+            <th v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:10%">Type</th> 
+            <th style="width:10%">Price</th>
+            <th style="width:20%">Status</th>
+            <th style="width:1%" ></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="nopointerrow" v-for="o in orders" style="height:40px">
+                <td style="width:20%">{{o.timeOfOrder}}</td>
+                <td v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:20%" >{{o.restaurantName}}</td>  
+                <td v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:10%" >{{o.restaurantType}}</td>                    
+                <td style="text-align:center">{{o.price}}</td>
+                <td v-if="o.orderStatus === 'INPREPARATION'" style="width:20%">IN PREPARATION</td>
+                <td v-if="o.orderStatus === 'WAITING'" style="width:20%">WAITING FOR TRANSPORT</td>
+                <td v-if="o.orderStatus === 'TRANSPORT'" style="width:20%">IN TRANSPORT</td>
+                <td v-if="o.orderStatus !== 'TRANSPORT' && o.orderStatus !== 'WAITING' && o.orderStatus !== 'INPREPARATION'" style="width:20%">{{o.orderStatus}}</td>
+                <td v-if="o.orderStatus === 'PROCESSING' && user.role === 'CUSTOMER'" style="width:10%"><button type= "button" v-on:click="cancel(o)">Cancel</button> </td>
+                <td v-if="o.orderStatus === 'INPREPARATION' && user.role === 'MANAGER'" style="width:10%"><button type= "button" v-on:click="finish(o)">Finish Preperation</button> </td>
+                <td v-if="o.orderStatus === 'TRANSPORT' && user.role === 'COURIER'" style="width:10%"><button type= "button" v-on:click="deliver(o)">Order Delivered</button> </td>
+                <td v-if="o.orderStatus === 'WAITING' && user.role === 'COURIER'" style="width:10%"><button type= "button" v-on:click="request(o)">Request Order</button> </td>
+            </tr>
+        </tbody>
+        </div>
+    </table>
+    </div>
+
+`,
     methods:{
 
-        findRestaurant(order){
+/*         findRestaurant(order){
             axios
             .post('/findRestaurant', order)
             .then(response=>{
-                this.restaurant = response.data
+                //this.restaurant = response.data
+                return this.restaurant.name
             });
-        },
+        }, */
 
         cancel(order){
             this.reqOrder.username = localStorage.getItem("username")

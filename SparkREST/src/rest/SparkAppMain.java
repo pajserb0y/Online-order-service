@@ -10,6 +10,9 @@ import static spark.Spark.staticFiles;
 
 
 
+
+
+
 import java.io.Console;
 import java.io.File;
 import java.io.InputStream;
@@ -25,8 +28,15 @@ import java.util.UUID;
 
 
 
+
+
+
+import javax.lang.model.element.TypeElement;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+
+
+
 
 
 
@@ -41,8 +51,13 @@ import model.MenuItem;
 import model.Restaurant;
 import model.ShoppingCart;
 import model.User;
+import model.Enums.RestaurantTypeEnum;
 import model.Enums.RoleEnum;
 import model.Order;
+import model.OrderDTO;
+
+
+
 
 
 
@@ -50,6 +65,9 @@ import model.Order;
 
 
 import com.google.gson.Gson;
+
+
+
 
 
 
@@ -512,12 +530,12 @@ public class SparkAppMain {
 			res.status(200);
 			return g.toJson("");
 		});
-		
+
 		post("/getOrders", (req, res) -> {
 			res.type("application/json");
 			User user = g.fromJson(req.body(), User.class);
 			ArrayList<Order> orders  = new ArrayList<Order>();
-
+			
 			if(user.getRole() == RoleEnum.CUSTOMER)
 				orders = orderService.getForCustomer(user.getId());
 			else if(user.getRole() == RoleEnum.COURIER) 
@@ -525,8 +543,15 @@ public class SparkAppMain {
 			else if(user.getRole() == RoleEnum.MANAGER) 		//ustvari trazim za restoran jer je to isto
 				orders = orderService.getForManager(managerService.getManagerByID(user.getId()).getRestaurantId());
 			
+			ArrayList<OrderDTO> dtos = new ArrayList<OrderDTO>();
+			for (Order o : orders)
+			{
+				OrderDTO dto = new OrderDTO(o, restaurantService.getById(o.getRestaurantId()).getName(), restaurantService.getById(o.getRestaurantId()).getRestaurantType());
+				dtos.add(dto);
+			}
+			
 			res.status(200);
-			return g.toJson(orders);
+			return g.toJson(dtos);
 		});
 		
 		post("/findRestaurant",(req, res) -> {

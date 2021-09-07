@@ -16,6 +16,7 @@ public class Order extends Entity{
 	protected String timeOfOrder;
 	protected double price;
 	protected OrderStatusEnum orderStatus;
+	protected ArrayList<String> requests;	//zahtevi kurira da preuzme paket koji cekaju da menadzer odabere kurira
 //	protected RestaurantTypeEnum restaurantType;
 //	protected String restaurantName;
 //	public String getRestaurantName() {
@@ -26,7 +27,7 @@ public class Order extends Entity{
 //		this.restaurantName = restaurantName;
 //	}
 
-	protected ArrayList<String> requests;	//zahtevi kurira da preuzme paket koji cekaju da menadzer odabere kurira
+	
 	
 	public Order()
 	{
