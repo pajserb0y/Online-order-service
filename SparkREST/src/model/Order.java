@@ -14,16 +14,6 @@ public class Order extends Entity{
 	protected double price;
 	protected OrderStatusEnum orderStatus;
 	protected ArrayList<Courier> requests;	//zahtevi kurira da preuzme paket koji cekaju da menadzer odabere kurira
-//	protected RestaurantTypeEnum restaurantType;
-//	protected String restaurantName;
-//	public String getRestaurantName() {
-//		return restaurantName;
-//	}
-//
-//	public void setRestaurantName(String restaurantName) {
-//		this.restaurantName = restaurantName;
-//	}
-
 	
 	
 	public Order()
@@ -43,7 +33,6 @@ public class Order extends Entity{
 		this.timeOfOrder = timeOfOrder;
 		this.price = price;
 		this.orderStatus = orderStatus;
-//		this.restaurantType = restaurantType;
 		this.requests = requests;
 	}
 
@@ -102,14 +91,6 @@ public class Order extends Entity{
 	public void setOrderStatus(OrderStatusEnum orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-
-//	public RestaurantTypeEnum getRestaurantType() {
-//		return restaurantType;
-//	}
-//
-//	public void setRestaurantType(RestaurantTypeEnum restaurantType) {
-//		this.restaurantType = restaurantType;
-//	}
 
 	public ArrayList<Courier> getRequests() {
 		return requests;

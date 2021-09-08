@@ -153,7 +153,7 @@ Vue.component("home-page", {
                     <myComments></myComments>
                 </div>
                 <div v-if="window === 'CUSTOMERS'">
-                    <myCustomers></myCustomers>
+                    <my-customers></my-customers>
                 </div>
                 <div v-if="window === 'REQUESTS'">
                     <courier-requests></courier-requests>

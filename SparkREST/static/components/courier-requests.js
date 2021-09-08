@@ -24,7 +24,7 @@ Vue.component("courier-requests",{
     	<div>
         <h1>Transport Requests</h1>
         <div>
-            <table style="width:99.999%">
+            <table border="1" >
                 <thead>
                     <th style="width:30%">Requested by</th>
                     <th style="width:15%">Order ID</th>
@@ -38,7 +38,7 @@ Vue.component("courier-requests",{
                         <td style="width:30%"> {{c.firstName}} {{c.lastName}} ({{c.username}})</td>
                         <td style="width:15%">{{o.id}}</td>
                         <td style="width:30%">{{o.timeOfOrder}}</td>
-                        <td style="width:15%">{{o.price}}</td>
+                        <td  style="text-align:center">{{o.price}}</td>
                         <td style="width:5%"><button type= "button" v-on:click="approve(o,c)">Approve</button> </td>
                         <td style="width:5%"><button type= "button" v-on:click="deny(o,c)">Deny</button> </td>
                     </tr>                                                                  

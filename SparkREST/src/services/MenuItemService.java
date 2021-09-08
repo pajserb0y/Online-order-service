@@ -74,7 +74,7 @@ public class MenuItemService {
 	
 	public static boolean checkNameAvailability(MenuItem item) {
 		for (MenuItem menuItem : menuItemList) {
-			if (menuItem.getRestorantId().equals(item.getRestorantId()) && menuItem.getName().equals(item.getName())){
+			if (menuItem.getRestorantId().equals(item.getRestorantId()) && menuItem.getName().equals(item.getName()) && !item.getId().equals(menuItem.getId())){
 				return false;
 			}
 		}

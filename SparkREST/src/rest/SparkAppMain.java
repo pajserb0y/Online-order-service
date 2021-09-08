@@ -488,6 +488,21 @@ public class SparkAppMain {
 			return "OK";
 		});
 		
+		post("/changeMenuItem", (req, res) -> {
+			res.type("application/json");
+			MenuItem item = g.fromJson(req.body(), MenuItem.class);
+				
+			if (menuItemService.checkNameAvailability(item)) {
+				menuItemService.change(item);
+				res.status(200);
+				return "DONE";
+			}
+			else {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}			
+		});
+		
 		post("/addToCart", (req, res) -> {
 			res.type("application/json");
 			ShoppingCart shoppingCartDTO = g.fromJson(req.body(), ShoppingCart.class);	//DTO je zato sto se prosledjuje isti item(tacno jedan), koji moze biti vise puta tj count > 1
@@ -629,7 +644,6 @@ public class SparkAppMain {
 			Order reqParams = g.fromJson(req.body(), Order.class);
 			UUID courierId =  reqParams.getCurrierId();
 			UUID orderId = reqParams.getId();
-
 			
 			orderService.approveTransportFor(orderId,courierId);
 			courierService.addOrderToCourier(orderId,courierId);
@@ -653,12 +667,19 @@ public class SparkAppMain {
 			return "OK";
 			
 		});
-//		post("/findRestaurant",(req, res) -> {
-//			res.type("application/json");
-//			Order order = g.fromJson(req.body(), Order.class);
-//			res.status(200);
-//			return g.toJson(restaurantService.getById(order.getRestaurantId()));
-//		});
+	
+		post("/getMyCustomers", (req, res) -> {
+			res.type("application/json");
+			User user = g.fromJson(req.body(), User.class);		
+			ArrayList<Customer> customers = new ArrayList<Customer>();
+			
+			ArrayList<UUID> customerIDs = orderService.getCustomers(managerService.getRestaurantIdByManagerId(user.getId()));
+			customers.addAll(customerService.getListOfCustomersByIds(customerIDs));
+			
+			res.status(200);
+			return g.toJson(customers);
+			
+		});
 		
 	}
 }

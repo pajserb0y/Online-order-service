@@ -175,4 +175,14 @@ public class ManagerService {
 		else
 			return managers;
 	}
+	
+	public static UUID getRestaurantIdByManagerId(UUID managerId) {
+		for (Manager manager: managerList) {
+			if (manager.getId().equals(managerId) && !manager.isDeleted()) {
+				return manager.getRestaurantId();
+			}
+		}
+			
+		return null;
+	}
 }

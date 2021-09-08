@@ -187,13 +187,13 @@ public class OrderService {
 		System.out.println("poslati ID  "+ orderId);
 		
 		for (Order order : orderList) {
-			System.out.println(order.getOrderStatus());
-			System.out.println(order.getId());
+//			System.out.println(order.getOrderStatus());
+//			System.out.println(order.getId());
 			if(order.getId().equals(orderId)){
-				System.out.println("prvi if prosao");
+//				System.out.println("prvi if prosao");
 				if(order.getOrderStatus() == OrderStatusEnum.PROCESSING){
 					order.setOrderStatus(OrderStatusEnum.INPREPARATION);
-					System.out.println(order.getOrderStatus());
+//					System.out.println(order.getOrderStatus());
 					break;
 			}
 		}
@@ -260,5 +260,15 @@ public class OrderService {
 			}
 		}
 		save();
+	}
+	
+	public static ArrayList<UUID> getCustomers(UUID restaurantID) {
+		ArrayList<UUID> returnIDs = new ArrayList<UUID>();
+		for (Order order : getAll()) {
+			if(order.getRestaurantId().equals(restaurantID) && !returnIDs.contains(order.getCustomerId())){
+				returnIDs.add(order.getCustomerId());
+			}
+		}
+		return returnIDs;
 	}
 }

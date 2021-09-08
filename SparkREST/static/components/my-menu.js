@@ -48,16 +48,16 @@ Vue.component("my-menu",{
     	<div>
         <h1>Menu</h1>
         <div>
-            <table style="width:99.999%">
+            <table  border="1" >
                 <thead>
-                    <th style="width:20%">Picture</th>
+                    <th style="width:0%">Picture</th>
                     <th style="width:15%">Name</th>
                     <th style="width:40%">Description</th>
                     <th style="width:5%">Price</th>
                 </thead>
                 <tbody>
                     <tr v-for="i in menuItems" @click="view(i)">
-                        <td style="width:20%"> <img :src="i.picturePath" width="75" height="75" ></td>
+                        <td style="width:0%"> <img :src="i.picturePath" width="75" height="75" ></td>
                         <td style="width:15%">{{i.name}}</td>
                         <td style="width:40%">{{i.description}}</td>
                         <td style="width:5%">{{i.price}}</td>
@@ -65,49 +65,50 @@ Vue.component("my-menu",{
                 </tbody>
             </table>            
         </div>
-        <div class="container" v-if="menuItem">
+        <div  v-if="menuItem">
             <form id="registrationForm" method ="POST" @submit.prevent = "changeItem">
-                <div>
-                    <label for="name"><b>Name*</b></label>
+                <div class="pp">
+                    <label class="lbl" for="name"><b>Name*</b></label>
                     <input type="text" v-model="menuItem.name" placeholder = "Name" required/>
                 </div>
-                <div>
-                    <label for="description"><b>Description</b></label>
+                <div class="pp">
+                    <label class="lbl" for="description"><b>Description</b></label>
                     <input type="text" v-model="menuItem.description" placeholder = "Description"/>
                 </div>
-                <div>
-                    <label for="type"><b>Type*</b></label>
+                <div class="pp">
+                    <label class="lbl" for="type"><b>Type*</b></label>
                     <select name="type" v-model="menuItem.type" id="type" required>
                         <option value="FOOD">Food</option>
                         <option value="DRINK">Drink</option>
                     </select>
                 </div>
-                <div>
-                    <label for="quantity"><b>Quantity</b></label>
+                <div class="pp">
+                    <label class="lbl" for="quantity"><b>Quantity</b></label>
                     <input type="number" v-model="menuItem.quantity" placeholder = "Quantity"/>
                 </div>
-                <div>
-                    <label for="type"><b>Quantity Type</b></label>
+                <div class="pp">
+                    <label class="lbl" for="type"><b>Quantity Type</b></label>
                     <select name="quantityType" v-model="menuItem.quantityType" id="quantityType">
                         <option value="GRAMS">Grams</option>
                         <option value="MILLILITERS">Milliliters</option>
                     </select>
                 </div>
-                <div>
-                    <label for="price"><b>Price*</b></label>
+                <div class="pp">
+                    <label class="lbl" for="price"><b>Price*</b></label>
                     <input type="number" v-model="menuItem.price" placeholder = "Price" required/>
                 </div>
                 <p></p>
-                <div>
-                    <button type = "submit"> Change</button>
+                <div class="btn2">
+                    <button class="emptyLabel" type = "submit"> Change</button>
                     <button type= "button" v-on:click="deleteMenuItem">Delete</button>
                 </div>
             </form>
         </div>
         </div>
     	`,
-    	   methods:{
-    		   deleteMenuItem(){
+    	methods:{
+               
+    		deleteMenuItem(){
    	            axios
    	            .post('/deleteMenuItem', this.menuItem)
    	            .then(response=>{
@@ -115,6 +116,7 @@ Vue.component("my-menu",{
                     .post('/getMenuItems', this.restaurant)
                     .then(response => {  
                         this.menuItems = response.data
+                        this.menuItem = ""        //da izbrise iz forme prethodni menuItem
                     })
    	                .catch((error) => {
    	                  });
@@ -123,7 +125,7 @@ Vue.component("my-menu",{
    	                console.log(error)
    	              });
    	        },
-   	     view(item){
+   	        view(item){
    	            this.menuItem = JSON.parse(JSON.stringify(item))
    	        },
 

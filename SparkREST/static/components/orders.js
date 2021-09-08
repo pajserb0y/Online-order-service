@@ -49,11 +49,11 @@ Vue.component("orders",{
             <input id="searchPriceFrom" class="searchInputSmaller" v-on:keyup="searchTable(0)" type="number" v-model="parameters.priceFrom" placeholder="Price From"/>
             <input id="searchPriceTo" class="searchInputSmaller" v-on:keyup="searchTable(0)" type="number" v-model="parameters.priceTo" placeholder="Price To"/>
             <label for="dateFrom"><b>Date from</b></label>
-            <input id="searchDateFrom" class="searchInputSmaller"  v-on:keyup="searchTable(0)" type="date" name="dateFrom" v-model="parameters.dateFrom"/>
+            <input id="searchDateFrom" class="searchInputSmaller"  v-on:change="searchTable(0)" type="date" name="dateFrom" v-model="parameters.dateFrom"/>
             <label for="dateTo"><b>Date to</b></label>
-            <input id="searchDateTo" class="searchInputSmaller"  v-on:keyup="searchTable(0)" type="date" name="dateTo" v-model="parameters.dateTo"/>
+            <input id="searchDateTo" class="searchInputSmaller"  v-on:change="searchTable(0)" type="date" name="dateTo" v-model="parameters.dateTo"/>
 
-            </br>
+            <br v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'">
             <label for="status"><b>Order status</b></label>
             <select v-on:change="searchTable(parameters.orderStatus)" name="status" v-model="parameters.orderStatus" id="status">
                 <option id="searchProcessing" value="PROCESSING">Processing</option>
@@ -64,7 +64,7 @@ Vue.component("orders",{
                 <option id="searchCanceled" value="CANCELED">Canceled</option>
                 <option id="searchNoneStatus" value="noneStatus">--none--</option>
             </select>
-            <label for="type"><b>Restaurant type</b></label>
+            <label v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" for="type"><b>Restaurant type</b></label>
             <select v-on:change="searchTable(parameters.restaurantType)" v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" name="type" v-model="parameters.restaurantType" id="type">
                 <option id="searchItalian" value="ITALIAN">Italian</option>
                 <option id="searchChinese" value="CHINESE">Chinese</option>
@@ -80,8 +80,8 @@ Vue.component("orders",{
         <thead>
         <tr background-color="transparent">
             <th style="width:20%">Date</th>
-            <th v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:20%">Restaurant</th>     
-            <th v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:10%">Type</th> 
+            <th  style="width:20%">Restaurant</th>     
+            <th  style="width:10%">Type</th> 
             <th style="width:10%">Price</th>
             <th style="width:20%">Status</th>
             <th style="width:1%" ></th>
@@ -90,8 +90,8 @@ Vue.component("orders",{
         <tbody>
             <tr class="nopointerrow" v-for="o in orders" style="height:40px">
                 <td style="width:20%">{{o.timeOfOrder}}</td>
-                <td v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:20%" >{{o.restaurantName}}</td>  
-                <td v-if="user.role === 'CUSTOMER' || user.role === 'COURIER'" style="width:10%" >{{o.restaurantType}}</td>                    
+                <td  style="width:20%" >{{o.restaurantName}}</td>  
+                <td  style="width:10%" >{{o.restaurantType}}</td>                    
                 <td style="text-align:center">{{o.price}}</td>
                 <td v-if="o.orderStatus === 'INPREPARATION'" style="width:20%">IN PREPARATION</td>
                 <td v-if="o.orderStatus === 'WAITING'" style="width:20%">WAITING FOR TRANSPORT</td>
@@ -184,10 +184,20 @@ Vue.component("orders",{
             else if (n == "noneStatus")
                 this.parameters.orderStatus = "";
                 
-            let map = new Map();
+            let map = new Map();               
+            map.set(3, this.parameters.priceFrom.concat(",").concat(this.parameters.priceTo));
             map.set(1, this.parameters.restaurantName);
-            map.set(3, this.parameters.orderStatus);
-            map.set(2, this.parameters.restaurantType);      
+            map.set(2, this.parameters.restaurantType);
+            map.set(0, this.parameters.dateFrom.concat(",").concat(this.parameters.dateTo));
+            if(this.parameters.orderStatus == "INPREPARATION"){
+                map.set(4, "IN PREPARATION");
+            }
+            else if(this.parameters.orderStatus == "TRANSPORT"){
+                map.set(4, "TRANSPORTATION");
+            }
+            else{
+                   map.set(4, this.parameters.orderStatus);
+            }
 
 
             var hideList = [];
@@ -197,7 +207,61 @@ Vue.component("orders",{
                     td = tr[i].getElementsByTagName("td")[col];
                     if (td) {
                         txtValue = td.textContent || td.innerText;
-                        if (!(txtValue.toUpperCase().indexOf(parameter.toUpperCase()) > -1)) 
+                        if(map.get(4) == "TRANSPORTATION" && txtValue == "IN TRANSPORT")                            
+                            txtValue = txtValue.concat("ATION");
+                        else
+                            txtValue = td.textContent || td.innerText;
+                        if(col == 3){
+                            if(this.parameters.priceFrom == "")
+                            {
+                                if(this.parameters.priceTo != "")
+                                {
+                                    var to = (map.get(3)).split(",")[1]
+                                    if(parseInt(txtValue) > parseInt(to))
+                                        hideList.push(i);
+                                }
+                            }
+                            else{
+                                var from = (map.get(3)).split(",")[0]
+                                if(this.parameters.priceTo == "")
+                                {
+                                    if(parseInt(txtValue) < parseInt(from))
+                                        hideList.push(i);
+                                }
+                                else{
+                                    var to = (map.get(3)).split(",")[1]
+                                    if(parseInt(txtValue) < parseInt(from) || parseInt(txtValue) > parseInt(to))
+                                        hideList.push(i);
+                                }
+                            }
+                        }
+                        else if(col == 0){
+                            txtValue = txtValue.split("/")[1].concat("/").concat(txtValue.split("/")[0]).concat("/").concat(txtValue.split("/")[2])
+                            var value = new Date(txtValue)
+                            if(this.parameters.dateFrom == "")
+                            {
+                                if(this.parameters.dateTo != "")
+                                {
+                                    var to = new Date((map.get(0)).split(",")[1])
+                                    if(value > to)
+                                        hideList.push(i);
+                                }
+                            }
+                            else{
+                                var from = new Date((map.get(0)).split(",")[0])
+                                if(this.parameters.dateTo == "")
+                                {
+                                    if(value < from)
+                                        hideList.push(i);
+                                }
+                                else{
+                                    var to = new Date((map.get(0)).split(",")[1])
+                                    if(value < from || value > to)
+                                        hideList.push(i);
+                                }
+                            }
+                        }
+                        else if (!(txtValue.toUpperCase().indexOf(parameter.toUpperCase()) > -1)) 
                             hideList.push(i);
                     }       
                 }

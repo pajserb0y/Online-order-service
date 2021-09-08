@@ -260,4 +260,12 @@ public class CustomerService {
 			
 		save();
 	}
+	
+	public static ArrayList<Customer> getListOfCustomersByIds(ArrayList<UUID> customerIDs) {
+		ArrayList<Customer> returnList = new ArrayList<Customer>();
+		for (UUID customerId : customerIDs) 
+			returnList.add(getCustomerByID(customerId));
+		
+		return returnList;
+	}
 }
