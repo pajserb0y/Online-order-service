@@ -9,14 +9,15 @@ public class OrderDTO extends 	Order
 	RestaurantTypeEnum restaurantType;
 	public OrderDTO(Order order, String name, RestaurantTypeEnum type)
 	{
+		this.id = order.getId();
+		this.deleted = order.isDeleted();
 		this.restaurantId = order.getRestaurantId();
 		this.customerId = order.getCustomerId();
-		this.currierId = order.getCurrierId();
+		this.courierId = order.getCurrierId();
 		this.menuItems = order.getMenuItems();
 		this.timeOfOrder = order.getTimeOfOrder();
 		this.price = order.getPrice();
 		this.orderStatus = order.getOrderStatus();
-//		this.restaurantType = restaurantType;
 		this.requests = order.getRequests();
 		this.restaurantName = name;
 		this.restaurantType = type;
@@ -26,7 +27,7 @@ public class OrderDTO extends 	Order
 		return "OrderDTO [restaurantName=" + restaurantName
 				+ ", restaurantType=" + restaurantType
 				+ ", restaurantId=" + restaurantId + ", customerId="
-				+ customerId + ", currierId=" + currierId
+				+ customerId + ", currierId=" + courierId
 				+ ", menuItems=" + menuItems + ", timeOfOrder="
 				+ timeOfOrder + ", price=" + price + ", orderStatus="
 				+ orderStatus + ", requests=" + requests + ", id=" + id

@@ -13,7 +13,6 @@ import static spark.Spark.staticFiles;
 
 
 
-import java.io.Console;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -21,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 
@@ -31,7 +31,6 @@ import java.util.UUID;
 
 
 
-import javax.lang.model.element.TypeElement;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 
@@ -51,7 +50,6 @@ import model.MenuItem;
 import model.Restaurant;
 import model.ShoppingCart;
 import model.User;
-import model.Enums.RestaurantTypeEnum;
 import model.Enums.RoleEnum;
 import model.Order;
 import model.OrderDTO;
@@ -549,16 +547,118 @@ public class SparkAppMain {
 				OrderDTO dto = new OrderDTO(o, restaurantService.getById(o.getRestaurantId()).getName(), restaurantService.getById(o.getRestaurantId()).getRestaurantType());
 				dtos.add(dto);
 			}
-			
 			res.status(200);
 			return g.toJson(dtos);
 		});
 		
-		post("/findRestaurant",(req, res) -> {
-			res.type("application/json");
-			Order order = g.fromJson(req.body(), Order.class);
+		post("/cancelOrder", (req, res) -> {
+			res.type("application/json");	
+			Order reqParams = g.fromJson(req.body(), Order.class);
+			UUID customerId=  reqParams.getCustomerId();
+			UUID orderId = reqParams.getId();
+			Order order = orderService.getOrderByID(orderId);
+			
+			double pointsLost = order.getPrice()/1000 * 133 * 4;
+			
+			orderService.cancelOrder(orderId);
+			customerService.removePoints(customerId, pointsLost);
+			
+			
 			res.status(200);
-			return g.toJson(restaurantService.getById(order.getRestaurantId()));
+			return "OK";
+			
 		});
+		
+		post("/prepareOrder", (req, res) -> {
+			res.type("application/json");
+			OrderDTO order = g.fromJson(req.body(), OrderDTO.class);
+			orderService.prepareOrder(order.getId());
+			
+			res.status(200);
+			return "OK";
+			
+		});
+		
+		post("/finishOrder", (req, res) -> {
+			res.type("application/json");
+			OrderDTO order = g.fromJson(req.body(), OrderDTO.class);
+			orderService.finishOrder(order.getId());
+			
+			res.status(200);
+			return "OK";
+			
+		});
+		
+		post("/deliverOrder", (req, res) -> {
+			res.type("application/json");
+			OrderDTO order = g.fromJson(req.body(), OrderDTO.class);
+			orderService.deliverOrder(order.getId());
+			
+			res.status(200);
+			return "OK";
+			
+		});
+		
+		post("/requestOrder", (req, res) -> {
+			res.type("application/json");
+			Order reqParams = g.fromJson(req.body(), Order.class);
+			UUID courierId =  reqParams.getCurrierId();
+			UUID orderId = reqParams.getId();
+
+			orderService.addRequest(orderId,courierId);
+			
+			res.status(200);
+			return "OK";
+			
+		});
+		
+		post("/getOrdersForRestaurant", (req, res) -> {
+			res.type("application/json");
+			User user = g.fromJson(req.body(), User.class);		
+			ArrayList<Order> orders = new ArrayList<Order>();
+			
+			orders = orderService.getForManager(managerService.getManagerByID(user.getId()).getRestaurantId());
+			
+			res.status(200);
+			return g.toJson(orders);
+			
+		});
+		
+		post("/approveTransport", (req, res) -> {
+			res.type("application/json");
+			Order reqParams = g.fromJson(req.body(), Order.class);
+			UUID courierId =  reqParams.getCurrierId();
+			UUID orderId = reqParams.getId();
+
+			
+			orderService.approveTransportFor(orderId,courierId);
+			courierService.addOrderToCourier(orderId,courierId);
+					
+			res.status(200);
+			return "OK";
+			
+		});
+		
+		post("/denyTransport", (req, res) -> {
+			res.type("application/json");
+			Order reqParams = g.fromJson(req.body(), Order.class);
+			UUID courierId =  reqParams.getCurrierId();
+			UUID orderId = reqParams.getId();
+
+			System.out.println("orderID "+orderId);
+			
+			orderService.denyTransportFor(orderId,courierId);
+					
+			res.status(200);
+			return "OK";
+			
+		});
+//		post("/findRestaurant",(req, res) -> {
+//			res.type("application/json");
+//			Order order = g.fromJson(req.body(), Order.class);
+//			res.status(200);
+//			return g.toJson(restaurantService.getById(order.getRestaurantId()));
+//		});
+		
 	}
 }

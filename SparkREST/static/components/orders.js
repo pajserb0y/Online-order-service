@@ -8,9 +8,13 @@ Vue.component("orders",{
                 username:""
             },
             orders:"",
-            restaurant:"",
             sendParam:{
-                id:""
+                id:"",
+            	courierId:""
+            },
+            reqParam:{
+                id:"",
+                customerId:""
             },
             parameters:{
                 role:"",
@@ -31,9 +35,6 @@ Vue.component("orders",{
         this.user.id = localStorage.getItem('id')
         this.user.role = localStorage.getItem('role')
         this.user.username = localStorage.getItem('username')
-        /* this.searchParams.entityID = this.user.entityID
-        this.searchParams.role = this.user.role
-        this.searchParams.username = this.user.username */
         axios
         .post('/getOrders',this.user)
         .then(response=>{
@@ -97,40 +98,44 @@ Vue.component("orders",{
                 <td v-if="o.orderStatus === 'TRANSPORT'" style="width:20%">IN TRANSPORT</td>
                 <td v-if="o.orderStatus !== 'TRANSPORT' && o.orderStatus !== 'WAITING' && o.orderStatus !== 'INPREPARATION'" style="width:20%">{{o.orderStatus}}</td>
                 <td v-if="o.orderStatus === 'PROCESSING' && user.role === 'CUSTOMER'" style="width:10%"><button type= "button" v-on:click="cancel(o)">Cancel</button> </td>
-                <td v-if="o.orderStatus === 'INPREPARATION' && user.role === 'MANAGER'" style="width:10%"><button type= "button" v-on:click="finish(o)">Finish Preperation</button> </td>
-                <td v-if="o.orderStatus === 'TRANSPORT' && user.role === 'COURIER'" style="width:10%"><button type= "button" v-on:click="deliver(o)">Order Delivered</button> </td>
+                <td v-if="o.orderStatus === 'PROCESSING' && user.role === 'MANAGER'" style="width:0%"><button type= "button" v-on:click="inPrep(o)">In Preparation</button> </td>
+                <td v-if="o.orderStatus === 'INPREPARATION' && user.role === 'MANAGER'" style="width:0%"><button type= "button" v-on:click="finish(o)">Finish </button> </td>
+                <td v-if="o.orderStatus === 'TRANSPORT' && user.role === 'COURIER'" style="width:0%"><button type= "button" v-on:click="deliver(o)">Order Delivered</button> </td>
                 <td v-if="o.orderStatus === 'WAITING' && user.role === 'COURIER'" style="width:10%"><button type= "button" v-on:click="request(o)">Request Order</button> </td>
             </tr>
         </tbody>
         </div>
     </table>
     </div>
-
+</table>
 `,
     methods:{
-
-/*         findRestaurant(order){
+         getOrders(){
             axios
-            .post('/findRestaurant', order)
+            .post('/getOrders',this.user)
             .then(response=>{
-                //this.restaurant = response.data
-                return this.restaurant.name
-            });
-        }, */
-
+                this.orders = response.data
+                this.sendParam.username = ""
+                this.sendParam.orderId = ""
+                this.sendParam.courierId = ""
+        });
+        }, 
         cancel(order){
-            this.reqOrder.username = localStorage.getItem("username")
-            this.reqOrder.orderID = order.entityID
+            this.reqParam.customerId = localStorage.getItem("id")
+            this.reqParam.id = order.id
             axios
-            .post('/cancelOrder', this.reqOrder)
+            .post('/cancelOrder', this.reqParam)
             .then(response=>{
-                axios
-                .post('/searchOrders', this.searchParams)
-                .then(response=>{
-                    this.orders = response.data
-                })
-                .catch((error) => {
-                  });
+                this.getOrders()
+            })
+            .catch((error) => {
+              });
+        },
+        inPrep(order){
+            axios
+            .post('/prepareOrder', order)
+            .then(response=>{
+                this.getOrders()   
             })
             .catch((error) => {
               });
@@ -140,31 +145,19 @@ Vue.component("orders",{
             axios
             .post('/finishOrder', order)
             .then(response=>{
-                axios
-                .post('/searchOrders', this.searchParams)
-                .then(response=>{
-                    this.orders = response.data
-                })
-                .catch((error) => {
-                  });
+                this.getOrders() 
             })
             .catch((error) => {
               });
         },
 
         request(order){
-            this.reqOrder.username = localStorage.getItem("username")
-            this.reqOrder.orderID = order.entityID
+            this.sendParam.courierId = localStorage.getItem("id")
+            this.sendParam.id = order.id
             axios
-            .post('/requestOrder', this.reqOrder)
+            .post('/requestOrder', this.sendParam)
             .then(response=>{
-                axios
-                .post('/searchOrders', this.searchParams)
-                .then(response=>{
-                    this.orders = response.data
-                })
-                .catch((error) => {
-                  });
+                this.getOrders() 
             })
             .catch((error) => {
               });
@@ -174,13 +167,7 @@ Vue.component("orders",{
             axios
             .post('/deliverOrder', order)
             .then(response=>{
-                axios
-                .post('/searchOrders', this.searchParams)
-                .then(response=>{
-                    this.orders = response.data
-                })
-                .catch((error) => {
-                  });
+                this.getOrders() 
             })
             .catch((error) => {
               });

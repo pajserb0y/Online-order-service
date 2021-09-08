@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 
 import model.Adress;
+import model.Courier;
 import model.Location;
 import model.MenuItem;
 import model.Order;
@@ -63,6 +64,15 @@ public class OrderService {
 		}
 	}
 	
+	public static Order getOrderByID(UUID id) {
+		for (Order order: orderList) {
+			if (order.getId().equals(id) && !order.isDeleted())
+				return order;
+		}
+		return null;
+	}
+	
+	
 	public static ArrayList<Order> getAll() {
 		ArrayList<Order> orders = new ArrayList<Order>();
 		for (Order order: orderList) {
@@ -104,10 +114,7 @@ public class OrderService {
 				order.setOrderStatus(OrderStatusEnum.PROCESSING);
 				order.setPrice(restaurantItem.getPrice() * restaurantItem.getCount());
 				
-//				ArrayList<MenuItem> newMenuItems = new ArrayList<MenuItem>();
-//				newMenuItems.add(restaurantItem);	
-				order.getMenuItems().add(restaurantItem);
-//				order.setMenuItems(newMenuItems);				
+				order.getMenuItems().add(restaurantItem);			
 				
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");  
 				LocalDateTime now = LocalDateTime.now(); 
@@ -123,6 +130,15 @@ public class OrderService {
 		return orders;
 	}
 	
+	public static void delete(UUID id) {
+		for (Order order : orderList) {
+			if (order.getId().equals(id)) {
+				order.setDeleted(true);
+				break;
+			}
+		}
+		save();
+	}
 	
 	public static ArrayList<Order> getForCustomer(UUID customerId) {
 		ArrayList<Order> orders = new ArrayList<Order>();
@@ -137,9 +153,9 @@ public class OrderService {
 		ArrayList<Order> orders = new ArrayList<Order>();
 		for (Order order: getAll()) 
 		{
-			if (order.getCurrierId() == courrierId && order.getOrderStatus() != OrderStatusEnum.DELIVERED && order.getOrderStatus() != OrderStatusEnum.CANCELED)
+			if (courrierId.equals(order.getCurrierId()) && order.getOrderStatus() != OrderStatusEnum.DELIVERED && order.getOrderStatus() != OrderStatusEnum.CANCELED)
 				orders.add(order);
-			if(order.getOrderStatus() == OrderStatusEnum.WAITING && !order.getRequests().contains(username)) {
+			if(order.getOrderStatus() == OrderStatusEnum.WAITING && !order.getRequests().contains(CourierService.getCourierByUsername(username))) {
 				orders.add(order);
 			}
 		}	
@@ -153,5 +169,96 @@ public class OrderService {
 				orders.add(order);
 		
 		return orders;
+	}
+	
+	public static void cancelOrder(UUID orderId) {
+		for (Order order : getAll()) {
+			if(order.getId().equals(orderId)){
+				order.setOrderStatus(OrderStatusEnum.CANCELED);;
+				break;
+			}
+		}
+		save();
+		
+	}
+
+	
+	public static void prepareOrder(UUID orderId) {
+		System.out.println("poslati ID  "+ orderId);
+		
+		for (Order order : orderList) {
+			System.out.println(order.getOrderStatus());
+			System.out.println(order.getId());
+			if(order.getId().equals(orderId)){
+				System.out.println("prvi if prosao");
+				if(order.getOrderStatus() == OrderStatusEnum.PROCESSING){
+					order.setOrderStatus(OrderStatusEnum.INPREPARATION);
+					System.out.println(order.getOrderStatus());
+					break;
+			}
+		}
+	}		
+	save();
+	}
+	
+	public static void finishOrder(UUID orderId) {
+		for (Order order : orderList) {
+			if(order.getId().equals(orderId)  && order.getOrderStatus() == OrderStatusEnum.INPREPARATION){
+				order.setOrderStatus(OrderStatusEnum.WAITING);
+				break;
+			}
+		}
+		save();
+	}
+	
+	public static void addRequest(UUID orderId, UUID courierId) {
+		for (Order order : orderList) {
+			if(order.getId().equals(orderId) && order.getOrderStatus().equals(OrderStatusEnum.WAITING)){
+				ArrayList<Courier> couriers = order.getRequests();
+				couriers.add(CourierService.getCourierByID(courierId));
+				order.setRequests(couriers);
+				break;
+			}
+		}
+		save();
+		
+	}
+	
+	public static void deliverOrder(UUID orderId) {
+		for (Order order : orderList) {
+			if(order.getId().equals(orderId) && order.getOrderStatus().equals(OrderStatusEnum.TRANSPORT)){
+				order.setOrderStatus(OrderStatusEnum.DELIVERED);
+				break;
+			}
+		}
+		save();
+		
+	}
+	
+	public static void approveTransportFor(UUID orderId, UUID courierId) {
+		for (Order order : orderList) {
+			if(order.getId().equals(orderId)){
+				order.setCurrierId(courierId);
+				order.getRequests().clear();
+				order.setOrderStatus(OrderStatusEnum.TRANSPORT);
+				break;
+			}
+		}
+		save();
+	}
+	
+	public static void denyTransportFor(UUID orderId, UUID courierId) {
+		ArrayList<Courier> requests = new ArrayList<Courier>();
+		for (Order order : orderList) {
+			if(order.getId().equals(orderId)){
+				for(Courier c : order.getRequests())
+					if(!c.getId().equals(courierId))
+						requests.add(c);
+
+				order.setRequests(requests);
+				break;
+			}
+		}
+		save();
 	}
 }

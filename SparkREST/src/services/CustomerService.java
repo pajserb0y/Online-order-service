@@ -242,4 +242,22 @@ public class CustomerService {
 		cart.setPrice(price);
 		save();
 	}
+
+	public void removePoints(UUID customerId, double pointsLost) {
+		for (Customer customer : customerList) {
+			if (customer.getId().equals(customerId)) {
+				customer.setPoints(customer.getPoints() - pointsLost);
+				if(customer.getPoints() < silverRequired) {
+					customer.setCustomerType(CustomerTypeEnum.BRONZE);
+					break;
+				}
+				else if(customer.getPoints() < goldRequired) {
+					customer.setCustomerType(CustomerTypeEnum.SILVER);
+					break;
+				}
+			}
+		}
+			
+		save();
+	}
 }

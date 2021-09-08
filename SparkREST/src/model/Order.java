@@ -1,22 +1,19 @@
 package model;
 
-import java.awt.Menu;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import model.Enums.OrderStatusEnum;
-import model.Enums.RestaurantTypeEnum;
 
 public class Order extends Entity{
 	protected UUID restaurantId;
 	protected UUID customerId;
-	protected UUID currierId;
+	protected UUID courierId;
 	protected ArrayList<MenuItem> menuItems;
 	protected String timeOfOrder;
 	protected double price;
 	protected OrderStatusEnum orderStatus;
-	protected ArrayList<String> requests;	//zahtevi kurira da preuzme paket koji cekaju da menadzer odabere kurira
+	protected ArrayList<Courier> requests;	//zahtevi kurira da preuzme paket koji cekaju da menadzer odabere kurira
 //	protected RestaurantTypeEnum restaurantType;
 //	protected String restaurantName;
 //	public String getRestaurantName() {
@@ -33,15 +30,15 @@ public class Order extends Entity{
 	{
 		super();
 		menuItems = new ArrayList<MenuItem>();
-		requests = new ArrayList<String>();
+		requests = new ArrayList<Courier>();
 	}
 	
 	public Order(UUID restaturanId, UUID customerId, UUID currierId, ArrayList<MenuItem> menuItems, String timeOfOrder,
-			double price, OrderStatusEnum orderStatus,  ArrayList<String> requests) {
+			double price, OrderStatusEnum orderStatus,  ArrayList<Courier> requests) {
 		super();
 		this.restaurantId = restaturanId;
 		this.customerId = customerId;
-		this.currierId = currierId;
+		this.courierId = currierId;
 		this.menuItems = menuItems;
 		this.timeOfOrder = timeOfOrder;
 		this.price = price;
@@ -67,11 +64,11 @@ public class Order extends Entity{
 	}
 
 	public UUID getCurrierId() {
-		return currierId;
+		return courierId;
 	}
 
 	public void setCurrierId(UUID currierId) {
-		this.currierId = currierId;
+		this.courierId = currierId;
 	}
 
 	public ArrayList<MenuItem> getMenuItems() {
@@ -114,11 +111,11 @@ public class Order extends Entity{
 //		this.restaurantType = restaurantType;
 //	}
 
-	public ArrayList<String> getRequests() {
+	public ArrayList<Courier> getRequests() {
 		return requests;
 	}
 
-	public void setRequests(ArrayList<String> requests) {
+	public void setRequests(ArrayList<Courier> requests) {
 		this.requests = requests;
 	}
 	

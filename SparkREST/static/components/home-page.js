@@ -156,7 +156,7 @@ Vue.component("home-page", {
                     <myCustomers></myCustomers>
                 </div>
                 <div v-if="window === 'REQUESTS'">
-                    <myRequests></myRequests>
+                    <courier-requests></courier-requests>
                 </div> 
         </div>
         </div>
