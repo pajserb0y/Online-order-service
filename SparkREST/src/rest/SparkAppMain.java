@@ -106,6 +106,7 @@ public class SparkAppMain {
 		restaurantService.load();  //radi i bez ovoga
 		menuItemService.load();
 		orderService.load();
+		commentService.load();
 
 		staticFiles.externalLocation(new File("./static").getCanonicalPath());
 		
@@ -714,19 +715,31 @@ public class SparkAppMain {
 			}
 		});
 		
+//		post("/getComments", (req, res) -> {
+//			res.type("application/json");
+//			Order order = g.fromJson(req.body(), Order.class);
+//			
+//			Customer customer = customerService.getCustomerByID(order.getCustomerId());
+//			
+//			Restaurant restaurant = restaurantService.getById(order.getRestaurantId());
+//			
+//			ArrayList<Comment> comments = new ArrayList<Comment>();
+//			if(customer == null)
+//				comments = commentService.getAllForRestaurant(restaurant.getId());
+//			else
+//				comments = commentService.getApprovedForRestaurant(restaurant.getId());
+//			System.out.println(comments);
+//			res.status(200);
+//			return g.toJson(comments);
+//		});
+		
 		post("/getComments", (req, res) -> {
 			res.type("application/json");
-			Order order = g.fromJson(req.body(), Order.class);
-			
-			Customer customer = customerService.getCustomerByID(order.getCustomerId());
-			
-			Restaurant restaurant = restaurantService.getById(order.getRestaurantId());
+			Restaurant restaurant = g.fromJson(req.body(), Restaurant.class);
 			
 			ArrayList<Comment> comments = new ArrayList<Comment>();
-			if(customer == null)
-				comments = commentService.getAllForRestaurant(restaurant.getId());
-			else
-				comments = commentService.getApprovedForRestaurant(restaurant.getId());
+			comments.addAll(commentService.getAllForRestaurant(restaurant.getId()));
+			
 			System.out.println(comments);
 			res.status(200);
 			return g.toJson(comments);
@@ -746,6 +759,51 @@ public class SparkAppMain {
 				return g.toJson(true);
 			}
 					
+		});
+		
+		post("/denyComment", (req, res) -> {
+			res.type("application/json");
+			Comment comment = g.fromJson(req.body(), Comment.class);
+					
+			commentService.denyComment(comment.getId());			
+			
+			res.status(200);
+			return "DONE";
+		});
+		
+		post("/approveComment", (req, res) -> {
+			res.type("application/json");
+			Comment comment = g.fromJson(req.body(), Comment.class);
+			UUID restaurantID = comment.getRestaurant();
+			commentService.approveComment(comment.getId());			
+			restaurantService.updateRating(restaurantID, commentService.calculateRestaurantRating(restaurantID));
+			
+			res.status(200);
+			return "DONE";
+		});
+		
+//		post("/getMyComments", (req, res) -> {
+//			res.type("application/json");
+//			HashMap<String, String> user = g.fromJson(req.body(), HashMap.class);
+//					
+//			Restaurant restaurant = restaurantService.getRestaurantById(menagerService.getRestaurantID(user.get("username")));
+//			ArrayList<Comment> comments = commentService.getAllForRestaurant(restaurant.getEntityID());
+//			
+//			
+//			res.status(200);
+//			return g.toJson(comments);
+//		});
+		
+		
+		
+		post("/deleteComment", (req, res) -> {
+			res.type("application/json");
+			Comment comment = g.fromJson(req.body(), Comment.class);
+			UUID restaurantID = comment.getRestaurant();
+			commentService.delete(comment.getId());			
+			restaurantService.updateRating(restaurantID,commentService.calculateRestaurantRating(restaurantID));
+			res.status(200);
+			return "DONE";
 		});
 	}
 

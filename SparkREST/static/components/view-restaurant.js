@@ -41,8 +41,7 @@ Vue.component("view-restaurant",{
             },
             comments:"",
             commentReq:{
-                customerId:"",
-                restaurantId:""
+                id:""
             }
         }
     },
@@ -60,8 +59,8 @@ Vue.component("view-restaurant",{
                     .then(response => {  
                         this.menuItems = response.data;
                     })
-                this.commentReq.customerId = localStorage.getItem("id")
-                this.commentReq.restaurantId = this.restaurant.id
+                //this.commentReq.customerId = localStorage.getItem("id")
+                this.commentReq.id = this.restaurant.id
                 axios
                     .post('/getComments',this.commentReq)
                     .then(response => {  
@@ -135,24 +134,27 @@ Vue.component("view-restaurant",{
                 <h1 v-if="commentable">Leave a comment</h1>
                 <div v-if="commentable">
                     <input style="width:85%" type="text" v-model="comment.text" placeholder = "Comment"/>
-                    <input :class="{invalid:comment.rating < 1 || comment.rating > 5}" min="1" max="5" style="width:5%" type="number" v-model="comment.rating" placeholder = "Rating"/>
-                    <button type= "button" v-on:click="makeComment()">Make Comment</button>
+                    <input :class="{invalid:comment.rating < 1 || comment.rating > 5}" min="1" max="5" style="width:10%" type="number" v-model="comment.rating" placeholder = "Rating"/>
+                    <button type= "button" v-on:click="makeComment()">Make a comment</button>
                 </div>
+
                 <h1 v-if="!manager">Comments</h1>
                 <div v-if="!manager">
-                    <table style="width:99.999%">
+                    <table border="1">
                         <thead>
                             <th style="width:33%">Username</th>
                             <th style="width:60%">Comment</th>
                             <th style="width:5%">Rating</th>
-                            <th v-if="role === 'ADMIN'" style="width:5%"></th>
+                            <th v-if="role === 'MANAGER' || role === 'ADMIN'" style="width:5%">Status</th>
+                            <th v-if="role === 'ADMIN' " style="width:5%"></th>
                         </thead>
                         <tbody>
                             <tr class="nopointerrow" v-for="c in comments">
                                 <td style="width:33%"> {{c.username}}</td>
                                 <td style="width:60%">{{c.text}}</td>
                                 <td style="width:5%">{{c.rating}}</td>
-                                <td v-if="role === 'ADMIN'" style="width:5%"><button type= "button" v-on:click="deleteComment(c)">Delete</button> </td>
+                                <td v-if="role === 'MANAGER' || role === 'ADMIN'" style="width:5%">{{c.approved}} </td>
+                                <td v-if="role === 'ADMIN' && c.approved === 'APPROVED'" style="width:5%"><button type= "button" v-on:click="deleteComment(c)">Delete</button> </td>
                             </tr>                                                                  
                         </tbody>
                     </table>            

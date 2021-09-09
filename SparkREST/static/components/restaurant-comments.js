@@ -6,6 +6,9 @@ Vue.component("restaurant-comments",{
             	customerId:"",
                 restaurantId:""
             },
+            restaurant:{
+                id:""
+            },
             comments:"",
             sendParams:{
                 id:""
@@ -18,9 +21,9 @@ Vue.component("restaurant-comments",{
         axios
         .post('/getCurrentRestaurant',this.sendParams)
             .then(response => {  
-                this.commentReq.restaurantId = response.data.id
+                this.restaurant.id = response.data.id
 	        axios
-	        .post('/getComments',this.commentReq)
+	        .post('/getComments',this.restaurant)
 	        .then(response=>{
 	            this.comments = response.data
 	        })
@@ -31,7 +34,7 @@ Vue.component("restaurant-comments",{
     	<div>
         <h1>Comments</h1>
         <div>
-            <table style="width:99.999%">
+            <table border="1">
                 <thead>
                     <th style="width:20%">Username</th>
                     <th style="width:60%">Comment</th>

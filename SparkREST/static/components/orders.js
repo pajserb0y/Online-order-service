@@ -77,8 +77,8 @@ Vue.component("orders",{
                 </select>
             </div>
 
-        <table id="myTable" border="1">
-            <div class="leftMargin">
+        <div>
+        <table id="myTable" border="1" style="width:99%">
                 <thead>
                 <tr background-color="transparent">
                     <th style="width:20%">Date</th>
@@ -106,8 +106,8 @@ Vue.component("orders",{
                         <td v-if="o.orderStatus === 'WAITING' && user.role === 'COURIER'" style="width:10%"><button type= "button" v-on:click="request(o)">Request Order</button> </td>
                     </tr>
                 </tbody>
-            </div>
         </table>
+        </div>
     </div>
     `,
     methods:{

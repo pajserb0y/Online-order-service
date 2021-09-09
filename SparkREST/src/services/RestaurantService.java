@@ -70,7 +70,7 @@ public class RestaurantService {
 		return restaurants;
 	}
 
-	public Restaurant getById(UUID id){ 
+	public static Restaurant getById(UUID id){ 
 		for (Restaurant restaurant: restaurantList) 
 			if (!restaurant.isDeleted() && restaurant.getId().equals(id)) 
 				return restaurant;
@@ -118,5 +118,11 @@ public class RestaurantService {
 	public static Restaurant getSelectedRestaurant() {
 		return selectedRestaurant;
 	}
-
+	
+	public static void updateRating(UUID restaurantID, int calculateRestaurantRating) {
+		Restaurant restaurant = getById(restaurantID);
+		restaurant.setRating(calculateRestaurantRating);
+		
+		save();		
+	}
 }
