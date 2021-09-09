@@ -150,7 +150,7 @@ Vue.component("home-page", {
                     <add-menuItems></add-menuItems>
                 </div>
                 <div v-if="window === 'COMMENTS'">
-                    <myComments></myComments>
+                    <restaurant-comments></restaurant-comments>
                 </div>
                 <div v-if="window === 'CUSTOMERS'">
                     <my-customers></my-customers>
