@@ -43,6 +43,7 @@ import javax.servlet.http.Part;
 
 
 import model.Admin;
+import model.Comment;
 import model.Courier;
 import model.Customer;
 import model.Manager;
@@ -50,6 +51,7 @@ import model.MenuItem;
 import model.Restaurant;
 import model.ShoppingCart;
 import model.User;
+import model.Enums.CustomerTypeEnum;
 import model.Enums.RoleEnum;
 import model.Order;
 import model.OrderDTO;
@@ -73,6 +75,7 @@ import com.google.gson.Gson;
 
 
 import services.AdminService;
+import services.CommentService;
 import services.CourierService;
 import services.CustomerService;
 import services.ManagerService;
@@ -90,6 +93,8 @@ public class SparkAppMain {
 	private static RestaurantService restaurantService = new RestaurantService();
 	private static MenuItemService menuItemService = new MenuItemService();
 	private static OrderService orderService = new OrderService();
+	private static CommentService commentService = new CommentService();
+	
 	
 	public static void main(String[] args) throws Exception {
 		port(8080);
@@ -681,5 +686,67 @@ public class SparkAppMain {
 			
 		});
 		
+		post("/canIComment", (req, res) -> {
+			res.type("application/json");
+			Order order = g.fromJson(req.body(), Order.class);
+			Customer customer = customerService.getCustomerByID(order.getCustomerId());
+			Restaurant restaurant = restaurantService.getById(order.getRestaurantId());
+			
+			if(customer == null){
+				res.status(200);
+				return g.toJson(false);
+			}				
+			
+			int delivered = orderService.getDeliveredForCustomerAndRestaurant(customer.getId(),restaurant.getId());
+			if(delivered == 0) {
+				res.status(200);
+				return g.toJson(false);
+			}
+			
+			
+			if(commentService.checkCommentable(delivered, customer.getId(), restaurant.getId())) {
+				res.status(200);
+				return g.toJson(true);
+			}
+			else {
+				res.status(200);
+				return g.toJson(false);
+			}
+		});
+		
+		post("/getComments", (req, res) -> {
+			res.type("application/json");
+			Order order = g.fromJson(req.body(), Order.class);
+			
+			Customer customer = customerService.getCustomerByID(order.getCustomerId());
+			
+			Restaurant restaurant = restaurantService.getById(order.getRestaurantId());
+			
+			ArrayList<Comment> comments = new ArrayList<Comment>();
+			if(customer == null)
+				comments = commentService.getAllForRestaurant(restaurant.getId());
+			else
+				comments = commentService.getApprovedForRestaurant(restaurant.getId());
+			System.out.println(comments);
+			res.status(200);
+			return g.toJson(comments);
+		});
+		
+		post("/makeComment", (req, res) -> {
+			res.type("application/json");
+			Comment comment = g.fromJson(req.body(), Comment.class);
+
+			if(comment.getRating() <1 || comment.getRating() > 5) {
+				res.status(404);
+				return g.toJson(false);
+			}
+			else {
+				commentService.addComment(comment);
+				res.status(200);
+				return g.toJson(true);
+			}
+					
+		});
 	}
+
 }

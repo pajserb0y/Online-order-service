@@ -3,6 +3,7 @@ Vue.component("view-restaurant",{
     data: function(){
         return{
             restaurant:{
+            	id:"",
                 name:"",
 				manager:"",
 				type:"",
@@ -27,6 +28,21 @@ Vue.component("view-restaurant",{
             cartItem:{
                 customerId:"",
                 menuItems:""
+            },
+            commentable:false,
+            manager:false,
+            managerId:"",
+            comment:{
+            	customer:"",
+            	username:"",
+                text:"",
+                restaurant:"",
+                rating:""
+            },
+            comments:"",
+            commentReq:{
+                customerId:"",
+                restaurantId:""
             }
         }
     },
@@ -36,13 +52,31 @@ Vue.component("view-restaurant",{
             .get('/getRestaurant')
             .then(response => {  
                 this.restaurant = response.data;
+                this.managerId = localStorage.getItem("id") //pretpostavka da je trenutni korisnik menadzer
+                this.manager = this.managerId == this.restaurant.manager
                 this.locationDTO = response.data.location.adress.street + ", " + response.data.location.adress.postalCode + " " + response.data.location.adress.town + ", " + response.data.location.adress.country
                 axios
                     .post('/getMenuItems', this.restaurant)
                     .then(response => {  
                         this.menuItems = response.data;
-            })
-        }) 
+                    })
+                this.commentReq.customerId = localStorage.getItem("id")
+                this.commentReq.restaurantId = this.restaurant.id
+                axios
+                    .post('/getComments',this.commentReq)
+                    .then(response => {  
+                    this.comments = response.data;      
+                })
+                axios
+                    .post('/canIComment',this.commentReq)
+                    .then(response=>{
+                        this.commentable = response.data
+                        this.comment.customer = localStorage.getItem("id")
+                        this.comment.username = localStorage.getItem("username")
+                        this.comment.restaurant = this.restaurant.id
+               })
+        })
+       
                 
     },
     template:`
@@ -104,8 +138,8 @@ Vue.component("view-restaurant",{
                     <input :class="{invalid:comment.rating < 1 || comment.rating > 5}" min="1" max="5" style="width:5%" type="number" v-model="comment.rating" placeholder = "Rating"/>
                     <button type= "button" v-on:click="makeComment()">Make Comment</button>
                 </div>
-                <h1 v-if="!myRes">Comments</h1>
-                <div v-if="!myRes">
+                <h1 v-if="!manager">Comments</h1>
+                <div v-if="!manager">
                     <table style="width:99.999%">
                         <thead>
                             <th style="width:33%">Username</th>
@@ -114,7 +148,7 @@ Vue.component("view-restaurant",{
                             <th v-if="role === 'ADMIN'" style="width:5%"></th>
                         </thead>
                         <tbody>
-                            <tr class="nopointerrow" v-for="c in restaurant.comments">
+                            <tr class="nopointerrow" v-for="c in comments">
                                 <td style="width:33%"> {{c.username}}</td>
                                 <td style="width:60%">{{c.text}}</td>
                                 <td style="width:5%">{{c.rating}}</td>
@@ -123,8 +157,8 @@ Vue.component("view-restaurant",{
                         </tbody>
                     </table>            
                 </div>
-                <div v-if="myRes">
-                    <myComments></myComments>
+                <div v-if="manager">
+                    <restaurant-comments></restaurant-comments>
                 </div>
         </div>
     `,
@@ -134,27 +168,27 @@ Vue.component("view-restaurant",{
             .post('/makeComment', this.comment)
             .then(response=>{
                 axios
-                .post('/viewRestaurant', this.reqparams)
+                .get('/getRestaurant')
                 .then(response=>{
-                    this.restaurantDTO = response.data
+                    this.restaurant = response.data
                     if(this.role === 'MANAGER'){
                         axios
-                        .post('/getMyRestaurant',this.user)
+                        .post('/getCurrentRestaurant',this.commentReq.customerId)
                         .then(response=>{
-                            this.myResId = response.data
-                            this.myRes = this.myResId == this.restaurantDTO.entityID
+                            this.managerId = response.data.manager
+                            this.manager = this.managerId == this.restaurant.manager
                         })
                     }
                     if(this.role === 'CUSTOMER'){
-                        this.commentReq.username = localStorage.getItem("username")
-                        this.commentReq.entityID = this.restaurantDTO.entityID
+                        this.commentReq.customerId = localStorage.getItem("id")
+                        this.commentReq.restaurantId = this.restaurant.id
                         axios
                         .post('/canIComment',this.commentReq)
                         .then(response=>{
                             this.commentable = response.data
                             this.comment.customer = localStorage.getItem("id")
                             this.comment.username = localStorage.getItem("username")
-                            this.comment.restaurant = this.restaurantDTO.entityID
+                            this.comment.restaurant = this.restaurant.id
                         })
                     }
                 })
@@ -172,9 +206,9 @@ Vue.component("view-restaurant",{
             .post('/deleteComment', comment)
             .then(response=>{
                 axios
-                .post('/viewRestaurant', this.reqparams)
+                .post('/getComments', this.commentReq)
                 .then(response=>{
-                    this.restaurantDTO = response.data
+                    this.comments = response.data
                 })
                 .catch((error) => {
                   });

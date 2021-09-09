@@ -271,4 +271,15 @@ public class OrderService {
 		}
 		return returnIDs;
 	}
+	
+	public static int getDeliveredForCustomerAndRestaurant(UUID user, UUID restaurant) {
+		int delivered = 0;
+		for (Order order : orderList) {
+			if( user.equals(order.getCustomerId()) && restaurant.equals(order.getRestaurantId()) && order.getOrderStatus() == OrderStatusEnum.DELIVERED) {
+				delivered++;
+			}
+		}
+		
+		return delivered;
+	}
 }
