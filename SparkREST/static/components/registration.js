@@ -49,9 +49,7 @@ Vue.component("registration", {
                         <button class="emptyLabel" type = "submit"> Register</button>
                         <button type= "button" v-on:click="cancel">Cancel</button>
                         </p>
-                    <p class="btn2">
-                        <button type = "button" v-on:click="registerAdmin"> Register admin</button>
-                    </p> 
+                    
                 </form>               
             </div>
         </div>

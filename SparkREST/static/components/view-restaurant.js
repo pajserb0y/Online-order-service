@@ -40,8 +40,12 @@ Vue.component("view-restaurant",{
                 rating:""
             },
             comments:"",
-            commentReq:{
+            commentReq:{       //objekat za slanje restorana
                 id:""
+            },
+            canIComment:{
+                customerId:"",
+                restaurantId:""
             }
         }
     },
@@ -64,16 +68,20 @@ Vue.component("view-restaurant",{
                 axios
                     .post('/getComments',this.commentReq)
                     .then(response => {  
-                    this.comments = response.data;      
-                })
-                axios
-                    .post('/canIComment',this.commentReq)
+                    this.comments = response.data;   
+                    this.canIComment.restaurantId = this.restaurant.id 
+                    this.canIComment.customerId = localStorage.getItem("id")
+
+                    axios
+                    .post('/canIComment',this.canIComment)
                     .then(response=>{
                         this.commentable = response.data
                         this.comment.customer = localStorage.getItem("id")
                         this.comment.username = localStorage.getItem("username")
                         this.comment.restaurant = this.restaurant.id
-               })
+                    })
+                })
+                
         })
        
                 
@@ -91,7 +99,7 @@ Vue.component("view-restaurant",{
                         <input type="text" v-model="restaurant.type" />
                     </div>
                     <div class="pp">
-                        <label class="lbl" for="status"><b>Type</b></label>
+                        <label class="lbl" for="status"><b>Status</b></label>
                         <input type="text" v-model="restaurant.status" />
                     </div>
                     <div class="pp">
@@ -133,10 +141,15 @@ Vue.component("view-restaurant",{
                 
                 <h1 v-if="commentable">Leave a comment</h1>
                 <div v-if="commentable">
-                    <input style="width:85%" type="text" v-model="comment.text" placeholder = "Comment"/>
-                    <input :class="{invalid:comment.rating < 1 || comment.rating > 5}" min="1" max="5" style="width:10%" type="number" v-model="comment.rating" placeholder = "Rating"/>
-                    <button type= "button" v-on:click="makeComment()">Make a comment</button>
+                <form id="commentForm" class="forma1" method ="POST" @submit.prevent = "makeComment">
+                    <div class="pp">
+                        <input class="lbl4" required  type="text" v-model="comment.text" placeholder = "Comment"/>
+                        <input style="width:90px" required :class="{invalid:comment.rating < 1 || comment.rating > 5}" min="1" max="5"  type="number" v-model="comment.rating" placeholder = "Rating"/>
+                        </div>
+                        <button type= "submit" >Make a comment</button>
+                </form>
                 </div>
+                
 
                 <h1 v-if="!manager">Comments</h1>
                 <div v-if="!manager">
@@ -150,9 +163,9 @@ Vue.component("view-restaurant",{
                         </thead>
                         <tbody>
                             <tr class="nopointerrow" v-for="c in comments">
-                                <td style="width:33%"> {{c.username}}</td>
-                                <td style="width:60%">{{c.text}}</td>
-                                <td style="width:5%">{{c.rating}}</td>
+                                <td v-if="((role !== 'MANAGER' || role !== 'ADMIN') && c.approved === 'APPROVED') || role === 'MANAGER' || role === 'ADMIN'" style="width:33%"> {{c.username}}</td>
+                                <td v-if="((role !== 'MANAGER' || role !== 'ADMIN') && c.approved === 'APPROVED') || role === 'MANAGER' || role === 'ADMIN'" style="width:60%">{{c.text}}</td>
+                                <td v-if="((role !== 'MANAGER' || role !== 'ADMIN') && c.approved === 'APPROVED') || role === 'MANAGER' || role === 'ADMIN'" style="width:5%">{{c.rating}}</td>
                                 <td v-if="role === 'MANAGER' || role === 'ADMIN'" style="width:5%">{{c.approved}} </td>
                                 <td v-if="role === 'ADMIN' && c.approved === 'APPROVED'" style="width:5%"><button type= "button" v-on:click="deleteComment(c)">Delete</button> </td>
                             </tr>                                                                  
@@ -173,24 +186,27 @@ Vue.component("view-restaurant",{
                 .get('/getRestaurant')
                 .then(response=>{
                     this.restaurant = response.data
-                    if(this.role === 'MANAGER'){
+                    /* if(this.role === 'MANAGER'){
                         axios
                         .post('/getCurrentRestaurant',this.commentReq.customerId)
                         .then(response=>{
                             this.managerId = response.data.manager
                             this.manager = this.managerId == this.restaurant.manager
                         })
-                    }
+                    } */
                     if(this.role === 'CUSTOMER'){
-                        this.commentReq.customerId = localStorage.getItem("id")
-                        this.commentReq.restaurantId = this.restaurant.id
+                        /* this.commentReq.customerId = localStorage.getItem("id")
+                        this.commentReq.restaurantId = this.restaurant.id */
                         axios
-                        .post('/canIComment',this.commentReq)
+                        .post('/canIComment',this.canIComment)
                         .then(response=>{
                             this.commentable = response.data
                             this.comment.customer = localStorage.getItem("id")
                             this.comment.username = localStorage.getItem("username")
                             this.comment.restaurant = this.restaurant.id
+                            this.comment.text = ""
+                            this.comment.rating = ""
+                            alert("Comment recieved. Wait for approval")
                         })
                     }
                 })

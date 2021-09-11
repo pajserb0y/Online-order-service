@@ -20,11 +20,13 @@ import com.google.gson.Gson;
 
 import model.Adress;
 import model.Courier;
+import model.Customer;
 import model.Location;
 import model.MenuItem;
 import model.Order;
 import model.Restaurant;
 import model.ShoppingCart;
+import model.Enums.CustomerTypeEnum;
 import model.Enums.OrderStatusEnum;
 
 
@@ -124,6 +126,9 @@ public class OrderService {
 			}
 		}		
 		
+		for(Order order : orders)
+			updatePointsAndType(order);
+		
 		orderList.addAll(orders);
 		save();
 		
@@ -187,13 +192,9 @@ public class OrderService {
 		System.out.println("poslati ID  "+ orderId);
 		
 		for (Order order : orderList) {
-//			System.out.println(order.getOrderStatus());
-//			System.out.println(order.getId());
 			if(order.getId().equals(orderId)){
-//				System.out.println("prvi if prosao");
 				if(order.getOrderStatus() == OrderStatusEnum.PROCESSING){
 					order.setOrderStatus(OrderStatusEnum.INPREPARATION);
-//					System.out.println(order.getOrderStatus());
 					break;
 			}
 		}
@@ -281,5 +282,28 @@ public class OrderService {
 		}
 		
 		return delivered;
+	}
+	
+	public static void updatePointsAndType(Order order) {
+		double newPoints = order.getPrice()/1000*133;
+		double price = order.getPrice();
+		
+		Customer customer = CustomerService.getCustomerByID(order.getCustomerId());	
+		
+		if(customer.getCustomerType() == CustomerTypeEnum.SILVER)
+			price = price * (100 - CustomerService.silverDiscount) / 100;
+		else if(customer.getCustomerType() == CustomerTypeEnum.GOLD)
+			price = price * (100 - CustomerService.goldDiscount) / 100;
+		
+		customer.setPoints(customer.getPoints() + newPoints);
+		
+		if(customer.getPoints() >= CustomerService.silverRequired) 
+			customer.setCustomerType(CustomerTypeEnum.SILVER);
+		if(customer.getPoints() >= CustomerService.goldRequired) 
+			customer.setCustomerType(CustomerTypeEnum.GOLD);
+		
+		
+		order.setPrice(price);
+		save();
 	}
 }

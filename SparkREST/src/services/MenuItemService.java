@@ -105,7 +105,7 @@ public class MenuItemService {
 
 	public static void deleteAllItemsForRestaurant(UUID RestaurantID) {
 		for (MenuItem menuItem : menuItemList) {
-			if(menuItem.getRestorantId() == RestaurantID) {
+			if(menuItem.getRestorantId().equals(RestaurantID)) {
 				menuItem.setDeleted(true);
 			}
 		}

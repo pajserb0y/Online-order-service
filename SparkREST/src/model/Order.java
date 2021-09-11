@@ -99,5 +99,14 @@ public class Order extends Entity{
 	public void setRequests(ArrayList<Courier> requests) {
 		this.requests = requests;
 	}
+
+	@Override
+	public String toString() {
+		return "Order [restaurantId=" + restaurantId + ", customerId="
+				+ customerId + ", courierId=" + courierId + ", menuItems="
+				+ menuItems + ", timeOfOrder=" + timeOfOrder + ", price="
+				+ price + ", orderStatus=" + orderStatus + ", requests="
+				+ requests + ", id=" + id + ", deleted=" + deleted + "]";
+	}
 	
 }

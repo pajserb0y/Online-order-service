@@ -75,7 +75,6 @@ public static ArrayList<Comment> commentList = new ArrayList<Comment>();
 	
 	public static ArrayList<Comment> getAllForRestaurant(UUID restauratId) {
 		ArrayList<Comment> comments = new ArrayList<Comment>();
-		System.out.println("comment service " + commentList);
 		for (Comment comment: commentList) {
 			if (!comment.isDeleted() && restauratId.equals(comment.getRestaurant())) {
 				comments.add(comment);
@@ -133,7 +132,7 @@ public static ArrayList<Comment> commentList = new ArrayList<Comment>();
 		double sum = 0;
 		
 		for (Comment comment : commentList) {
-			if (id.equals(comment.getRestaurant())) {
+			if (id.equals(comment.getRestaurant()) && !comment.isDeleted() && comment.getApproved() == CommentStatusEnum.APPROVED) {
 				count++;
 				sum = sum + comment.getRating();
 			}

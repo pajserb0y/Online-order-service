@@ -51,8 +51,7 @@ public class ManagerService {
 	public static void add(Manager manager) {
 		
 		manager.setRole(RoleEnum.MANAGER);
-		manager.setRestaurantId(null);
-		System.out.println(manager.toString());
+		//manager.setRestaurantId(null);
 		managerList.add(manager);
 		save();
 	}
@@ -124,7 +123,7 @@ public class ManagerService {
 
 	public static void deleteRestaurant(UUID restaurantID) {
 		for (Manager manager : managerList) {
-			if (manager.getRestaurantId().equals(restaurantID)) {
+			if (restaurantID.equals(manager.getRestaurantId()) && !manager.isDeleted()) {
 				addRestaurantToManager(manager.getId(), null);
 				break;
 			}
@@ -166,7 +165,7 @@ public class ManagerService {
 		// TODO Auto-generated method stub
 		ArrayList<Manager> managers = new ArrayList<Manager>();
 		for (Manager manager: managerList) {
-			if (manager.getRestaurantId() == (null)) {
+			if (manager.getRestaurantId() == (null) && !manager.isDeleted()) {
 				 managers.add(manager);
 			}
 		}	

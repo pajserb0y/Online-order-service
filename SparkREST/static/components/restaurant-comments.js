@@ -62,7 +62,7 @@ Vue.component("restaurant-comments",{
             .post('/approveComment',comment)
             .then(response=>{
                 axios
-                .post('/getComments',this.commentReq)
+                .post('/getComments',this.restaurant)
                 .then(response=>{
                     this.comments = response.data
                 })
@@ -73,7 +73,7 @@ Vue.component("restaurant-comments",{
             .post('/denyComment',comment)
             .then(response=>{
                 axios
-                .post('/getComments',this.commentReq)
+                .post('/getComments',this.restaurant)
                 .then(response=>{
                     this.comments = response.data
                 })

@@ -12,9 +12,9 @@ Vue.component("login",{
 
     },
     template:`
-    	<div class="center">
+    	<div  class="center">
         	
-            <div>
+            <div >
             <h1 style="padding-left: 40%;">Login form</h1>
                 <form id="loginForm" method ="POST"  @submit.prevent = "login">
                     <div class="pp">

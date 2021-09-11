@@ -184,7 +184,7 @@ public class CustomerService {
 		shoppingCartDTO.setPrice(price);
 		currCustomer.setShoppingCart(shoppingCartDTO);
 		
-		updatePointsAndType(shoppingCartDTO);		//azurira cenu u korpi
+		calculateDiscount(shoppingCartDTO);		//azurira cenu u korpi
 		
 		save();
 	}
@@ -199,9 +199,9 @@ public class CustomerService {
 		double price = 0;
 		for (MenuItem menuItem : customer.getShoppingCart().getMenuItems()) 
 			price += menuItem.getPrice()*menuItem.getCount();
-		//price = price - (price * customer.getCustomerType().getDiscount()/100);
-				
-		customer.getShoppingCart().setPrice(price);
+		cart.setPrice(price);
+		calculateDiscount(cart);
+		
 		save();
 	}
 	
@@ -220,19 +220,10 @@ public class CustomerService {
 		save();		
 	}
 	
-	public static void updatePointsAndType(ShoppingCart cart) {
-		double newPoints = cart.getPrice()/1000*133;
+	public static void calculateDiscount(ShoppingCart cart) {
 		double price = cart.getPrice();
 		
-		Customer customer = getCustomerByID(cart.getCustomerId());	
-		
-		customer.setPoints(customer.getPoints() + newPoints);
-		
-		if(customer.getPoints() >= silverRequired) 
-			customer.setCustomerType(CustomerTypeEnum.SILVER);
-		if(customer.getPoints() >= goldRequired) 
-			customer.setCustomerType(CustomerTypeEnum.GOLD);
-		
+		Customer customer = getCustomerByID(cart.getCustomerId());					
 		
 		if(customer.getCustomerType() == CustomerTypeEnum.SILVER)
 			price = price * (100 - silverDiscount) / 100;

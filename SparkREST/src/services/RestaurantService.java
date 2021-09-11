@@ -63,7 +63,7 @@ public class RestaurantService {
 				
 			}
 		}
-		restaurants = (ArrayList<Restaurant>) restaurants.stream()
+		restaurants = (ArrayList<Restaurant>) restaurants.stream()	//sortiranje restorana po statusu (prvo da budu open)
 				  .sorted(Comparator.comparing(Restaurant::getStatus))
 				  .collect(Collectors.toList());
 
@@ -124,5 +124,25 @@ public class RestaurantService {
 		restaurant.setRating(calculateRestaurantRating);
 		
 		save();		
+	}
+	
+	public static void deleteManager(UUID managerId) {
+		for (Restaurant restaurant : getAll()) 
+			if(managerId.equals(restaurant.getManager())) 
+				restaurant.setManager(null);
+		
+		save();
+	}
+	
+	public static UUID addManagerToAvailableRestaurant(UUID managerId){
+		for (Restaurant restaurant : getAll()) 
+			if(restaurant.getManager() == null) {
+				restaurant.setManager(managerId);
+				save();
+				return restaurant.getId();
+			}
+		
+		save();
+		return null;
 	}
 }

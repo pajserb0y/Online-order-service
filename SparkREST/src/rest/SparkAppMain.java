@@ -5,14 +5,6 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.staticFiles;
 
-
-
-
-
-
-
-
-
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -23,24 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-
-
-
-
-
-
-
-
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
-
-
-
-
-
-
-
-
 
 import model.Admin;
 import model.Comment;
@@ -56,23 +32,7 @@ import model.Enums.RoleEnum;
 import model.Order;
 import model.OrderDTO;
 
-
-
-
-
-
-
-
-
 import com.google.gson.Gson;
-
-
-
-
-
-
-
-
 
 import services.AdminService;
 import services.CommentService;
@@ -112,32 +72,6 @@ public class SparkAppMain {
 		
 			
 		
-		post("/addAdmin", (req, res) -> {
-			res.type("application/json");
-			Admin admin = g.fromJson(req.body(), Admin.class);
-			if(!customerService.checkUsernameAvailability(admin.getUsername())) {
-				res.status(404);
-				return "ALREADY EXISTS";
-			}
-			else if(!managerService.checkUsernameAvailability(admin.getUsername())) {
-				res.status(404);
-				return "ALREADY EXISTS";
-			}
-			else if(!courierService.checkUsernameAvailability(admin.getUsername())) {
-				res.status(404);
-				return "ALREADY EXISTS";
-			}
-			else if(!adminService.checkUsernameAvailability(admin.getUsername())) {
-				res.status(404);
-				return "ALREADY EXISTS";
-			}
-			else {
-				admin.setRole(RoleEnum.ADMIN);
-				adminService.add(admin);
-				res.status(200);
-				return "SUCCESS";
-			}
-		});
 		
 		post("/registerCustomer", (req, res) -> {
 			res.type("application/json");
@@ -303,7 +237,16 @@ public class SparkAppMain {
 				}
 				else if(user.getRole() == RoleEnum.MANAGER) {
 					Manager manager = g.fromJson(req.body(), Manager.class);
+					System.out.println(manager);
+					
+					UUID restaurantId = restaurantService.addManagerToAvailableRestaurant(manager.getId());
+					if(restaurantId != null)
+						manager.setRestaurantId(restaurantId);
+					
+					System.out.println(manager);
+					
 					managerService.add(manager);
+					
 					res.status(200);
 					return "SUCCESS";
 				}
@@ -320,7 +263,7 @@ public class SparkAppMain {
 			User user = g.fromJson(req.body(), User.class);
 			if(user.getRole() == RoleEnum.MANAGER) {
 				managerService.delete(user.getId());
-				//restaurantService.deleteMenager(user.getUsername());
+				restaurantService.deleteManager(user.getId());
 			}
 			else if(user.getRole() == RoleEnum.CUSTOMER) {
 				customerService.delete(user.getId());
@@ -365,7 +308,6 @@ public class SparkAppMain {
 		post("/addRestaurant", (req,res) ->{
 			res.type("applicaton/json");
 			Restaurant restaurant = g.fromJson(req.body(),Restaurant.class);
-			//restaurant.setLogoPath(currRes.getLogoPath());
 			restaurant.setLogoPath(logoPath.value);
 			
 			restaurantService.addRestaurant(restaurant);
@@ -378,9 +320,10 @@ public class SparkAppMain {
 		post("/deleteRestaurant", (req, res) -> {
 			res.type("application/json");			
 			Restaurant restaurant = g.fromJson(req.body(), Restaurant.class);
-			restaurantService.delete(restaurant.getId());
-			//menuItemService.deleteForRestaurant(restaurant.getId());
+			
+			menuItemService.deleteAllItemsForRestaurant(restaurant.getId());
 			managerService.deleteRestaurant(restaurant.getId());
+			restaurantService.delete(restaurant.getId());
 			
 			res.status(200);
 			return g.toJson(restaurantService.getAll());
@@ -392,8 +335,7 @@ public class SparkAppMain {
 			res.status(200);
 			return g.toJson(managers);	
 		});
-		
-		
+				
 		
 		get("/allRestaurants", (req, res) -> {
 			res.type("application/json");
@@ -452,9 +394,7 @@ public class SparkAppMain {
 			MenuItem item = g.fromJson(req.body(), MenuItem.class);
 			item.setPicturePath(picturePath.value);
 			item.setCount(0);
-//			int restaurantID = menagerService.getRestaurantID(item.getRestaurant());			
-//			item.setRestaurant(restaurantID);	
-			if (menuItemService.checkNameAvailability(item)) { 		//zasto nismo pozvali gore i napravili novu instancu MenuitemService-a kao i za ostale servise
+			if (menuItemService.checkNameAvailability(item)) { 
 				menuItemService.add(item);
 				res.status(200);
 				return "DONE";
@@ -508,6 +448,7 @@ public class SparkAppMain {
 				return "ALREADY EXISTS";
 			}			
 		});
+
 		
 		post("/addToCart", (req, res) -> {
 			res.type("application/json");
@@ -543,7 +484,7 @@ public class SparkAppMain {
 			if(!cart.getMenuItems().isEmpty()) {
 				customerService.emptyCart(cart);
 				
-				ArrayList<Order> newOrders = orderService.createOrders(cart);		
+				ArrayList<Order> newOrders = orderService.createOrders(cart);
 				customerService.addOrders(newOrders);
 			}
 			res.status(200);
@@ -575,15 +516,14 @@ public class SparkAppMain {
 		post("/cancelOrder", (req, res) -> {
 			res.type("application/json");	
 			Order reqParams = g.fromJson(req.body(), Order.class);
-			UUID customerId=  reqParams.getCustomerId();
+			UUID customerId = reqParams.getCustomerId();
 			UUID orderId = reqParams.getId();
 			Order order = orderService.getOrderByID(orderId);
 			
-			double pointsLost = order.getPrice()/1000 * 133 * 4;
+			double pointsLost = (order.getPrice()/1000) * 133 * 4;
 			
 			orderService.cancelOrder(orderId);
 			customerService.removePoints(customerId, pointsLost);
-			
 			
 			res.status(200);
 			return "OK";
@@ -715,23 +655,6 @@ public class SparkAppMain {
 			}
 		});
 		
-//		post("/getComments", (req, res) -> {
-//			res.type("application/json");
-//			Order order = g.fromJson(req.body(), Order.class);
-//			
-//			Customer customer = customerService.getCustomerByID(order.getCustomerId());
-//			
-//			Restaurant restaurant = restaurantService.getById(order.getRestaurantId());
-//			
-//			ArrayList<Comment> comments = new ArrayList<Comment>();
-//			if(customer == null)
-//				comments = commentService.getAllForRestaurant(restaurant.getId());
-//			else
-//				comments = commentService.getApprovedForRestaurant(restaurant.getId());
-//			System.out.println(comments);
-//			res.status(200);
-//			return g.toJson(comments);
-//		});
 		
 		post("/getComments", (req, res) -> {
 			res.type("application/json");
@@ -740,7 +663,7 @@ public class SparkAppMain {
 			ArrayList<Comment> comments = new ArrayList<Comment>();
 			comments.addAll(commentService.getAllForRestaurant(restaurant.getId()));
 			
-			System.out.println(comments);
+	
 			res.status(200);
 			return g.toJson(comments);
 		});
@@ -749,7 +672,7 @@ public class SparkAppMain {
 			res.type("application/json");
 			Comment comment = g.fromJson(req.body(), Comment.class);
 
-			if(comment.getRating() <1 || comment.getRating() > 5) {
+			if(comment.getRating() <1 || comment.getRating() > 5 || comment.getRating() == null) {
 				res.status(404);
 				return g.toJson(false);
 			}
@@ -780,20 +703,7 @@ public class SparkAppMain {
 			
 			res.status(200);
 			return "DONE";
-		});
-		
-//		post("/getMyComments", (req, res) -> {
-//			res.type("application/json");
-//			HashMap<String, String> user = g.fromJson(req.body(), HashMap.class);
-//					
-//			Restaurant restaurant = restaurantService.getRestaurantById(menagerService.getRestaurantID(user.get("username")));
-//			ArrayList<Comment> comments = commentService.getAllForRestaurant(restaurant.getEntityID());
-//			
-//			
-//			res.status(200);
-//			return g.toJson(comments);
-//		});
-		
+		});			
 		
 		
 		post("/deleteComment", (req, res) -> {
@@ -804,6 +714,33 @@ public class SparkAppMain {
 			restaurantService.updateRating(restaurantID,commentService.calculateRestaurantRating(restaurantID));
 			res.status(200);
 			return "DONE";
+		});
+		
+		post("/addAdmin", (req, res) -> {
+			res.type("application/json");
+			Admin admin = g.fromJson(req.body(), Admin.class);
+			if(!customerService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!managerService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!courierService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else if(!adminService.checkUsernameAvailability(admin.getUsername())) {
+				res.status(404);
+				return "ALREADY EXISTS";
+			}
+			else {
+				admin.setRole(RoleEnum.ADMIN);
+				adminService.add(admin);
+				res.status(200);
+				return "SUCCESS";
+			}
 		});
 	}
 
