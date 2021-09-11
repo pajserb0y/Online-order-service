@@ -1,28 +1,40 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import model.Enums.RestaurantStatusEnum;
+import model.Enums.RestaurantTypeEnum;
 
 public class Restaurant extends Entity {
 	protected String name;
-	protected ArrayList<MenuItem> menu;
+	protected UUID manager;
+	protected ArrayList<UUID> menu;
 	protected RestaurantStatusEnum status;
+	protected RestaurantTypeEnum type;
 	protected Location location;
 	protected String logoPath;
-	protected double raiting;
-	
-	public Restaurant(String name, ArrayList<MenuItem> menu, RestaurantStatusEnum status, Location location,
-			String logoPath, double raiting) {
+	protected double rating;
+
+
+	public Restaurant() {
 		super();
-		this.name = name;
-		this.menu = menu;
-		this.status = status;
-		this.location = location;
-		this.logoPath = logoPath;
-		this.raiting = raiting;
 	}
 
+	public Restaurant(String name, UUID manager, ArrayList<UUID> menu, RestaurantStatusEnum status,
+			RestaurantTypeEnum restaturantType, Location location, String logoPath, double raiting) {
+		super();
+		this.name = name;
+		this.manager = manager;
+		this.menu = menu;
+		this.status = status;
+		this.type = restaturantType;
+		this.location = location;
+		this.logoPath = logoPath;
+		this.rating = raiting;
+	}
+
+	
 	public String getName() {
 		return name;
 	}
@@ -31,11 +43,19 @@ public class Restaurant extends Entity {
 		this.name = name;
 	}
 
-	public ArrayList<MenuItem> getMenu() {
+	public UUID getManager() {
+		return manager;
+	}
+
+	public void setManager(UUID manager) {
+		this.manager = manager;
+	}
+
+	public ArrayList<UUID> getMenu() {
 		return menu;
 	}
 
-	public void setMenu(ArrayList<MenuItem> menu) {
+	public void setMenu(ArrayList<UUID> menu) {
 		this.menu = menu;
 	}
 
@@ -45,6 +65,14 @@ public class Restaurant extends Entity {
 
 	public void setStatus(RestaurantStatusEnum status) {
 		this.status = status;
+	}
+
+	public RestaurantTypeEnum getRestaurantType() {
+		return type;
+	}
+
+	public void setRestaurantType(RestaurantTypeEnum restaturantType) {
+		this.type = restaturantType;
 	}
 
 	public Location getLocation() {
@@ -63,11 +91,18 @@ public class Restaurant extends Entity {
 		this.logoPath = logoPath;
 	}
 
-	public double getRaiting() {
-		return raiting;
+	public double getRating() {
+		return rating;
 	}
 
-	public void setRaiting(double raiting) {
-		this.raiting = raiting;
+	public void setRating(double raiting) {
+		this.rating = raiting;
+	}
+
+	@Override
+	public String toString() {
+		return "Restaurant [name=" + name + ", manager=" + manager + ", menu=" + menu + ", status=" + status
+				+ ", restaturantType=" + type + ", location=" + location + ", logoPath=" + logoPath
+				+ ", raiting=" + rating + ", id=" + id + ", deleted=" + deleted + "]";
 	}
 }

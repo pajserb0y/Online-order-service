@@ -1,5 +1,5 @@
 Vue.component("my-account", {
-
+    
     data: function(){
         return{
             user:{                
@@ -19,6 +19,7 @@ Vue.component("my-account", {
         }
     },
     mounted(){
+        /* document.body.style.backgroundImage = "url('images/background.jpg')" */
         this.sendParams.id = localStorage.getItem('id')
         this.sendParams.role = localStorage.getItem('role')
         axios
@@ -26,50 +27,41 @@ Vue.component("my-account", {
             .then(response => {
                 this.user = response.data
             })
-        /* this.user.role = localStorage.getItem('user.role')
-        this.user.id = localStorage.getItem('user.id')
-        this.user.username = localStorage.getItem('user.username')
-        this.user.firstName = localStorage.getItem('user.firstName')
-        this.user.lastName = localStorage.getItem('user.lastName')
-        this.user.password = localStorage.getItem('user.password')
-        this.user.dateOfBirth = localStorage.getItem('user.dateOfBirth')
-        this.user.gender = localStorage.getItem('user.gender') */
-
     },
     template:`
-    	<div>
-        	<h1>{{user.username}} account</h1>
+    	<div >
+        	<h1 style="padding-left: 18%;">{{user.username}}'s account</h1>
             <div>
                 <form id="registrationForm" method ="POST" @submit.prevent = "edit">
-                    <div>
-                        <label for="firstName"><b>First Name</b></label>
-                        <input type="text" v-model="user.firstName" placeholder = "First Name" required/>
+                    <div class="pp">
+                        <label label class="lbl" for="firstName"><b>First Name</b></label>
+                        <input type="text" v-model="user.firstName" placeholder = "First Name" required autofocus/>
                     </div>
-                    <div>
-                        <label for="lastName"><b>Last Name</b></label>
+                    <div class="pp">
+                        <label label class="lbl" for="lastName"><b>Last Name</b></label>
                         <input type="text" v-model="user.lastName" placeholder = "Last Name" required/>
                     </div>
-                    <div>
-                        <label for="username"><b>Username</b></label>
+                    <div class="pp">
+                        <label label class="lbl" for="username"><b>Username</b></label>
                         <input type="text" v-model="user.username" placeholder = "Username" required/>
                     </div>
-                    <div>
-                        <label for="password"><b>Password</b></label>
-                        <input type="password" v-model="user.password" placeholder = "Password" required/>
+                    <div class="pp">
+                        <label label class="lbl" for="password"><b>Password</b></label>
+                        <input type="text" v-model="user.password" placeholder = "Password" required/>
                     </div>
-                    <div>
-                        <label for="gender"><b>Gender</b></label>
+                    <div class="pp">
+                        <label label class="lbl" for="gender"><b>Gender</b></label>
                         <select name="gender" v-model="user.gender" id="gender" required>
                             <option value="MALE">Male</option>
                             <option value="FEMALE">Female</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="date"><b>Date of birth</b></label>
+                    <div class="pp">
+                        <label label class="lbl" for="date"><b>Date of birth</b></label>
                         <input type="date" v-model="user.dateOfBirth" required/>
                     </div>
                     <p></p>
-                    <div>
+                    <div class="btn2">
                         <button type = "submit"> Change</button>
                     </div>
                 </form>
@@ -90,7 +82,7 @@ Vue.component("my-account", {
                 console.log("Error");
                 alert("A user exists with the same username");
               });
-        },
+        }
     }
 
 });

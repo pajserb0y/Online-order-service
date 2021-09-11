@@ -51,7 +51,8 @@ public class ManagerService {
 	public static void add(Manager manager) {
 		
 		manager.setRole(RoleEnum.MANAGER);
-		//manager.setRestaurantId(0);
+		//manager.setRestaurantId(null);
+		managerList.add(manager);
 		save();
 	}
 	
@@ -74,7 +75,7 @@ public class ManagerService {
 
 	public static void delete(UUID id) {
 		for (Manager manager : getAll()) {
-			if (manager.getId() == id) {
+			if (manager.getId().equals(id)) {
 				manager.setDeleted(true);
 				break;
 			}
@@ -110,9 +111,9 @@ public class ManagerService {
 		return managers;
 	}
 	
-	public static void addRestaurantToManager(String username, UUID restaurantID) {
+	public static void addRestaurantToManager(UUID managerId, UUID restaurantID) {
 		for (Manager manager : getAll()) {
-			if(manager.getUsername().equals(username)) {
+			if(manager.getId().equals(managerId)) {
 				manager.setRestaurantId(restaurantID);
 				break;
 			}
@@ -122,8 +123,8 @@ public class ManagerService {
 
 	public static void deleteRestaurant(UUID restaurantID) {
 		for (Manager manager : managerList) {
-			if (manager.getRestaurantId() == restaurantID) {
-				addRestaurantToManager(manager.getUsername(),null);
+			if (restaurantID.equals(manager.getRestaurantId()) && !manager.isDeleted()) {
+				addRestaurantToManager(manager.getId(), null);
 				break;
 			}
 		}
@@ -143,7 +144,7 @@ public class ManagerService {
 	public boolean checkUsernameAvailability(String username, UUID id) {
 		// TODO Auto-generated method stub
 		for (Manager manager : managerList) {
-			if (manager.getUsername().equals(username) && !manager.isDeleted() && manager.getId().equals(id)) {
+			if (manager.getUsername().equals(username) && !manager.isDeleted() && !manager.getId().equals(id)) {
 				return false;
 			}
 		}			
@@ -157,6 +158,30 @@ public class ManagerService {
 				return manager;
 			}
 		}			
+		return null;
+	}
+	
+	public static ArrayList<Manager> getAvailableManagers() {
+		// TODO Auto-generated method stub
+		ArrayList<Manager> managers = new ArrayList<Manager>();
+		for (Manager manager: managerList) {
+			if (manager.getRestaurantId() == (null) && !manager.isDeleted()) {
+				 managers.add(manager);
+			}
+		}	
+		if(managers.isEmpty())
+			return null;
+		else
+			return managers;
+	}
+	
+	public static UUID getRestaurantIdByManagerId(UUID managerId) {
+		for (Manager manager: managerList) {
+			if (manager.getId().equals(managerId) && !manager.isDeleted()) {
+				return manager.getRestaurantId();
+			}
+		}
+			
 		return null;
 	}
 }

@@ -10,9 +10,9 @@ import java.util.Collections;
 import java.util.UUID;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-
 import model.Customer;
+import model.MenuItem;
+import model.Order;
 import model.ShoppingCart;
 import model.User;
 import model.Enums.CustomerTypeEnum;
@@ -23,10 +23,10 @@ import model.Enums.RoleEnum;
 public class CustomerService {
 	
 	public static ArrayList<Customer> customerList = new ArrayList<Customer>();
-//	private static CustomerType normal = new CustomerType("NORMAL",0,0);
-//	private static CustomerType bronze = new CustomerType("BRONZE",1,1000);
-//	private static CustomerType silver = new CustomerType("SILVER",2,3000);
-//	private static CustomerType gold = new CustomerType("GOLD",5,20000);
+	public final static int silverRequired = 3000;
+	public final static int goldRequired = 4000;
+	public final static double silverDiscount = 3;
+	public final static double goldDiscount = 5;
 	
 	public static void load() {
 		try {
@@ -85,7 +85,7 @@ public class CustomerService {
 	
 	public static void delete(UUID customerID) {
 		for (Customer customer : customerList) {
-			if (customer.getId() == customerID) {
+			if (customer.getId().equals(customerID)) {
 				customer.setDeleted(true);
 				break;
 			}
@@ -151,5 +151,112 @@ public class CustomerService {
 			}
 		}			
 		return null;
+	}
+	
+	public static void addItemsToShoppingCart(ShoppingCart shoppingCartDTO) 	//objekat shopingCart sluzi kao DTO za dodavanje pojedinacnog istog meniItema, koji moze biti u vecem broju,
+																				//u shoppingCart trenutnog korisnika 
+	{
+		Customer currCustomer = getCustomerByID(shoppingCartDTO.getCustomerId());
+		
+		ArrayList<MenuItem> oldMenuItems = currCustomer.getShoppingCart().getMenuItems();
+		MenuItem newItem = shoppingCartDTO.getMenuItems().get(0);
+		
+		double price = currCustomer.getShoppingCart().getPrice();
+		boolean found = false;
+		for (MenuItem oneOldItem : oldMenuItems)
+		{
+			if (oneOldItem.getId().equals(newItem.getId()))
+			{
+				oneOldItem.setCount(oneOldItem.getCount() + newItem.getCount());
+				price += newItem.getPrice() * newItem.getCount();
+				found = true;
+				break;
+			}			
+		}
+		if (!found)
+		{
+			oldMenuItems.add(newItem);
+			price += newItem.getPrice() * newItem.getCount();
+		}
+
+		
+		shoppingCartDTO.setMenuItems(oldMenuItems);
+		shoppingCartDTO.setPrice(price);
+		currCustomer.setShoppingCart(shoppingCartDTO);
+		
+		calculateDiscount(shoppingCartDTO);		//azurira cenu u korpi
+		
+		save();
+	}
+	
+	public static ShoppingCart getCart(UUID customerId) {
+			return getCustomerByID(customerId).getShoppingCart();
+	}
+	
+	public static void changeCart(ShoppingCart cart) {
+		Customer customer = getCustomerByID(cart.getCustomerId());
+		customer.setShoppingCart(cart);
+		double price = 0;
+		for (MenuItem menuItem : customer.getShoppingCart().getMenuItems()) 
+			price += menuItem.getPrice()*menuItem.getCount();
+		cart.setPrice(price);
+		calculateDiscount(cart);
+		
+		save();
+	}
+	
+	public static void emptyCart(ShoppingCart cart) {
+		Customer customer = getCustomerByID(cart.getCustomerId());
+		customer.getShoppingCart().getMenuItems().clear();
+		customer.getShoppingCart().setPrice(0);
+		save();
+	}
+	
+	public static void addOrders(ArrayList<Order> orders) {
+		Customer customer = getCustomerByID(orders.get(0).getCustomerId());
+		for (Order order : orders)
+			customer.getOrders().add(order.getId());
+		
+		save();		
+	}
+	
+	public static void calculateDiscount(ShoppingCart cart) {
+		double price = cart.getPrice();
+		
+		Customer customer = getCustomerByID(cart.getCustomerId());					
+		
+		if(customer.getCustomerType() == CustomerTypeEnum.SILVER)
+			price = price * (100 - silverDiscount) / 100;
+		else if(customer.getCustomerType() == CustomerTypeEnum.GOLD)
+			price = price * (100 - goldDiscount) / 100;
+		
+		cart.setPrice(price);
+		save();
+	}
+
+	public void removePoints(UUID customerId, double pointsLost) {
+		for (Customer customer : customerList) {
+			if (customer.getId().equals(customerId)) {
+				customer.setPoints(customer.getPoints() - pointsLost);
+				if(customer.getPoints() < silverRequired) {
+					customer.setCustomerType(CustomerTypeEnum.BRONZE);
+					break;
+				}
+				else if(customer.getPoints() < goldRequired) {
+					customer.setCustomerType(CustomerTypeEnum.SILVER);
+					break;
+				}
+			}
+		}
+			
+		save();
+	}
+	
+	public static ArrayList<Customer> getListOfCustomersByIds(ArrayList<UUID> customerIDs) {
+		ArrayList<Customer> returnList = new ArrayList<Customer>();
+		for (UUID customerId : customerIDs) 
+			returnList.add(getCustomerByID(customerId));
+		
+		return returnList;
 	}
 }

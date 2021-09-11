@@ -1,5 +1,5 @@
 package model.Enums;
 
 public enum QuantityTypeEnum {
-	GRAM,MILILITER
+	GRAMS,MILLILITERS
 }
