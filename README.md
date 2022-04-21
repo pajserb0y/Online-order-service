@@ -1,4 +1,5 @@
-# web_projekat
+# Online order service
+
 Food order system web application <br/>
 Backend: Java Spark <br/>
 Frontend: Vue.js <br/>
